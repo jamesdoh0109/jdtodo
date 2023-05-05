@@ -1,0 +1,259 @@
+from flask import jsonify, request, session, make_response 
+from setup import app, db
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import IntegrityError 
+from models import *
+import re
+import jwt 
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+
+@app.route('/', methods=['GET'])
+def home():
+    users = User.query.all()
+    for user in users:
+        print(user.email)
+    projects = Project.query.all()
+    for project in projects:
+        print(project.id, project.name, project.date_created, project.user_id, project.tasks)
+    return "Welcome"
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    login_json = request.get_json()
+    if not login_json:
+        return jsonify({'error': 'Missing request body.'}), 400 
+    if has_empty_fields('email', 'password', req_json=login_json):
+        return jsonify({'error': 'Both fields are required.'}), 400
+    email = login_json['email']
+    password = login_json['password'] 
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({'error': 'User does not exist.'}), 404 
+    if not check_password_hash(user.hashed_password, password):
+        return jsonify({'error': 'Incorrect password.'}), 401 
+    else:
+        user_obj = {'id': user.id, 'name': f'{user.firstname} {user.lastname}', 'email': user.email}
+        access_token = create_access_token(identity=user.id)
+        return jsonify({'message': 'Login success.', 'access_token': access_token}), 200 
+    
+# @app.route('/api/logout', methods=['POST'])
+# def logout():
+#     return jsonify({'message': 'Logged out successfully.'}), 200 
+
+def has_empty_fields(*args, req_json):
+    for field in args:
+        if field not in req_json:
+            return True
+    if '' in req_json.values():
+        return True 
+
+def check_valid_email(email):
+    regex = r'[^@]+@[^@]+\.[^@]+'
+    return re.fullmatch(regex, email) 
+
+def check_verify_password(password, password2):
+    return password == password2
+
+def check_valid_password(password):
+    return (len(password) >= 8 and any([c.isupper() for c in password]) and any([c.isdigit() for c in password]))
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    new_user_json = request.get_json()
+    if not new_user_json:
+        return jsonify({'error': 'Missing request body.'}), 400
+    if has_empty_fields('firstname', 'lastname', 'email', 'password', 'password2', req_json=new_user_json):
+        return jsonify({'error': 'All 5 fields are required.'}), 400
+    firstname = new_user_json['firstname']
+    lastname = new_user_json['lastname']
+    email = new_user_json['email']
+    password = new_user_json['password']
+    password2 = new_user_json['password2']
+    if not check_valid_email(email):
+        return jsonify({'error': 'Email is not valid.'}), 400 
+    if not check_verify_password(password, password2):
+        return jsonify({'error': 'Your passwords don\'t match.'}), 400 
+    if not check_valid_password(password):
+        return jsonify({'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number.'}), 400
+    new_user = User(firstname, lastname, email, generate_password_hash(password))
+    try: 
+        db.session.add(new_user)
+        db.session.commit()
+    except IntegrityError: 
+        db.session.rollback()
+        return jsonify({'error': 'Email already exists.'}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': e}), 500 
+    return jsonify({'message': 'User successfully created.'}), 201
+
+@app.route('/api/projects', methods=['GET'])
+def get_projects():
+    auth_header = request.headers.get('Authorization')
+    jwt_token = auth_header.split(' ')[1]
+    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    projects = Project.query.filter_by(user_id=decoded['session']['user']['id'])
+    project_list = [{'proj_id': proj.id, 'proj_name': proj.name} for proj in projects]
+    return jsonify({'projects': project_list}), 200 
+
+@app.route('/api/projects', methods=['POST'])
+def create_project():
+    auth_header = request.headers.get('Authorization')
+    jwt_token = auth_header.split(' ')[1]
+    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    new_project_json = request.get_json()
+    if not new_project_json:
+        return jsonify({'error': 'Missing request body.'}), 400 
+    if 'name' not in new_project_json:
+        return jsonify({'error': 'Project name is required.'}), 400 
+    name = new_project_json['name']
+    project = Project(name, decoded['session']['user']['id']) 
+    try: 
+        db.session.add(project)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': e}), 500 
+    return jsonify({'message': 'Project successfully created.'}), 201
+
+@app.route('/api/projects/<proj_id>', methods=['PATCH'])
+def modify_project_name(proj_id):
+    auth_header = request.headers.get('Authorization')
+    jwt_token = auth_header.split(' ')[1]
+    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    project = Project.query.filter_by(id=proj_id).first()
+    if project is None:
+        return jsonify({'error': f'Project {proj_id} not found'}), 400
+    if project.user_id != decoded['session']['user']['id']:
+        return jsonify({'error': 'You can\'t edit someone else\'s project.'}), 401
+    name_change_json = request.get_json()
+    if not name_change_json:
+        return jsonify({'error': 'Missing request body.'}), 400
+    if 'name' not in name_change_json:
+        return jsonify({'error': 'Project name is required.'}), 400 
+    project.name = name_change_json['name']
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': e}), 500 
+    return jsonify({'message': 'Project name successfully updated.'}), 200
+
+@app.route('/api/projects/<proj_id>', methods=['DELETE'])
+def delete_project(proj_id):
+    auth_header = request.headers.get('Authorization')
+    jwt_token = auth_header.split(' ')[1]
+    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    project = Project.query.filter_by(id=proj_id).first()
+    if project is None:
+        return jsonify({'error': f'Project {proj_id} not found'}), 400
+    if project.user_id != decoded['session']['user']['id']:
+        return jsonify({'error': 'You can\'t delete someone else\'s project.'}), 401
+    try:
+        db.session.delete(project)
+        db.session.commit()
+        return jsonify({'message': f'Project {proj_id} deleted successfully.'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': e}), 500 
+        
+@app.route('/api/<proj_id>/tasks', methods=['GET']) 
+def get_tasks_for_project(proj_id):
+    auth_header = request.headers.get('Authorization')
+    jwt_token = auth_header.split(' ')[1]
+    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    project = Project.query.filter_by(id=proj_id).first()
+    if project is None:
+        return jsonify({'error': f'Project {proj_id} not found'}), 400
+    if project.user_id != decoded['session']['user']['id']:
+        return jsonify({'error': 'You can\'t access someone else\'s project.'}), 401
+    tasks = Task.query.filter_by(proj_id=proj_id)
+    task_list = [
+        {
+            'task_id': task.id,
+            'task_name': task.name,
+            'task_description': task.description,
+            'task_is_done': task.is_done,
+        }
+        for task in tasks 
+    ]
+    return ({'task_list': task_list}), 200
+
+@app.route('/api/<proj_id>/tasks', methods=['POST'])
+def create_task(proj_id):
+    auth_header = request.headers.get('Authorization')
+    jwt_token = auth_header.split(' ')[1]
+    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    project = Project.query.filter_by(id=proj_id).first()
+    if project is None:
+        return jsonify({'error': f'Project {proj_id} not found'}), 400
+    if project.user_id != decoded['session']['user']['id']:
+        return jsonify({'error': 'You can\'t access someone else\'s project.'}), 401
+    new_task_json = request.get_json()
+    if not new_task_json:
+        return jsonify({'error': 'Missing request body.'}), 400 
+    if 'name' not in new_task_json:
+        return jsonify({'error': 'Task name is required.'}), 400 
+    name = new_task_json['name']
+    task = Task(name, proj_id)
+    if 'description' in new_task_json and new_task_json['description'] != "": 
+        task.description = new_task_json['description'] 
+    try: 
+        db.session.add(task)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': e}), 500 
+    return jsonify({'message': 'Task successfully created.'}), 201
+
+@app.route('/api/tasks/<task_id>', methods=['PATCH'])
+def modify_task(task_id):  
+    auth_header = request.headers.get('Authorization')
+    jwt_token = auth_header.split(' ')[1]
+    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    task = Task.query.filter_by(id=task_id).first()
+    if task is None: 
+        return jsonify({'error': f'Task {task_id} not found'}), 400
+    project_with_queried_task = Project.query.filter_by(id=task.proj_id).first()
+    if project_with_queried_task.user_id != decoded['session']['user']['id']:
+        return jsonify({'error': 'You can\'t access someone else\'s task.'}), 401
+    new_task_json = request.get_json() 
+    if 'name' in new_task_json and new_task_json['name'] != task.name:
+        task.name = new_task_json['name']
+    if 'description' in new_task_json and new_task_json['description'] != task.description:
+        task.description = new_task_json['description']
+    if 'is_done' in new_task_json and new_task_json['is_done'] != task.is_done:
+        task.is_done = new_task_json['is_done']
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': e}), 500 
+    return jsonify({'message': 'Task successfully updated.'}), 200
+
+@app.route('/api/tasks/<task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    auth_header = request.headers.get('Authorization')
+    jwt_token = auth_header.split(' ')[1]
+    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    task = Task.query.filter_by(id=task_id).first()
+    if task is None: 
+        return jsonify({'error': f'Task {task_id} not found'}), 400
+    project_with_queried_task = Project.query.filter_by(id=task.proj_id).first()
+    if project_with_queried_task.user_id != decoded['session']['user']['id']:
+        return jsonify({'error': 'You can\'t delete someone else\'s task.'}), 401 
+    try:
+        db.session.delete(task)
+        db.session.commit()
+        return jsonify({'message': f'Task {task_id} deleted successfully.'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': e}), 500 
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+        app.run(debug=True)
