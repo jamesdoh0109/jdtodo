@@ -8,9 +8,10 @@ import Message from "../components/Message";
 import AccountCTA from "../components/AccountCTA";
 
 export default function Signup() {
-  const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  
+  const [error, setError] = useState("");
+  
   const formik = useFormik({
     initialValues: {
       firstname: "",
@@ -24,10 +25,23 @@ export default function Signup() {
     },
   });
 
-  const handleSignup = async (values) => {
-    const signupError = validateSignupInput(values["firstname"], values["lastname"], values["email"], values["password"], values["password2"])
+  const handleSignup = async ({
+    firstname,
+    lastname,
+    email,
+    password,
+    password2,
+  }) => {
+    console.log(firstname);
+    const signupError = validateSignupInput(
+      firstname,
+      lastname,
+      email,
+      password,
+      password2
+    );
     if (signupError) {
-      setError(signupError)
+      setError(signupError);
     }
     try {
       const response = await fetch(
@@ -38,11 +52,11 @@ export default function Signup() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            firstname: values["firstname"],
-            lastname: values["lastname"],
-            email: values["email"],
-            password: values["password"],
-            password2: values["password2"],
+            firstname,
+            lastname,
+            email,
+            password,
+            password2,
           }),
         }
       );
@@ -57,66 +71,62 @@ export default function Signup() {
     }
   };
 
-  const signUpForm = () => {
-    return (
-      <div className="m-auto text-center py-10">
-        {error && <Message error={error} />}
-        <div className="mx-auto flex flex-col gap-5 w-96">
-          <div className="title">
-            <h1 className="text-5xl font-bold">Sign Up</h1>
-          </div>
-          <form
-            className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-            onSubmit={formik.handleSubmit}
-          >
-            <Input
-              id="firstname"
-              type="text"
-              placeholder="First Name"
-              handleChange={formik.handleChange}
-              values={formik.values.firstname}
-            />
-            <Input
-              id="lastname"
-              type="text"
-              placeholder="Last Name"
-              handleChange={formik.handleChange}
-              values={formik.values.lastname}
-            />
-            <Input
-              id="email"
-              type="text"
-              placeholder="Email"
-              handleChange={formik.handleChange}
-              values={formik.values.email}
-            />
-            <Input
-              id="password"
-              type="password"
-              placeholder="Password"
-              handleChange={formik.handleChange}
-              values={formik.values.password}
-            />
-            <Input
-              id="password2"
-              type="password"
-              placeholder="Verify Password"
-              handleChange={formik.handleChange}
-              values={formik.values.password2}
-            />
-            <div>
-              <Button text="Sign Up" />
-            </div>
-          </form>
-          <AccountCTA
-            message="Already have an account? &nbsp;"
-            href="/login"
-            action="Log In"
-          />
+  return (
+    <div className="m-auto text-center py-10">
+      {error && <Message error={error} />}
+      <div className="mx-auto flex flex-col gap-5 w-80">
+        <div className="title">
+          <h1 className="text-5xl font-bold">Sign Up</h1>
         </div>
+        <form
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          onSubmit={formik.handleSubmit}
+        >
+          <Input
+            id="firstname"
+            type="text"
+            placeholder="First Name"
+            handleChange={formik.handleChange}
+            values={formik.values.firstname}
+          />
+          <Input
+            id="lastname"
+            type="text"
+            placeholder="Last Name"
+            handleChange={formik.handleChange}
+            values={formik.values.lastname}
+          />
+          <Input
+            id="email"
+            type="text"
+            placeholder="Email"
+            handleChange={formik.handleChange}
+            values={formik.values.email}
+          />
+          <Input
+            id="password"
+            type="password"
+            placeholder="Password"
+            handleChange={formik.handleChange}
+            values={formik.values.password}
+          />
+          <Input
+            id="password2"
+            type="password"
+            placeholder="Verify Password"
+            handleChange={formik.handleChange}
+            values={formik.values.password2}
+          />
+          <div>
+            <Button text="Sign Up" />
+          </div>
+        </form>
+        <AccountCTA
+          message="Already have an account? &nbsp;"
+          href="/login"
+          action="Log In"
+        />
       </div>
-    );
-  };
-
-  return signUpForm();
+    </div>
+  );
 }

@@ -1,12 +1,12 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { checkAuthAndRedirect } from "./util/auth";
 
 import Root from "./pages/Root";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-
-import { checkAuthAndRedirect } from "./util/auth";
+import Account from "./pages/Account";
 
 function App() {
   const router = createBrowserRouter([
@@ -34,6 +34,11 @@ function App() {
           element: <Dashboard />,
           loader: () => checkAuthAndRedirect("protected"),
         },
+        {
+          path: "/account",
+          element: <Account />,
+          loader: () => checkAuthAndRedirect("protected")
+        }
       ],
     },
   ]);

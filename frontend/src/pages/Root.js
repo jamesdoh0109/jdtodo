@@ -5,9 +5,9 @@ function Root() {
   return (
     <>
       <Navigation />
-      <div className="flex h-screen bg-slate-200">
+      <main className="flex h-screen">
         <Outlet />
-      </div>
+      </main>
     </>
   )
 }

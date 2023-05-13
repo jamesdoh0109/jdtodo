@@ -29,6 +29,7 @@ def login():
     email = login_json['email']
     password = login_json['password'] 
     user = User.query.filter_by(email=email).first()
+    print(user)
     if user is None:
         return jsonify({'error': 'User does not exist.'}), 404 
     if not check_password_hash(user.hashed_password, password):
@@ -36,11 +37,7 @@ def login():
     else:
         user_obj = {'id': user.id, 'name': f'{user.firstname} {user.lastname}', 'email': user.email}
         access_token = create_access_token(identity=user.id)
-        return jsonify({'message': 'Login success.', 'access_token': access_token}), 200 
-    
-# @app.route('/api/logout', methods=['POST'])
-# def logout():
-#     return jsonify({'message': 'Logged out successfully.'}), 200 
+        return jsonify({'message': 'Login success.', 'access_token': access_token, 'user': user_obj}), 200 
 
 def has_empty_fields(*args, req_json):
     for field in args:
@@ -90,43 +87,41 @@ def signup():
     return jsonify({'message': 'User successfully created.'}), 201
 
 @app.route('/api/projects', methods=['GET'])
+@jwt_required()
 def get_projects():
-    auth_header = request.headers.get('Authorization')
-    jwt_token = auth_header.split(' ')[1]
-    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
-    projects = Project.query.filter_by(user_id=decoded['session']['user']['id'])
-    project_list = [{'proj_id': proj.id, 'proj_name': proj.name} for proj in projects]
+    user_id = get_jwt_identity()
+    projects = Project.query.filter_by(user_id=user_id)
+    project_list = [{'proj_id': proj.id, 'proj_name': proj.name, 'date_created': proj.date_created} for proj in projects]
     return jsonify({'projects': project_list}), 200 
 
 @app.route('/api/projects', methods=['POST'])
+@jwt_required()
 def create_project():
-    auth_header = request.headers.get('Authorization')
-    jwt_token = auth_header.split(' ')[1]
-    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    user_id = get_jwt_identity()
     new_project_json = request.get_json()
     if not new_project_json:
         return jsonify({'error': 'Missing request body.'}), 400 
     if 'name' not in new_project_json:
         return jsonify({'error': 'Project name is required.'}), 400 
     name = new_project_json['name']
-    project = Project(name, decoded['session']['user']['id']) 
+    project = Project(name, user_id) 
     try: 
         db.session.add(project)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': e}), 500 
-    return jsonify({'message': 'Project successfully created.'}), 201
+    project_obj = {'proj_id': project.id, 'proj_name': project.name, 'date_created': project.date_created}
+    return jsonify({'message': 'Project successfully created.', 'project': project_obj}), 201
 
 @app.route('/api/projects/<proj_id>', methods=['PATCH'])
 def modify_project_name(proj_id):
-    auth_header = request.headers.get('Authorization')
-    jwt_token = auth_header.split(' ')[1]
-    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    user_id = get_jwt_identity()
+    new_project_json = request.get_json()
     project = Project.query.filter_by(id=proj_id).first()
     if project is None:
         return jsonify({'error': f'Project {proj_id} not found'}), 400
-    if project.user_id != decoded['session']['user']['id']:
+    if project.user_id != user_id:
         return jsonify({'error': 'You can\'t edit someone else\'s project.'}), 401
     name_change_json = request.get_json()
     if not name_change_json:
@@ -142,14 +137,13 @@ def modify_project_name(proj_id):
     return jsonify({'message': 'Project name successfully updated.'}), 200
 
 @app.route('/api/projects/<proj_id>', methods=['DELETE'])
+@jwt_required()
 def delete_project(proj_id):
-    auth_header = request.headers.get('Authorization')
-    jwt_token = auth_header.split(' ')[1]
-    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    user_id = get_jwt_identity()
     project = Project.query.filter_by(id=proj_id).first()
     if project is None:
         return jsonify({'error': f'Project {proj_id} not found'}), 400
-    if project.user_id != decoded['session']['user']['id']:
+    if project.user_id != user_id:
         return jsonify({'error': 'You can\'t delete someone else\'s project.'}), 401
     try:
         db.session.delete(project)
@@ -251,6 +245,12 @@ def delete_task(task_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': e}), 500 
+
+@app.route('/api/protected', methods=['GET'])
+@jwt_required()
+def validate_token():
+    user_id = get_jwt_identity()
+    return jsonify({'message': f'{user_id} authorized.'}), 200
 
 if __name__ == '__main__':
     with app.app_context():
