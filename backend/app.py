@@ -154,14 +154,13 @@ def delete_project(proj_id):
         return jsonify({'error': e}), 500 
         
 @app.route('/api/<proj_id>/tasks', methods=['GET']) 
+@jwt_required()
 def get_tasks_for_project(proj_id):
-    auth_header = request.headers.get('Authorization')
-    jwt_token = auth_header.split(' ')[1]
-    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    user_id = get_jwt_identity()
     project = Project.query.filter_by(id=proj_id).first()
     if project is None:
         return jsonify({'error': f'Project {proj_id} not found'}), 400
-    if project.user_id != decoded['session']['user']['id']:
+    if project.user_id != user_id:
         return jsonify({'error': 'You can\'t access someone else\'s project.'}), 401
     tasks = Task.query.filter_by(proj_id=proj_id)
     task_list = [
@@ -176,14 +175,13 @@ def get_tasks_for_project(proj_id):
     return ({'task_list': task_list}), 200
 
 @app.route('/api/<proj_id>/tasks', methods=['POST'])
+@jwt_required()
 def create_task(proj_id):
-    auth_header = request.headers.get('Authorization')
-    jwt_token = auth_header.split(' ')[1]
-    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    user_id = get_jwt_identity()
     project = Project.query.filter_by(id=proj_id).first()
     if project is None:
         return jsonify({'error': f'Project {proj_id} not found'}), 400
-    if project.user_id != decoded['session']['user']['id']:
+    if project.user_id != user_id:
         return jsonify({'error': 'You can\'t access someone else\'s project.'}), 401
     new_task_json = request.get_json()
     if not new_task_json:
@@ -203,15 +201,14 @@ def create_task(proj_id):
     return jsonify({'message': 'Task successfully created.'}), 201
 
 @app.route('/api/tasks/<task_id>', methods=['PATCH'])
+@jwt_required()
 def modify_task(task_id):  
-    auth_header = request.headers.get('Authorization')
-    jwt_token = auth_header.split(' ')[1]
-    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    user_id = get_jwt_identity()
     task = Task.query.filter_by(id=task_id).first()
     if task is None: 
         return jsonify({'error': f'Task {task_id} not found'}), 400
     project_with_queried_task = Project.query.filter_by(id=task.proj_id).first()
-    if project_with_queried_task.user_id != decoded['session']['user']['id']:
+    if project_with_queried_task.user_id != user_id:
         return jsonify({'error': 'You can\'t access someone else\'s task.'}), 401
     new_task_json = request.get_json() 
     if 'name' in new_task_json and new_task_json['name'] != task.name:
@@ -228,15 +225,14 @@ def modify_task(task_id):
     return jsonify({'message': 'Task successfully updated.'}), 200
 
 @app.route('/api/tasks/<task_id>', methods=['DELETE'])
+@jwt_required()
 def delete_task(task_id):
-    auth_header = request.headers.get('Authorization')
-    jwt_token = auth_header.split(' ')[1]
-    decoded = jwt.decode(jwt_token, key="super-secret-key", algorithms=["HS256"], verify=True)
+    user_id = get_jwt_identity()
     task = Task.query.filter_by(id=task_id).first()
     if task is None: 
         return jsonify({'error': f'Task {task_id} not found'}), 400
     project_with_queried_task = Project.query.filter_by(id=task.proj_id).first()
-    if project_with_queried_task.user_id != decoded['session']['user']['id']:
+    if project_with_queried_task.user_id != user_id:
         return jsonify({'error': 'You can\'t delete someone else\'s task.'}), 401 
     try:
         db.session.delete(task)
