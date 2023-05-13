@@ -1,18 +1,15 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { login, validateLoginInput } from "../util/auth";
-import AuthContext from "../store/auth-context";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import Message from "../components/Message";
 import AccountCTA from "../components/AccountCTA";
-import UserDataContext from "../store/user-data-context";
 
 export default function Login() {
-  const authCtx = useContext(AuthContext);
-  const userCtx = useContext(UserDataContext);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
@@ -27,7 +24,7 @@ export default function Login() {
     },
   });
 
-  const handleLogin = async ({ email, password}) => {
+  const handleLogin = async ({ email, password }) => {
     const loginError = validateLoginInput(email, password);
     if (loginError) {
       setError(loginError);
@@ -48,7 +45,7 @@ export default function Login() {
       if (response.status !== 200) {
         setError(data.error);
       } else {
-        login(authCtx, userCtx, navigate, data)  
+        login(dispatch, navigate, data);
       }
     } catch (e) {
       setError(e);

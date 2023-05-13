@@ -1,20 +1,17 @@
-import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AuthContext from "../store/auth-context";
-import { Navbar } from "flowbite-react";
 import { logout } from "../util/auth";
-import UserDataContext from "../store/user-data-context";
+import { useDispatch, useSelector } from "react-redux";
+import { Navbar } from "flowbite-react";
 
 export default function Navigation() {
-  const authCtx = useContext(AuthContext);
-  const userCtx = useContext(UserDataContext);
+  const dispatch = useDispatch();
 
-  const token = authCtx.token;
+  const token = useSelector((state) => state.auth.token);
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(authCtx, userCtx, navigate);
+    logout(dispatch, navigate);
   };
 
   const loggedOutOptions = (

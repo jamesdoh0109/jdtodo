@@ -1,4 +1,6 @@
 import { redirect } from "react-router-dom";
+import { authActions } from "../store/reducers/auth";
+import { userDataActions } from "../store/reducers/user-data";
 
 function hasEmptyFields(...args) {
   return args.includes("");
@@ -57,24 +59,24 @@ async function checkTokenValidity(token) {
   return false;
 }
 
-export function logout(authCtx, userCtx, navigate) {
+export function logout(dispatch, navigate) {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
-  authCtx.setToken(null);
-  userCtx.setId(-1);
-  userCtx.setFullname("");
-  userCtx.setEmail("");
-  userCtx.setProjects(null);
+  dispatch(authActions.setToken({token: null}))
+  dispatch(userDataActions.setId({id: -1}))
+  dispatch(userDataActions.setFullname({fullname: ""}))
+  dispatch(userDataActions.setEmail({email: ""}))
+  dispatch(userDataActions.setProjects({projects: null}))
   navigate("/");
 }
 
-export function login(authCtx, userCtx, navigate, userData) {
+export function login(dispatch, navigate, userData) {
   localStorage.setItem("token", userData.access_token);
   localStorage.setItem("user", JSON.stringify(userData.user))
-  authCtx.setToken(userData.access_token);
-  userCtx.setId(userData.user.id);
-  userCtx.setFullname(userData.user.name);
-  userCtx.setEmail(userData.user.email);
+  dispatch(authActions.setToken({token: userData.access_token}))
+  dispatch(userDataActions.setId({id: userData.user.id}))
+  dispatch(userDataActions.setFullname({fullname: userData.user.fullname}))
+  dispatch(userDataActions.setEmail({email: userData.user.email}))
   navigate("/dashboard");
 }
 

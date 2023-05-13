@@ -1,19 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import AuthProvider from './store/AuthProvider';
-import UserDataProvider from './store/UserDataProvider';
-import ModalProvider from './store/ModalProvider';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import { Provider } from "react-redux";
+import store from "./store";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <AuthProvider>
-    <UserDataProvider>
-      <ModalProvider>
-        <App />
-      </ModalProvider>
-    </UserDataProvider>
-  </AuthProvider>
+  <Provider store={store}>
+    <App />
+  </Provider>
 );
-

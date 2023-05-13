@@ -7,8 +7,19 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
+import { useEffect } from "react";
+import { useDispatch } from 'react-redux'
+import { initialTokenFetchFromBrowswer } from "./store/reducers/auth";
+import { initialUserDataFetchFromBrowswer } from "./store/reducers/user-data";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initialTokenFetchFromBrowswer());
+    dispatch(initialUserDataFetchFromBrowswer());
+  }, []);
+
   const router = createBrowserRouter([
     {
       path: "/",

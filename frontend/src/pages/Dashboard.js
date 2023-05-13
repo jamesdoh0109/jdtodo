@@ -1,23 +1,21 @@
-import { useContext, useEffect, useState } from "react";
-import AuthContext from "../store/auth-context";
+import { useEffect, useState } from "react";
 import ProjectCard from "../components/ProjectCard";
-import UserDataContext from "../store/user-data-context";
 import ProjectForm from "../components/ProjectForm";
 import { Button } from "flowbite-react";
-import ModalContext from "../store/modal-context";
+import { useDispatch, useSelector } from "react-redux";
+import { modalActions } from "../store/reducers/modal";
+import { userDataActions } from "../store/reducers/user-data";
 
 export default function Dashboard() {
-  const authCtx = useContext(AuthContext);
-  const userCtx = useContext(UserDataContext);
-  const modalCtx = useContext(ModalContext);
+  const dispatch = useDispatch();
 
-  const projects = userCtx.projects;
+  const token = useSelector((state) => state.auth.token);
+  const projects = useSelector((state) => state.userData.projects);
 
   // loading === true on initial render (i.e. first time fetching projects)
   const [isLoading, setIsLoading] = useState(!projects);
 
   const [onCreateNewProject, setOnCreateNewProject] = useState(true);
-
 
   useEffect(() => {
     const getProjects = async () => {
@@ -27,17 +25,17 @@ export default function Dashboard() {
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + authCtx.token,
+              Authorization: "Bearer " + token,
             },
           }
         );
         const data = await response.json();
-        console.log(data.projects)
+        console.log(data.projects);
         const projects = data.projects;
-        userCtx.setProjects(projects);
+        dispatch(userDataActions.setProjects({ projects: projects }));
         setIsLoading(false);
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
     };
     if (!projects) {
@@ -47,13 +45,11 @@ export default function Dashboard() {
 
   const openCreateProjectModal = () => {
     setOnCreateNewProject(true);
-    modalCtx.setIsModalOpen(true)
-  }
+    dispatch(modalActions.toggle());
+  };
 
   const createProjectBtn = (
-    <div
-      style={{ marginTop: "8rem" }}
-    >
+    <div style={{ marginTop: "8rem" }}>
       <Button onClick={openCreateProjectModal}>Create new project</Button>
     </div>
   );
@@ -61,10 +57,8 @@ export default function Dashboard() {
   return (
     <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
       <div style={{ width: "80%" }}>
-        <ProjectForm token={authCtx.token} addNew={onCreateNewProject} />
-        {isLoading && (
-          <p style={{ marginTop: "8rem" }}>Loading...</p>
-        )}
+        <ProjectForm token={token} addNew={onCreateNewProject} />
+        {isLoading && <p style={{ marginTop: "8rem" }}>Loading...</p>}
         {!isLoading && projects?.length === 0 && (
           <>
             {createProjectBtn}

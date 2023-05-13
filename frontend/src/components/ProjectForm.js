@@ -1,13 +1,15 @@
-import { Modal, Button, Label, TextInput, Checkbox } from "flowbite-react";
-import { useContext, useState } from "react";
-import UserDataContext from "../store/user-data-context";
-import ModalContext from "../store/modal-context";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Modal, Button, Label, TextInput } from "flowbite-react";
+import { modalActions } from "../store/reducers/modal";
+import { userDataActions } from "../store/reducers/user-data";
 
 export default function ModalForm({ token, addNew }) {
-  const userCtx = useContext(UserDataContext);
-  const modalCtx = useContext(ModalContext);
+  const dispatch = useDispatch();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const modalOpen = useSelector((state) => state.modal.modalOpen);
+  const projects = useSelector((state) => state.userData.projects);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e) => {
@@ -34,11 +36,13 @@ export default function ModalForm({ token, addNew }) {
           proj_id: data.project.proj_id,
           proj_name: data.project.proj_name,
         };
-        userCtx.setProjects([...userCtx.projects, newProject]);
+        dispatch(
+          userDataActions.setProjects({ projects: [...projects, newProject] })
+        );
       } catch (e) {
         console.log(e);
       }
-      modalCtx.setIsModalOpen(false);
+      dispatch(modalActions.toggle());
       setIsLoading(false);
       e.target.reset();
     };
@@ -65,28 +69,30 @@ export default function ModalForm({ token, addNew }) {
           proj_id: data.project.proj_id,
           proj_name: data.project.proj_name,
         };
-        userCtx.setProjects([...userCtx.projects, newProject]);
+        dispatch(
+          userDataActions.setProjects({ projects: [...projects, newProject] })
+        );
       } catch (e) {
         console.log(e);
       }
-      modalCtx.setIsModalOpen(false);
+      dispatch(modalActions.toggle());
       setIsLoading(false);
       e.target.reset();
-    }
+    };
     if (addNew) {
       createProject();
     } else {
-      editProject()
+      editProject();
     }
   };
 
   return (
     <>
       <Modal
-        show={modalCtx.isModalOpen}
+        show={modalOpen}
         size="md"
         popup={true}
-        onClose={() => modalCtx.setIsModalOpen(false)}
+        onClose={() => dispatch(modalActions.toggle())}
       >
         <Modal.Header />
         <Modal.Body>
