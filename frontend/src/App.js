@@ -1,16 +1,16 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { checkAuthAndRedirect } from "./util/auth";
-
+import { initialTokenFetchFromBrowswer } from "./store/reducers/auth";
+import { initialUserDataFetchFromBrowswer } from "./store/reducers/user-data";
 import Root from "./pages/Root";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard/index";
 import Account from "./pages/Account";
-import { useEffect } from "react";
-import { useDispatch } from 'react-redux'
-import { initialTokenFetchFromBrowswer } from "./store/reducers/auth";
-import { initialUserDataFetchFromBrowswer } from "./store/reducers/user-data";
+import ProjectDetail from "./pages/Dashboard/ProjectDetail";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     dispatch(initialTokenFetchFromBrowswer());
     dispatch(initialUserDataFetchFromBrowswer());
-  }, []);
+  }, [dispatch]);
 
   const router = createBrowserRouter([
     {
@@ -46,10 +46,15 @@ function App() {
           loader: () => checkAuthAndRedirect("protected"),
         },
         {
+          path: "/dashboard/:projectId",
+          element: <ProjectDetail />,
+          loader: () => checkAuthAndRedirect("protected"),
+        },
+        {
           path: "/account",
           element: <Account />,
-          loader: () => checkAuthAndRedirect("protected")
-        }
+          loader: () => checkAuthAndRedirect("protected"),
+        },
       ],
     },
   ]);

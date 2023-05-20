@@ -4,7 +4,8 @@ const userDataSlice = createSlice({
   name: "userData",
   initialState: {
     id: -1,
-    fullname: "",
+    firstname: "",
+    lastname: "",
     email: "",
     projects: null,
   },
@@ -12,8 +13,11 @@ const userDataSlice = createSlice({
     setId(state, action) {
       state.id = action.payload.id;
     },
-    setFullname(state, action) {
-      state.fullname = action.payload.fullname;
+    setFirstname(state, action) {
+      state.firstname = action.payload.firstname;
+    },
+    setLastname(state, action) {
+      state.lastname = action.payload.lastname;
     },
     setEmail(state, action) {
       state.email = action.payload.email;
@@ -35,8 +39,13 @@ export const initialUserDataFetchFromBrowswer = () => {
         })
       );
       dispatch(
-        userDataActions.setFullname({
-          fullname: formattedUser.fullname,
+        userDataActions.setFirstname({
+          firstname: formattedUser.firstname,
+        })
+      );
+      dispatch(
+        userDataActions.setLastname({
+          lastname: formattedUser.lastname,
         })
       );
       dispatch(

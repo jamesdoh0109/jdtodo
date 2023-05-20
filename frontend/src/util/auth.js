@@ -15,20 +15,29 @@ function checkValidPassword(password) {
   return password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
 }
 
-export function validateLoginInput(username, password) {
-  if (hasEmptyFields(username, password)) {
+function validateEditUserInput({ firstname, lastname, email }) {
+  if (hasEmptyFields(firstname, lastname, email)) {
+    return "You can't have an empty field.";
+  } else if (!checkValidEmail(email)) {
+    return "Email is not valid.";
+  }
+  return null;
+}
+
+function validateLoginInput({ email, password }) {
+  if (hasEmptyFields(email, password)) {
     return "Both fields are required.";
   }
   return null;
 }
 
-export function validateSignupInput(
+function validateSignupInput({
   firstname,
   lastname,
   email,
   password,
-  password2
-) {
+  password2,
+}) {
   if (hasEmptyFields(firstname, lastname, email, password, password2)) {
     return "All 5 fields are required.";
   } else if (!checkValidEmail(email)) {
@@ -39,6 +48,18 @@ export function validateSignupInput(
     return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number.";
   }
   return null;
+}
+
+export function checkForInputErrors(form) {
+  const numInputs = Object.keys(form).length;
+  switch (numInputs) {
+    case 2:
+      return validateLoginInput(form);
+    case 3:
+      return validateEditUserInput(form);
+    default:
+      return validateSignupInput(form);
+  }
 }
 
 async function checkTokenValidity(token) {
@@ -52,31 +73,29 @@ async function checkTokenValidity(token) {
     }
   );
   const data = await response.json();
-  console.log(data);
-  if (data.message) {
-    return true;
-  }
-  return false;
+  return data.message ? true : false;
 }
 
 export function logout(dispatch, navigate) {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
-  dispatch(authActions.setToken({token: null}))
-  dispatch(userDataActions.setId({id: -1}))
-  dispatch(userDataActions.setFullname({fullname: ""}))
-  dispatch(userDataActions.setEmail({email: ""}))
-  dispatch(userDataActions.setProjects({projects: null}))
+  dispatch(authActions.setToken({ token: null }));
+  dispatch(userDataActions.setId({ id: -1 }));
+  dispatch(userDataActions.setFirstname({ firstname: "" }));
+  dispatch(userDataActions.setLastname({ lastname: "" }));
+  dispatch(userDataActions.setEmail({ email: "" }));
+  dispatch(userDataActions.setProjects({ projects: null }));
   navigate("/");
 }
 
 export function login(dispatch, navigate, userData) {
   localStorage.setItem("token", userData.access_token);
-  localStorage.setItem("user", JSON.stringify(userData.user))
-  dispatch(authActions.setToken({token: userData.access_token}))
-  dispatch(userDataActions.setId({id: userData.user.id}))
-  dispatch(userDataActions.setFullname({fullname: userData.user.fullname}))
-  dispatch(userDataActions.setEmail({email: userData.user.email}))
+  localStorage.setItem("user", JSON.stringify(userData.user));
+  dispatch(authActions.setToken({ token: userData.access_token }));
+  dispatch(userDataActions.setId({ id: userData.user.id }));
+  dispatch(userDataActions.setFirstname({ firstname: userData.user.firstname }));
+  dispatch(userDataActions.setLastname({ lastname: userData.user.lastname }));
+  dispatch(userDataActions.setEmail({ email: userData.user.email }));
   navigate("/dashboard");
 }
 
