@@ -8,7 +8,7 @@ class User(db.Model):
     lastname = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     hashed_password = db.Column(db.String(128), nullable=False)
-    projects = db.relationship('Project', backref='user', lazy=True)
+    projects = db.relationship('Project', backref='user', lazy=True, cascade="all, delete")
     
     def __init__(self, firstname, lastname, email, hashed_password):
         self.firstname = firstname
