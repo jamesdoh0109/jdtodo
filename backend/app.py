@@ -101,8 +101,10 @@ def create_project():
     if not new_project_json:
         return jsonify({'error': 'Missing request body.'}), 400 
     if 'name' not in new_project_json:
-        return jsonify({'error': 'Project name is required.'}), 400 
+        return jsonify({'error': 'Name is required.'}), 400 
     name = new_project_json['name']
+    if len(name) > 25:
+        return jsonify({'error': 'Name must be less than 25 characters.'}), 400 
     project = Project(name, user_id) 
     try: 
         db.session.add(project)
@@ -241,12 +243,6 @@ def delete_task(task_id):
         db.session.rollback()
         return jsonify({'error': e}), 500 
 
-@app.route('/api/protected', methods=['GET'])
-@jwt_required()
-def validate_token():
-    user_id = get_jwt_identity()
-    return jsonify({'message': f'{user_id} authorized.'}), 200
-
 @app.route('/api/user/<user_id>/details', methods=['PATCH'])
 @jwt_required()
 def modify_user_details(user_id):
@@ -319,6 +315,8 @@ def modify_user_password(user_id):
         return jsonify({'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number.'}), 400
     if not check_password_hash(user.hashed_password, current_password):
         return jsonify({'error': 'Your current password is incorrect.'}), 400
+    if check_password_hash(user.hashed_password, password):
+        return jsonify({'error': 'New password must be different from your current one.'}), 400
     user.hashed_password = generate_password_hash(password)
     try:
         db.session.commit()
@@ -327,8 +325,14 @@ def modify_user_password(user_id):
         return jsonify({'error': e}), 500 
     return jsonify({'message': 'Password successfully updated.'}), 200
 
+@app.route('/api/protected', methods=['GET'])
+@jwt_required()
+def validate_token():
+    user_id = get_jwt_identity()
+    return jsonify({'message': f'{user_id} authorized.'}), 200
+
 if __name__ == '__main__':
     with app.app_context():
-        # db.drop_all()
+        #db.drop_all()
         db.create_all()
         app.run(debug=True)
