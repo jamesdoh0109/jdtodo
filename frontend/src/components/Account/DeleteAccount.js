@@ -5,21 +5,16 @@ import useFetch from "../../hooks/useFetch";
 import Button from "../common/Button";
 
 export default function DeleteAccount() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const id = useSelector((state) => state.userData.id);
   const firstname = useSelector((state) => state.userData.firstname);
   const lastname = useSelector((state) => state.userData.lastname);
   const fullname = `${firstname} ${lastname}`;
-
   const token = useSelector((state) => state.auth.token);
 
   const { isLoading, fetchData } = useFetch();
 
-  const redirectAfterDelete = () => {
-    logout(dispatch, navigate);
-  };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleDeleteAccount = () => {
     const requestConfig = {
@@ -30,7 +25,7 @@ export default function DeleteAccount() {
         Authorization: "Bearer " + token,
       },
     };
-    fetchData(requestConfig, redirectAfterDelete);
+    fetchData(requestConfig, () => logout(dispatch, navigate));
   };
 
   return (

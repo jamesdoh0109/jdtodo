@@ -25,12 +25,19 @@ export default function Navigation() {
     <Navbar.Collapse>
       <NavLink to="/dashboard">Dashboard</NavLink>
       <NavLink to="/account">Account</NavLink>
-      <NavLink onClick={handleLogout} to="/">Log Out</NavLink>
+      <NavLink onClick={handleLogout} to="/">
+        Log Out
+      </NavLink>
     </Navbar.Collapse>
   );
 
   return (
-    <Navbar fluid={true} rounded={true} className="fixed w-full bg-inherit">
+    <Navbar
+      fluid={true}
+      rounded={true}
+      className="fixed w-full"
+      style={{ backgroundColor: "rgb(226 232 240)" }} 
+    >
       <NavLink to={token ? "/dashboard" : "/"}>
         <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white ml-3">
           JDTodo

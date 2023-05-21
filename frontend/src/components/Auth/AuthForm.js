@@ -2,16 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login, checkForInputErrors } from "../../util/auth";
+import { prepareForm } from "../../util/form";
 import useFetch from "../../hooks/useFetch";
 import Button from "../common/Button";
 import Input from "../common/Input";
 import Message from "../common/Message";
 import AccountCTA from "./AccountCTA";
-
-const prepareForm = (formInputs) => {
-  // create the initial form object (input's names as keys and empty string as the initial values)
-  return formInputs.reduce((r, v) => ({ ...r, [v.name]: "" }), {});
-};
 
 export default function AuthForm({
   title,
@@ -38,8 +34,9 @@ export default function AuthForm({
     const inputError = checkForInputErrors(form);
     if (inputError) {
       setStatus({ error: true, message: inputError });
+    } else {
+      submitForm();
     }
-    submitForm();
   };
 
   const handleResponse = async (res) => {
@@ -58,8 +55,9 @@ export default function AuthForm({
   };
 
   const submitForm = async () => {
+    const endpoint = `/api/${title.replace(/\s/g, "").toLowerCase()}`;
     const requestConfig = {
-      url: "/api/" + title.replace(/\s/g, "").toLowerCase(),
+      url: endpoint,
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
