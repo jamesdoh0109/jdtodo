@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../../store/reducers/user-data";
-import { prepareForm } from "../../util/form";
+import { prepareForm, trimFormTrailingSpaces } from "../../util/form";
 import { checkForInputErrors } from "../../util/auth";
 import useFetch from "../../hooks/useFetch";
 import Input from "../common/Input";
@@ -20,24 +20,18 @@ export function AccountForm({ title, formInputs }) {
 
   const dispatch = useDispatch();
 
-  const validateInputs = () => {
-    const editUserError = checkForInputErrors(form);
-    if (editUserError) {
-      setStatus({ error: true, message: editUserError });
-    }
-  };
-
   const handleOnChange = (e) => {
     setForm((prevForm) => ({ ...prevForm, [e.target.name]: e.target.value }));
   };
 
   const handleResponse = async (res) => {
+    const formattedForm = trimFormTrailingSpaces(form)
     if (res.status === 200) {
       if (isEditProfileForm) {
-        dispatch(userDataActions.setFirstname({ firstname: form.firstname }));
-        dispatch(userDataActions.setLastname({ lastname: form.lastname }));
-        dispatch(userDataActions.setEmail({ email: form.email }));
-        localStorage.setItem("user", JSON.stringify({ ...form, id: id }));
+        dispatch(userDataActions.setFirstname({ firstname: formattedForm.firstname }));
+        dispatch(userDataActions.setLastname({ lastname: formattedForm.lastname }));
+        dispatch(userDataActions.setEmail({ email: formattedForm.email }));
+        localStorage.setItem("user", JSON.stringify({ ...formattedForm, id: id }));
       }
       setStatus({ error: false, message: "Successfully updated!" });
     } else {
@@ -48,11 +42,20 @@ export function AccountForm({ title, formInputs }) {
         setStatus({ error: true, message: e });
       }
     }
+    setForm(formattedForm)
   };
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    isEditProfileForm && validateInputs();
+    const inputError = checkForInputErrors(form);
+    if (inputError) {
+      setStatus({ error: true, message: inputError });
+    } else {
+      submitForm();
+    }
+  };
+
+  const submitForm = () => {
     const endpoint = `/api/user/${id}${
       isEditProfileForm ? "/details" : "/password"
     }`;
@@ -63,7 +66,7 @@ export function AccountForm({ title, formInputs }) {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify(form),
+      body: JSON.stringify(trimFormTrailingSpaces(form)),
     };
     fetchData(requestConfig, handleResponse);
   };
@@ -82,7 +85,7 @@ export function AccountForm({ title, formInputs }) {
   const formComponent = (
     <form className="pt-7 pb-8 mb-4" onSubmit={handleOnSubmit}>
       {formInputs.map(({ name, label, type }) => (
-        <>
+        <div key={name}>
           <label htmlFor={name}>{label}</label>
           <Input
             id={name}
@@ -91,7 +94,7 @@ export function AccountForm({ title, formInputs }) {
             onChange={handleOnChange}
             value={form[name]}
           />
-        </>
+        </div>
       ))}
       <Button
         text={isLoading ? "Saving changes..." : "Save changes"}

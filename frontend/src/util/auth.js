@@ -15,6 +15,21 @@ function checkValidPassword(password) {
   return password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
 }
 
+function validateChangePasswordInput({
+  currentPassword,
+  newPassword,
+  confirmPassword,
+}) {
+  if (hasEmptyFields(currentPassword, newPassword, confirmPassword)) {
+    return "You can't have an empty field.";
+  } else if (newPassword !== confirmPassword) {
+    return "Your passwords don't match.";
+  } else if (!checkValidPassword(newPassword)) {
+    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number.";
+  }
+  return null;
+}
+
 function validateEditUserInput({ firstname, lastname, email }) {
   if (hasEmptyFields(firstname, lastname, email)) {
     return "You can't have an empty field.";
@@ -56,7 +71,11 @@ export function checkForInputErrors(form) {
     case 2:
       return validateLoginInput(form);
     case 3:
-      return validateEditUserInput(form);
+      if ("currentPassword" in form) {
+        return validateChangePasswordInput(form);
+      } else {
+        return validateEditUserInput(form);
+      }
     default:
       return validateSignupInput(form);
   }
@@ -93,7 +112,9 @@ export function login(dispatch, navigate, userData) {
   localStorage.setItem("user", JSON.stringify(userData.user));
   dispatch(authActions.setToken({ token: userData.access_token }));
   dispatch(userDataActions.setId({ id: userData.user.id }));
-  dispatch(userDataActions.setFirstname({ firstname: userData.user.firstname }));
+  dispatch(
+    userDataActions.setFirstname({ firstname: userData.user.firstname })
+  );
   dispatch(userDataActions.setLastname({ lastname: userData.user.lastname }));
   dispatch(userDataActions.setEmail({ email: userData.user.email }));
   navigate("/dashboard");

@@ -2,21 +2,25 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
+import { projectNameTooLong } from "../../util/form";
 import useFetch from "../../hooks/useFetch";
 import Input from "../common/Input";
 import Modal from "../common/Modal";
 import Button from "../common/Button";
+import Message from "../common/Message";
 
 export default function ProjectForm({ token }) {
   const projects = useSelector((state) => state.userData.projects);
   const creatingNew = useSelector((state) => state.projectForm.creatingNew);
-  const projectToBeEdited = useSelector((state) => state.projectForm.projectToBeEdited);
+  const projectToBeEdited = useSelector(
+    (state) => state.projectForm.projectToBeEdited
+  );
 
   const [projectName, setProjectName] = useState(
     projectToBeEdited ? projectToBeEdited.name : ""
   );
 
-  const { isLoading, fetchData } = useFetch();
+  const { status, setStatus, isLoading, fetchData } = useFetch();
 
   const dispatch = useDispatch();
 
@@ -41,25 +45,10 @@ export default function ProjectForm({ token }) {
     }
   };
 
-  const editProject = async (e) => {
-    e.preventDefault();
-    const requestConfig = {
-      url: "/api/projects/" + projectToBeEdited.id,
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({
-        name: projectName,
-      }),
-    };
-    fetchData(requestConfig, displayEditedProject);
-  };
-
   const displayNewProject = async (res) => {
     try {
       const data = await res.json();
+      console.log(data);
       const newProject = {
         dateCreated: data.project.date_created,
         id: data.project.proj_id,
@@ -74,20 +63,38 @@ export default function ProjectForm({ token }) {
     }
   };
 
-  const createProject = async (e) => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
+    if (projectNameTooLong(projectName.trim())) {
+      setStatus({
+        error: true,
+        message: "Name must be less than 25 characters.",
+      });
+    } else {
+      submitForm();
+    }
+  };
+
+  const submitForm = () => {
+    const endpoint = `/api/projects${
+      !creatingNew ? "/" + projectToBeEdited.id : ""
+    }`;
+    console.log(endpoint);
     const requestConfig = {
-      url: "/api/projects",
-      method: "POST",
+      url: endpoint,
+      method: creatingNew ? "POST" : "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
-        name: projectName,
+        name: projectName.trim(),
       }),
     };
-    fetchData(requestConfig, displayNewProject);
+    fetchData(
+      requestConfig,
+      creatingNew ? displayNewProject : displayEditedProject
+    );
   };
 
   const handleProjectNameChange = (e) => {
@@ -144,7 +151,7 @@ export default function ProjectForm({ token }) {
 
   const formButtons = (
     <div className="w-full">
-      {creatingNew ? createButton  : editButton}
+      {creatingNew ? createButton : editButton}
       {closeButton}
     </div>
   );
@@ -152,7 +159,8 @@ export default function ProjectForm({ token }) {
   return (
     <>
       <Modal>
-        <form onSubmit={creatingNew ? createProject : editProject}>
+        {status.error && <Message errorMsg={status.message} />}
+        <form onSubmit={handleOnSubmit}>
           <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
             {formTitle}
             {formInput}

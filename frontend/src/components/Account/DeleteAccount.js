@@ -32,7 +32,7 @@ export default function DeleteAccount() {
     <>
       <h1 className="text-2xl font-medium">Delete Account</h1>
       <p className="pt-7 pb-8">
-        Hello <h3 className="font-bold inline">{fullname}</h3>
+        Hello <span className="font-bold inline">{fullname}</span>
         !
         <br />
         <br />

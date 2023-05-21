@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login, checkForInputErrors } from "../../util/auth";
-import { prepareForm } from "../../util/form";
+import { prepareForm, trimFormTrailingSpaces } from "../../util/form";
 import useFetch from "../../hooks/useFetch";
 import Button from "../common/Button";
 import Input from "../common/Input";
@@ -54,13 +54,13 @@ export default function AuthForm({
     }
   };
 
-  const submitForm = async () => {
+  const submitForm = () => {
     const endpoint = `/api/${title.replace(/\s/g, "").toLowerCase()}`;
     const requestConfig = {
       url: endpoint,
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify(trimFormTrailingSpaces(form)),
     };
     fetchData(requestConfig, handleResponse);
   };
