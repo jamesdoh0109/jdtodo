@@ -168,12 +168,14 @@ def get_tasks_for_project(proj_id):
         {
             'task_id': task.id,
             'task_name': task.name,
+            'task_deadline': task.deadline,
+            'task_status': task.status,
             'task_description': task.description,
             'task_is_done': task.is_done,
         }
         for task in tasks 
     ]
-    return ({'task_list': task_list}), 200
+    return ({'tasks': task_list}), 200
 
 @app.route('/api/<proj_id>/tasks', methods=['POST'])
 @jwt_required()
@@ -189,10 +191,15 @@ def create_task(proj_id):
         return jsonify({'error': 'Missing request body.'}), 400 
     if 'name' not in new_task_json:
         return jsonify({'error': 'Task name is required.'}), 400 
+    if 'deadline' not in new_task_json:
+        return jsonify({'error': 'Deadline is required.'}), 400 
     name = new_task_json['name']
-    task = Task(name, proj_id)
+    deadline = new_task_json['deadline']
+    task = Task(name, deadline, proj_id)
     if 'description' in new_task_json and new_task_json['description'] != "": 
         task.description = new_task_json['description'] 
+    if 'status' in new_task_json and new_task_json['status'] != "": 
+        task.status = new_task_json['status'] 
     try: 
         db.session.add(task)
         db.session.commit()

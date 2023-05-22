@@ -26,17 +26,18 @@ export default function ProjectForm({ token }) {
 
   const displayEditedProject = async (res) => {
     try {
-      const newProject = {
+      const editedProject = {
         dateCreated: projectToBeEdited.dateCreated,
         id: projectToBeEdited.id,
         name: projectName,
+        tasks: null,
       };
       const filteredProjects = projects.filter(
         (project) => project.id !== projectToBeEdited.id
       );
       dispatch(
         userDataActions.setProjects({
-          projects: [...filteredProjects, newProject],
+          projects: [...filteredProjects, editedProject],
         })
       );
       dispatch(modalActions.toggle());
@@ -53,6 +54,7 @@ export default function ProjectForm({ token }) {
         dateCreated: data.project.date_created,
         id: data.project.proj_id,
         name: data.project.proj_name,
+        tasks: null,
       };
       dispatch(
         userDataActions.setProjects({ projects: [...projects, newProject] })

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
@@ -13,6 +13,7 @@ export default function Dashboard() {
   const token = useSelector((state) => state.auth.token);
   const projects = useSelector((state) => state.userData.projects);
   const modalOpen = useSelector((state) => state.modal.modalOpen);
+  const [initialLoading, setInitialLoading] = useState(true); 
 
   const { isLoading, fetchData } = useFetch();
 
@@ -20,7 +21,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // only make request on initial render of the screen (i.e. when projects is undefined)
-    if (!projects) {
+    if (!projects && initialLoading) {
       const populateProjects = async (res) => {
         try {
           const data = await res.json();
@@ -28,6 +29,7 @@ export default function Dashboard() {
             id: project.proj_id,
             name: project.proj_name,
             dateCreated: project.date_created,
+            tasks: null,
           }));
           dispatch(userDataActions.setProjects({ projects: projects }));
         } catch (e) {
@@ -43,8 +45,9 @@ export default function Dashboard() {
         },
       };
       fetchData(requestConfig, populateProjects);
+      setInitialLoading(false);
     }
-  }, [fetchData, dispatch, projects, token]);
+  }, [fetchData, dispatch, projects, token, initialLoading]);
 
   const openCreateProjectModal = () => {
     dispatch(projectFormActions.onCreateProject());
