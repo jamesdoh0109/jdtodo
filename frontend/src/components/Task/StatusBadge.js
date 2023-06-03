@@ -2,11 +2,11 @@ import { Badge } from "flowbite-react";
 
 export default function StatusBadge({ status }) {
   const color =
-    status === "Complete"
+    status === "Finished"
       ? "success"
-      : status === "In Progress"
+      : status === "In progress"
       ? "warning"
       : "failure";
 
-  return <Badge color={color}>{status}</Badge>;
+  return <Badge size="xs" color={color}>{status}</Badge>;
 }

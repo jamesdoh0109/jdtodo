@@ -11,10 +11,8 @@ import Message from "../common/Message";
 
 export default function ProjectForm({ token }) {
   const projects = useSelector((state) => state.userData.projects);
-  const creatingNew = useSelector((state) => state.projectForm.creatingNew);
-  const projectToBeEdited = useSelector(
-    (state) => state.projectForm.projectToBeEdited
-  );
+  const creatingNew = useSelector((state) => state.form.creatingNew);
+  const projectToBeEdited = useSelector((state) => state.form.itemToBeEdited);
 
   const [projectName, setProjectName] = useState(
     projectToBeEdited ? projectToBeEdited.name : ""
@@ -78,7 +76,6 @@ export default function ProjectForm({ token }) {
     const endpoint = `/api/projects${
       !creatingNew ? "/" + projectToBeEdited.id : ""
     }`;
-    console.log(endpoint);
     const requestConfig = {
       url: endpoint,
       method: creatingNew ? "POST" : "PATCH",
@@ -99,6 +96,24 @@ export default function ProjectForm({ token }) {
   const handleProjectNameChange = (e) => {
     setProjectName(e.target.value);
   };
+
+  const formTitle = (
+    <h2 className="text-xl font-medium text-gray-900 dark:text-white">
+      {creatingNew ? "Create a new project" : "Edit project"}
+    </h2>
+  );
+
+  const formInput = (
+    <div>
+      <Input
+        id="project-name"
+        type="text"
+        placeholder="e.g. final exam prep"
+        onChange={handleProjectNameChange}
+        value={projectName}
+      />
+    </div>
+  );
 
   const createButton = (
     <Button
@@ -127,27 +142,6 @@ export default function ProjectForm({ token }) {
     />
   );
 
-  const formTitle = (
-    <h2 className="text-xl font-medium text-gray-900 dark:text-white">
-      {creatingNew ? "Create a new project" : "Edit project"}
-    </h2>
-  );
-
-  const formInput = (
-    <div>
-      <div className="mb-2 block">
-        <label htmlFor="project-name" value="Project name" />
-      </div>
-      <Input
-        id="project-name"
-        type="text"
-        placeholder="e.g. final exam prep"
-        onChange={handleProjectNameChange}
-        value={projectName}
-      />
-    </div>
-  );
-
   const formButtons = (
     <div className="w-full">
       {creatingNew ? createButton : editButton}
@@ -156,17 +150,15 @@ export default function ProjectForm({ token }) {
   );
 
   return (
-    <>
-      <Modal>
-        {status.error && <Message errorMsg={status.message} />}
-        <form onSubmit={handleOnSubmit}>
-          <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
-            {formTitle}
-            {formInput}
-            {formButtons}
-          </div>
-        </form>
-      </Modal>
-    </>
+    <Modal>
+      {status.error && <Message errorMsg={status.message} />}
+      <form onSubmit={handleOnSubmit}>
+        <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
+          {formTitle}
+          {formInput}
+          {formButtons}
+        </div>
+      </form>
+    </Modal>
   );
 }

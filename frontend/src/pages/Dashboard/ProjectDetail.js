@@ -1,14 +1,19 @@
-import { useParams } from "react-router-dom";
-import TaskTable from "../../components/Task/TaskTable";
 import { useEffect } from "react";
-import useFetch from "../../hooks/useFetch";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../../store/reducers/user-data";
+import { formActions } from "../../store/reducers/form";
+import { modalActions } from "../../store/reducers/modal";
+import useFetch from "../../hooks/useFetch";
+import TaskTable from "../../components/Task/TaskTable";
 import Loading from "../../components/common/Loading";
+import Button from "../../components/common/Button";
+import TaskForm from "../../components/Task/TaskForm";
 
 export default function ProjectDetail() {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
+  const modalOpen = useSelector((state) => state.modal.modalOpen);
   const tasksForProjects = useSelector(
     (state) => state.userData.tasksForProjects
   );
@@ -21,7 +26,7 @@ export default function ProjectDetail() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('Project Detail rendered');
+    // console.log("Project Detail rendered");
     if (!tasksForCurrentProject) {
       const populateTasks = async (res) => {
         try {
@@ -55,14 +60,52 @@ export default function ProjectDetail() {
       };
       fetchData(requestConfig, populateTasks);
     }
-  }, [id, token, tasksForProjects, tasksForCurrentProject]);
+  }, [id, token]);
+
+  const openCreateTaskModal = () => {
+    dispatch(formActions.onCreate());
+    dispatch(modalActions.toggle());
+  };
+
+  const createTaskButton = (
+    <div className="mt-32">
+      <Button text="Create new task" onClick={openCreateTaskModal} />
+    </div>
+  );
+
+  const dashboardWithNoTasks = (
+    <>
+      {createTaskButton}
+      <p className="mt-4">You currently don't have any tasks.</p>
+    </>
+  );
+
+  const dashboardWithTasks = (
+    <>
+      {createTaskButton}
+      <div className="mt-4">
+        <TaskTable tasks={tasksForCurrentProject?.tasks} />
+      </div>
+    </>
+  );
 
   return (
-    <div className="mt-12 w-full flex justify-center">
-      <div className="w-5/6">
+    <div className="w-full flex justify-center">
+      <div className="w-4/5">
+        {modalOpen && (
+          <TaskForm
+            projectId={id}
+            tasksForProjects={tasksForProjects}
+            tasksForCurrentProject={tasksForCurrentProject}
+          />
+        )}
         {isLoading && <Loading />}
-        {!isLoading && tasksForCurrentProject?.tasks.length === 0 && <>No tasks!</>}
-        {!isLoading && tasksForCurrentProject?.tasks.length > 0 && <TaskTable />}
+        {!isLoading &&
+          tasksForCurrentProject?.tasks.length === 0 &&
+          dashboardWithNoTasks}
+        {!isLoading &&
+          tasksForCurrentProject?.tasks.length > 0 &&
+          dashboardWithTasks}
       </div>
     </div>
   );

@@ -42,9 +42,10 @@ class Task(db.Model):
     is_done = db.Column(db.Boolean, default=False)
     proj_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
 
-    def __init__(self, name, deadline, proj_id):
+    def __init__(self, name, deadline, status, proj_id):
         self.name = name 
         self.deadline = deadline
+        self.status = status 
         self.proj_id = proj_id
 
     def __repr__(self):

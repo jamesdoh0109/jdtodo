@@ -193,20 +193,22 @@ def create_task(proj_id):
         return jsonify({'error': 'Task name is required.'}), 400 
     if 'deadline' not in new_task_json:
         return jsonify({'error': 'Deadline is required.'}), 400 
+    if 'status' not in new_task_json:
+        return jsonify({'error': 'Status is required.'}), 400
     name = new_task_json['name']
     deadline = new_task_json['deadline']
-    task = Task(name, deadline, proj_id)
+    status = new_task_json['status']
+    task = Task(name, deadline, status, proj_id)
     if 'description' in new_task_json and new_task_json['description'] != "": 
         task.description = new_task_json['description'] 
-    if 'status' in new_task_json and new_task_json['status'] != "": 
-        task.status = new_task_json['status'] 
     try: 
         db.session.add(task)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': e}), 500 
-    return jsonify({'message': 'Task successfully created.'}), 201
+    task_obj = {'task_id': task.id, 'task_name': task.name, 'task_deadline': task.deadline, 'task_description': task.description, 'task_status': task.status, 'task_is_done': task.is_done}
+    return jsonify({'message': 'Task successfully created.', 'task': task_obj}), 201
 
 @app.route('/api/tasks/<task_id>', methods=['PATCH'])
 @jwt_required()

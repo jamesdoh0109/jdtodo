@@ -1,32 +1,30 @@
-import { Table, Checkbox } from "flowbite-react";
-import StatusBadge from "./StatusBadge";
+import { Table } from "flowbite-react";
+import TaskRow from "./TaskRow";
 
-export default function TaskTable() {
+export default function TaskTable({ tasks }) {
+  const tableHeader = (
+    <Table.Head>
+      <Table.HeadCell className="w-6"></Table.HeadCell>
+      <Table.HeadCell>Task name</Table.HeadCell>
+      <Table.HeadCell className="w-24">Deadline</Table.HeadCell>
+      <Table.HeadCell className="w-36">Status</Table.HeadCell>
+    </Table.Head>
+  );
+
+  const tableRow = (task) => (
+    <TaskRow key={task.id} task={task} />
+  );
+
+  const tableBody = (
+    <Table.Body className="divide-y">
+      {tasks.map((task) => tableRow(task))}
+    </Table.Body>
+  );
+
   return (
     <Table>
-      <Table.Head>
-        <Table.HeadCell></Table.HeadCell>
-        <Table.HeadCell className="w-3/4">Task name</Table.HeadCell>
-        <Table.HeadCell>Deadline</Table.HeadCell>
-        <Table.HeadCell>Status</Table.HeadCell>
-      </Table.Head>
-      <Table.Body className="divide-y">
-        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-           <Checkbox onClick={() => console.log('clicked')}/>
-          </Table.Cell>
-          <Table.Cell>asd d dad adasd ad da dad dasdad</Table.Cell>
-          <Table.Cell>Laptop</Table.Cell>
-          <Table.Cell>
-            <a
-              href="/tables"
-              className="font-medium text-blue-600 hover:underline dark:text-blue-500"
-            >
-              <StatusBadge status="Complete" />
-            </a>
-          </Table.Cell>
-        </Table.Row>
-      </Table.Body>
+      {tableHeader}
+      {tableBody}
     </Table>
   );
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
-import { projectFormActions } from "../../store/reducers/project-form";
+import { formActions } from "../../store/reducers/form";
 import useFetch from "../../hooks/useFetch";
 import ProjectCard from "../../components/Project/ProjectCard";
 import ProjectForm from "../../components/Project/ProjectForm";
@@ -49,7 +49,7 @@ export default function Dashboard() {
   }, [fetchData, dispatch, projects, token, initialLoading]);
 
   const openCreateProjectModal = () => {
-    dispatch(projectFormActions.onCreateProject());
+    dispatch(formActions.onCreate());
     dispatch(modalActions.toggle());
   };
 
