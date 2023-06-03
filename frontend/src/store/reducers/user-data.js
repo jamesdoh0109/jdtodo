@@ -8,6 +8,7 @@ const userDataSlice = createSlice({
     lastname: "",
     email: "",
     projects: null,
+    tasksForProjects: null,
   },
   reducers: {
     setId(state, action) {
@@ -25,6 +26,9 @@ const userDataSlice = createSlice({
     setProjects(state, action) {
       state.projects = action.payload.projects;
     },
+    setTasksForProjects(state, action) {
+      state.tasksForProjects = action.payload.tasksForProjects;
+    }
   },
 });
 
@@ -51,11 +55,6 @@ export const initialUserDataFetchFromBrowswer = () => {
       dispatch(
         userDataActions.setEmail({
           email: formattedUser.email,
-        })
-      );
-      dispatch(
-        userDataActions.setProjects({
-          projects: formattedUser.projects,
         })
       );
     }

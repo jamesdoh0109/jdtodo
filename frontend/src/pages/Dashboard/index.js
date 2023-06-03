@@ -29,7 +29,6 @@ export default function Dashboard() {
             id: project.proj_id,
             name: project.proj_name,
             dateCreated: project.date_created,
-            tasks: null,
           }));
           dispatch(userDataActions.setProjects({ projects: projects }));
         } catch (e) {

@@ -9,21 +9,20 @@ import Loading from "../../components/common/Loading";
 export default function ProjectDetail() {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
-  const projects = useSelector((state) => state.userData.projects);
-  const currentProject = projects?.find((project) => project.id == id);
-  const tasks = currentProject?.tasks;
-  
+  const tasksForProjects = useSelector(
+    (state) => state.userData.tasksForProjects
+  );
+  const tasksForCurrentProject = tasksForProjects?.find(
+    (project) => project.id === id
+  );
 
   const { isLoading, fetchData } = useFetch();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!projects) {
-      
-    }
-    if (!tasks) {
-      console.log('d')
+    console.log('Project Detail rendered');
+    if (!tasksForCurrentProject) {
       const populateTasks = async (res) => {
         try {
           const data = await res.json();
@@ -35,15 +34,11 @@ export default function ProjectDetail() {
             description: task.task_description,
             isDone: task.task_is_done,
           }));
-          const filteredProjects = projects.filter(
-            (project) => project.id != id
-          );
           dispatch(
-            userDataActions.setProjects({
-              projects: [
-                ...filteredProjects,
-                { ...currentProject, tasks: tasks },
-              ],
+            userDataActions.setTasksForProjects({
+              tasksForProjects: tasksForProjects
+                ? [...tasksForProjects, { id: id, tasks: tasks }]
+                : [{ id: id, tasks: tasks }],
             })
           );
         } catch (e) {
@@ -60,15 +55,14 @@ export default function ProjectDetail() {
       };
       fetchData(requestConfig, populateTasks);
     }
-  }, []);
+  }, [id, token, tasksForProjects, tasksForCurrentProject]);
 
   return (
     <div className="mt-12 w-full flex justify-center">
       <div className="w-5/6">
         {isLoading && <Loading />}
-        {!isLoading && tasks?.length === 0 && <>No tasks!</>}
-        {!isLoading && tasks?.length > 0 && <TaskTable />}
-        
+        {!isLoading && tasksForCurrentProject?.tasks.length === 0 && <>No tasks!</>}
+        {!isLoading && tasksForCurrentProject?.tasks.length > 0 && <TaskTable />}
       </div>
     </div>
   );

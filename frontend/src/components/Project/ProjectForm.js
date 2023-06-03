@@ -30,7 +30,6 @@ export default function ProjectForm({ token }) {
         dateCreated: projectToBeEdited.dateCreated,
         id: projectToBeEdited.id,
         name: projectName,
-        tasks: null,
       };
       const filteredProjects = projects.filter(
         (project) => project.id !== projectToBeEdited.id
@@ -49,12 +48,10 @@ export default function ProjectForm({ token }) {
   const displayNewProject = async (res) => {
     try {
       const data = await res.json();
-      console.log(data);
       const newProject = {
         dateCreated: data.project.date_created,
         id: data.project.proj_id,
         name: data.project.proj_name,
-        tasks: null,
       };
       dispatch(
         userDataActions.setProjects({ projects: [...projects, newProject] })
