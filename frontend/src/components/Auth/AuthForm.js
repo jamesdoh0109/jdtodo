@@ -62,7 +62,7 @@ export default function AuthForm({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(trimFormTrailingSpaces(form)),
     };
-    fetchData(requestConfig, handleResponse);
+    fetchData(requestConfig, undefined, handleResponse);
   };
 
   const formTitle = (

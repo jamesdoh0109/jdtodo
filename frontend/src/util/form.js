@@ -27,6 +27,14 @@ export function projectNameTooLong(name) {
   return name.length > 25;
 }
 
+export function taskNameTooLong(name) {
+  return name.length > 60;
+}
+
+export function taskFormMissingRequiredFields (name, deadline, status) {
+  return name === "" || deadline === "" || status === ""
+}
+
 export function trimFormTrailingSpaces(form) {
   const passwordRelatedKeys = [
     "password",
@@ -44,4 +52,16 @@ export function trimFormTrailingSpaces(form) {
       return [key, value];
     })
   );
+}
+
+export function formatDate(date) {
+  const dateObj = new Date(date);
+
+  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+  const day = dateObj.getDate().toString().padStart(2, '0');
+  const year = dateObj.getFullYear();
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  return formattedDate;
 }

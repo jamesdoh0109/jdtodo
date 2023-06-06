@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
-import { projectFormActions } from "../../store/reducers/project-form";
+import { formActions } from "../../store/reducers/form";
+import { sortById } from "../../util/display";
 import useFetch from "../../hooks/useFetch";
 import ProjectCard from "../../components/Project/ProjectCard";
 import ProjectForm from "../../components/Project/ProjectForm";
@@ -13,6 +14,7 @@ export default function Dashboard() {
   const token = useSelector((state) => state.auth.token);
   const projects = useSelector((state) => state.userData.projects);
   const modalOpen = useSelector((state) => state.modal.modalOpen);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const { isLoading, fetchData } = useFetch();
 
@@ -20,7 +22,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // only make request on initial render of the screen (i.e. when projects is undefined)
-    if (!projects) {
+    if (!projects && initialLoading) {
       const populateProjects = async (res) => {
         try {
           const data = await res.json();
@@ -34,7 +36,7 @@ export default function Dashboard() {
           console.log(e);
         }
       };
-      
+
       const requestConfig = {
         url: "/api/projects",
         headers: {
@@ -42,12 +44,13 @@ export default function Dashboard() {
           Authorization: "Bearer " + token,
         },
       };
-      fetchData(requestConfig, populateProjects);
+      fetchData(requestConfig, undefined, populateProjects);
+      setInitialLoading(false);
     }
-  }, [fetchData, dispatch, projects, token]);
+  }, [fetchData, dispatch, projects, token, initialLoading]);
 
   const openCreateProjectModal = () => {
-    dispatch(projectFormActions.onCreateProject());
+    dispatch(formActions.onCreate());
     dispatch(modalActions.toggle());
   };
 
@@ -68,10 +71,8 @@ export default function Dashboard() {
     <>
       {createProjectBtn}
       <ul className="w-full grid mt-4 gap-y-7 pl-xl:grid-cols-g-xl pl-lg:grid-cols-g-lg pl-md:grid-cols-g-md pl-sm:grid-cols-g-sm pl-xs:grid-cols-g-xs justify-start">
-        {projects
-          ?.slice() // Create a copy of the array to avoid mutating the original array
-          .sort((a, b) => a.id - b.id) // Sort projects by id in ascending order
-          .map((project) => (
+        {projects &&
+          sortById(projects).map((project) => (
             <li key={project.id} className="mr-8">
               <ProjectCard
                 id={project.id}

@@ -25,7 +25,7 @@ export default function DeleteAccount() {
         Authorization: "Bearer " + token,
       },
     };
-    fetchData(requestConfig, () => logout(dispatch, navigate));
+    fetchData(requestConfig, undefined, () => logout(dispatch, navigate));
   };
 
   return (

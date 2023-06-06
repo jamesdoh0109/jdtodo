@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
-import { projectFormActions } from "../../store/reducers/project-form";
+import { formActions } from "../../store/reducers/form";
 import { splitNameIntoLines } from "../../util/form";
 import { Card } from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -37,8 +37,8 @@ export default function ProjectCard({ id, name, dateCreated }) {
 
   const openEditProjectModal = () => {
     dispatch(
-      projectFormActions.onEditProject({
-        projectToBeEdited: { id: id, name: name, dateCreated: dateCreated },
+      formActions.onEdit({
+        itemToBeEdited: { id: id, name: name, dateCreated: dateCreated },
       })
     );
     dispatch(modalActions.toggle());

@@ -168,12 +168,14 @@ def get_tasks_for_project(proj_id):
         {
             'task_id': task.id,
             'task_name': task.name,
+            'task_deadline': task.deadline,
+            'task_status': task.status,
             'task_description': task.description,
             'task_is_done': task.is_done,
         }
         for task in tasks 
     ]
-    return ({'task_list': task_list}), 200
+    return ({'tasks': task_list}), 200
 
 @app.route('/api/<proj_id>/tasks', methods=['POST'])
 @jwt_required()
@@ -189,8 +191,14 @@ def create_task(proj_id):
         return jsonify({'error': 'Missing request body.'}), 400 
     if 'name' not in new_task_json:
         return jsonify({'error': 'Task name is required.'}), 400 
+    if 'deadline' not in new_task_json:
+        return jsonify({'error': 'Deadline is required.'}), 400 
+    if 'status' not in new_task_json:
+        return jsonify({'error': 'Status is required.'}), 400
     name = new_task_json['name']
-    task = Task(name, proj_id)
+    deadline = new_task_json['deadline']
+    status = new_task_json['status']
+    task = Task(name, deadline, status, proj_id)
     if 'description' in new_task_json and new_task_json['description'] != "": 
         task.description = new_task_json['description'] 
     try: 
@@ -199,7 +207,8 @@ def create_task(proj_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': e}), 500 
-    return jsonify({'message': 'Task successfully created.'}), 201
+    task_obj = {'task_id': task.id, 'task_name': task.name, 'task_deadline': task.deadline, 'task_description': task.description, 'task_status': task.status, 'task_is_done': task.is_done}
+    return jsonify({'message': 'Task successfully created.', 'task': task_obj}), 201
 
 @app.route('/api/tasks/<task_id>', methods=['PATCH'])
 @jwt_required()
@@ -214,6 +223,10 @@ def modify_task(task_id):
     new_task_json = request.get_json() 
     if 'name' in new_task_json and new_task_json['name'] != task.name:
         task.name = new_task_json['name']
+    if 'deadline' in new_task_json and new_task_json['deadline'] != task.deadline:
+        task.deadline = new_task_json['deadline']
+    if 'status' in new_task_json and new_task_json['status'] != task.status:
+        task.status = new_task_json['status']
     if 'description' in new_task_json and new_task_json['description'] != task.description:
         task.description = new_task_json['description']
     if 'is_done' in new_task_json and new_task_json['is_done'] != task.is_done:
