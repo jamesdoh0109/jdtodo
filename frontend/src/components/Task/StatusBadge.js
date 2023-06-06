@@ -8,5 +8,5 @@ export default function StatusBadge({ status }) {
       ? "warning"
       : "failure";
 
-  return <Badge size="xs" color={color}>{status}</Badge>;
+  return <Badge size="xs" color={color} className="flex justify-center">{status}</Badge>;
 }

@@ -14,10 +14,10 @@ export default function ProjectDetail() {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
   const modalOpen = useSelector((state) => state.modal.modalOpen);
-  const tasksForProjects = useSelector(
-    (state) => state.userData.tasksForProjects
+  const tasksForAllProjects = useSelector(
+    (state) => state.userData.tasksForAllProjects
   );
-  const tasksForCurrentProject = tasksForProjects?.find(
+  const tasksForCurrentProject = tasksForAllProjects?.find(
     (project) => project.id === id
   );
 
@@ -26,7 +26,7 @@ export default function ProjectDetail() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // console.log("Project Detail rendered");
+    console.log("useEffect");
     if (!tasksForCurrentProject) {
       const populateTasks = async (res) => {
         try {
@@ -40,9 +40,9 @@ export default function ProjectDetail() {
             isDone: task.task_is_done,
           }));
           dispatch(
-            userDataActions.setTasksForProjects({
-              tasksForProjects: tasksForProjects
-                ? [...tasksForProjects, { id: id, tasks: tasks }]
+            userDataActions.setTasksForAllProjects({
+              tasksForAllProjects: tasksForAllProjects
+                ? [...tasksForAllProjects, { id: id, tasks: tasks }]
                 : [{ id: id, tasks: tasks }],
             })
           );
@@ -58,9 +58,9 @@ export default function ProjectDetail() {
           Authorization: "Bearer " + token,
         },
       };
-      fetchData(requestConfig, populateTasks);
+      fetchData(requestConfig, undefined, populateTasks);
     }
-  }, [id, token]);
+  }, [id, token, dispatch, tasksForAllProjects, tasksForCurrentProject]); // why does putting fetchData in dependency cause so much rerender
 
   const openCreateTaskModal = () => {
     dispatch(formActions.onCreate());
@@ -92,13 +92,7 @@ export default function ProjectDetail() {
   return (
     <div className="w-full flex justify-center">
       <div className="w-4/5">
-        {modalOpen && (
-          <TaskForm
-            projectId={id}
-            tasksForProjects={tasksForProjects}
-            tasksForCurrentProject={tasksForCurrentProject}
-          />
-        )}
+        {modalOpen && <TaskForm />}
         {isLoading && <Loading />}
         {!isLoading &&
           tasksForCurrentProject?.tasks.length === 0 &&

@@ -8,7 +8,7 @@ const userDataSlice = createSlice({
     lastname: "",
     email: "",
     projects: null,
-    tasksForProjects: null,
+    tasksForAllProjects: null,
   },
   reducers: {
     setId(state, action) {
@@ -23,12 +23,107 @@ const userDataSlice = createSlice({
     setEmail(state, action) {
       state.email = action.payload.email;
     },
+    // TODO: simplify and add updateProjects functionality
+    updateTasks(state, action) {
+      let data, task, projectId, tasksForCurrentProject, taskToBeEdited, form;
+      switch (action.payload.type) {
+        case "CREATE":
+          ({ data, projectId, tasksForCurrentProject } = action.payload);
+          try {
+            const newTask = {
+              id: data.task.task_id,
+              name: data.task.task_name,
+              deadline: data.task.task_deadline,
+              description: data.task.task_description,
+              status: data.task.task_status,
+              isDone: data.task.task_status === "Finished" ? true : false,
+            };
+
+            // project object containing the new task
+            const projectWithNewTask = {
+              id: projectId,
+              tasks: [...tasksForCurrentProject.tasks, newTask],
+            };
+
+            // update the array of project objs by first filtering out the current project
+            // and re adding the project obj containing the new task
+            const filteredProjectArray = state.tasksForAllProjects.filter(
+              (project) => project.id !== projectId
+            );
+            state.tasksForAllProjects = [
+              ...filteredProjectArray,
+              projectWithNewTask,
+            ];
+          } catch (e) {
+            console.log(e);
+          }
+          return;
+        case "EDIT":
+          ({ taskToBeEdited, task, form, projectId, tasksForCurrentProject } =
+            action.payload);
+          try {
+            // two types of edits: one using form and checkbox click
+            const editedTask = form
+              ? {
+                  id: taskToBeEdited,
+                  name: form.name,
+                  deadline: form.deadline,
+                  description: form.description,
+                  status: form.status,
+                  isDone: form.is_done,
+                }
+              : {
+                  id: taskToBeEdited,
+                  name: task.name,
+                  deadline: task.deadline,
+                  description: task.description,
+                  status: task.isDone ? "Not started" : "Finished",
+                  isDone: !task.isDone,
+                };
+
+            // update the tasks for the project by first filtering out the old task
+            // and adding the updated version
+            const filteredTasks = tasksForCurrentProject.tasks.filter(
+              (task) => task.id !== taskToBeEdited
+            );
+            const projectWithUpdatedTask = {
+              id: projectId,
+              tasks: [...filteredTasks, editedTask],
+            };
+
+            // update the array of project objs by first filtering out the current project
+            // and re adding the project obj containing the new task
+            const filteredProjectArray = state.tasksForAllProjects.filter(
+              (project) => project.id !== projectId
+            );
+            state.tasksForAllProjects = [
+              ...filteredProjectArray,
+              projectWithUpdatedTask,
+            ];
+          } catch (e) {
+            console.log(e);
+          }
+          return;
+        default:
+          return;
+      }
+    },
+    updateProjects(state, action) {
+      switch (action.type) {
+        case "CREATE":
+          return;
+        case "EDIT":
+          return;
+        default:
+          return;
+      }
+    },
     setProjects(state, action) {
       state.projects = action.payload.projects;
     },
-    setTasksForProjects(state, action) {
-      state.tasksForProjects = action.payload.tasksForProjects;
-    }
+    setTasksForAllProjects(state, action) {
+      state.tasksForAllProjects = action.payload.tasksForAllProjects;
+    },
   },
 });
 

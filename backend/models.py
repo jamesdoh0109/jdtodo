@@ -46,6 +46,7 @@ class Task(db.Model):
         self.name = name 
         self.deadline = deadline
         self.status = status 
+        self.is_done = status == 'Finished'
         self.proj_id = proj_id
 
     def __repr__(self):

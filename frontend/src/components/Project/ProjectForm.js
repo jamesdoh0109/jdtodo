@@ -89,7 +89,8 @@ export default function ProjectForm({ token }) {
     };
     fetchData(
       requestConfig,
-      creatingNew ? displayNewProject : displayEditedProject
+      !creatingNew && displayEditedProject,
+      creatingNew && displayNewProject
     );
   };
 

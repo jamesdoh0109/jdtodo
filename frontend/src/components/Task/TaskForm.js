@@ -1,26 +1,31 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
-import { formatDate } from "../../util/form";
+import {
+  formatDate,
+  taskFormMissingRequiredFields,
+  taskNameTooLong,
+} from "../../util/form";
 import useFetch from "../../hooks/useFetch";
 import Button from "../common/Button";
 import Modal from "../common/Modal";
 import Input from "../common/Input";
 import Message from "../common/Message";
-import {
-  taskFormMissingRequiredFields,
-  taskNameTooLong,
-} from "../../util/form";
 
-export default function TaskForm({
-  projectId,
-  tasksForProjects,
-  tasksForCurrentProject,
-}) {
+export default function TaskForm() {
+  const id = useParams().projectId;
+  const token = useSelector((state) => state.auth.token);
   const creatingNew = useSelector((state) => state.form.creatingNew);
   const taskToBeEdited = useSelector((state) => state.form.itemToBeEdited);
-  const token = useSelector((state) => state.auth.token);
+
+  const tasksForAllProjects = useSelector(
+    (state) => state.userData.tasksForAllProjects
+  );
+  const tasksForCurrentProject = tasksForAllProjects?.find(
+    (project) => project.id === id
+  );
 
   const [form, setForm] = useState({
     name: taskToBeEdited ? taskToBeEdited.name : "",
@@ -29,42 +34,35 @@ export default function TaskForm({
     status: taskToBeEdited ? taskToBeEdited.status : "Not started",
   });
 
-  console.log(form)
-
   const { status, setStatus, isLoading, fetchData } = useFetch();
 
   const dispatch = useDispatch();
 
   const displayNewTask = async (res) => {
-    try {
-      const data = await res.json();
-      const newTask = {
-        id: data.task.task_id,
-        name: data.task.task_name,
-        deadline: data.task.task_deadline,
-        description: data.task.task_description,
-        status: data.task.task_status,
-        isDone: data.task.task_is_done,
-      };
-      const newTaskArray = {
-        id: projectId,
-        tasks: [...tasksForCurrentProject.tasks, newTask],
-      };
-      const filteredTasksForProjects = tasksForProjects.filter(
-        (project) => project.id !== projectId
-      );
-      dispatch(
-        userDataActions.setTasksForProjects({
-          tasksForProjects: [...filteredTasksForProjects, newTaskArray],
-        })
-      );
-      dispatch(modalActions.toggle());
-    } catch (e) {
-      console.log(e);
-    }
+    const data = await res.json();
+    dispatch(
+      userDataActions.updateTasks({
+        type: "CREATE",
+        data: data,
+        projectId: id,
+        tasksForCurrentProject: tasksForCurrentProject,
+      })
+    );
+    dispatch(modalActions.toggle());
   };
 
-  const displayEditedTask = () => {};
+  const displayEditedTask = () => {
+    dispatch(
+      userDataActions.updateTasks({
+        type: "EDIT",
+        taskToBeEdited: taskToBeEdited.id,
+        form: { ...form, is_done: form.status === "Finished" },
+        projectId: id,
+        tasksForCurrentProject: tasksForCurrentProject,
+      })
+    );
+    dispatch(modalActions.toggle());
+  };
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -84,7 +82,9 @@ export default function TaskForm({
   };
 
   const submitForm = () => {
-    const endpoint = `/api/${projectId}/tasks`;
+    const endpoint = creatingNew
+      ? `/api/${id}/tasks`
+      : `/api/tasks/${taskToBeEdited.id}`;
     const requestConfig = {
       url: endpoint,
       method: creatingNew ? "POST" : "PATCH",
@@ -92,9 +92,13 @@ export default function TaskForm({
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, is_done: form.status === "Finished" }),
     };
-    fetchData(requestConfig, creatingNew ? displayNewTask : displayEditedTask);
+    fetchData(
+      requestConfig,
+      !creatingNew && displayEditedTask,
+      creatingNew && displayNewTask
+    );
   };
 
   const handleTaskChange = (e) => {
@@ -107,9 +111,9 @@ export default function TaskForm({
     </h2>
   );
 
-  const formInput = (id, label, type, required) => (
+  const formInput = (id, label, type) => (
     <>
-      <div className="mb-1 block">
+      <div className="mt-3 block">
         <label htmlFor={id}>{label}</label>
       </div>
       {type !== "options" ? (
@@ -121,7 +125,12 @@ export default function TaskForm({
           value={form[id]}
         />
       ) : (
-        <select id={id} name={id} onChange={handleTaskChange} value={form.status}>
+        <select
+          id={id}
+          name={id}
+          onChange={handleTaskChange}
+          value={form.status}
+        >
           <option value="Not started">Not started</option>
           <option value="In progress">In progress</option>
           <option value="Finished">Finished</option>

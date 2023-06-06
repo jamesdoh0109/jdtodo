@@ -9,6 +9,7 @@ flask-cors = "*"
 flask-sqlalchemy = "*"
 pyjwt = "*"
 flask-jwt-extended = "*"
+pytz = "*"
 
 [dev-packages]
 

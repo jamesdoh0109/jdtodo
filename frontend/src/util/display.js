@@ -9,3 +9,9 @@ export function formatDate(date) {
 
   return formattedDate;
 }
+
+export function sortById(obj) {
+  return obj
+    ?.slice() // Create a copy of the array to avoid mutating the original array
+    .sort((a, b) => a.id - b.id);
+}

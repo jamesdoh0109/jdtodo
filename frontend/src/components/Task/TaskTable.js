@@ -1,3 +1,4 @@
+import { sortById } from "../../util/display";
 import { Table } from "flowbite-react";
 import TaskRow from "./TaskRow";
 
@@ -11,13 +12,11 @@ export default function TaskTable({ tasks }) {
     </Table.Head>
   );
 
-  const tableRow = (task) => (
-    <TaskRow key={task.id} task={task} />
-  );
+  const tableRow = (task) => <TaskRow key={task.id} task={task} />;
 
   const tableBody = (
     <Table.Body className="divide-y">
-      {tasks.map((task) => tableRow(task))}
+      {tasks && sortById(tasks).map((task) => tableRow(task))}
     </Table.Body>
   );
 

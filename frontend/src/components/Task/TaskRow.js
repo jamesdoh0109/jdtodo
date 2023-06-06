@@ -1,13 +1,26 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { formActions } from "../../store/reducers/form";
 import { modalActions } from "../../store/reducers/modal";
+import { userDataActions } from "../../store/reducers/user-data";
 import { formatDate } from "../../util/display";
 import { Table, Checkbox } from "flowbite-react";
 import StatusBadge from "./StatusBadge";
+import useFetch from "../../hooks/useFetch";
 
 export default function TaskRow({ task }) {
+  const id = useParams().projectId;
+  const token = useSelector((state) => state.auth.token);
   const [color, setColor] = useState("bg-white");
+  const tasksForAllProjects = useSelector(
+    (state) => state.userData.tasksForAllProjects
+  );
+  const tasksForCurrentProject = tasksForAllProjects?.find(
+    (project) => project.id === id
+  );
+
+  const { fetchData } = useFetch();
 
   const dispatch = useDispatch();
 
@@ -28,11 +41,40 @@ export default function TaskRow({ task }) {
           deadline: task.deadline,
           description: task.description,
           status: task.status,
-          isDone: task.is_done,
+          isDone: task.isDone,
         },
       })
     );
     dispatch(modalActions.toggle());
+  };
+
+  const displayEditedTask = () => {
+    dispatch(
+      userDataActions.updateTasks({
+        type: "EDIT",
+        taskToBeEdited: task.id,
+        task: task,
+        projectId: id,
+        tasksForCurrentProject: tasksForCurrentProject,
+      })
+    );
+  };
+
+  const toggleTaskStatus = () => {
+    const endpoint = `/api/tasks/${task.id}`;
+    const requestConfig = {
+      url: endpoint,
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        status: task.isDone ? "Not started" : "Finished",
+        is_done: !task.isDone,
+      }),
+    };
+    fetchData(requestConfig, displayEditedTask);
   };
 
   return (
@@ -45,8 +87,10 @@ export default function TaskRow({ task }) {
     >
       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
         <Checkbox
-          defaultChecked={task.isDone}
-          onClick={() => console.log("clicked")}
+          checked={task.isDone}
+          onChange={() => toggleTaskStatus()}
+          // prevent modal popup 
+          onClick={(e) => e.stopPropagation()}
         />
       </Table.Cell>
       <Table.Cell>{task.name}</Table.Cell>

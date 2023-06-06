@@ -68,7 +68,7 @@ export function AccountForm({ title, formInputs }) {
       },
       body: JSON.stringify(trimFormTrailingSpaces(form)),
     };
-    fetchData(requestConfig, handleResponse);
+    fetchData(requestConfig, undefined, handleResponse);
   };
 
   const statusMsg = (

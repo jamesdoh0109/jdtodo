@@ -8,15 +8,16 @@ const useFetch = () => {
     message: "request not made yet.",
   });
 
-  const fetchData = async (requestConfig, applyData) => {
+  const fetchData = async (requestConfig, preFetchUpdateUI, applyData) => {
     setIsLoading(true);
+    preFetchUpdateUI && preFetchUpdateUI();
     try {
       const res = await fetch(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
         body: requestConfig.body ? requestConfig.body : null,
         headers: requestConfig.headers ? requestConfig.headers : {},
       });
-      applyData(res);
+      applyData && applyData(res);
     } catch (e) {
       setStatus({ error: true, message: e });
     }

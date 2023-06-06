@@ -223,6 +223,10 @@ def modify_task(task_id):
     new_task_json = request.get_json() 
     if 'name' in new_task_json and new_task_json['name'] != task.name:
         task.name = new_task_json['name']
+    if 'deadline' in new_task_json and new_task_json['deadline'] != task.deadline:
+        task.deadline = new_task_json['deadline']
+    if 'status' in new_task_json and new_task_json['status'] != task.status:
+        task.status = new_task_json['status']
     if 'description' in new_task_json and new_task_json['description'] != task.description:
         task.description = new_task_json['description']
     if 'is_done' in new_task_json and new_task_json['is_done'] != task.is_done:
