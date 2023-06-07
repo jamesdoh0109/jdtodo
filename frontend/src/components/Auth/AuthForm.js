@@ -43,7 +43,7 @@ export default function AuthForm({
     try {
       const data = await res.json();
       if (res.status !== 201 && res.status !== 200) {
-        setStatus({ error: true, message: data.error });
+        setStatus({ error: true, message: data.error ? data.error : data.message });
       } else if (res.status === 200) {
         login(dispatch, navigate, data);
       } else if (res.status === 201) {
