@@ -8,6 +8,7 @@ import { formatDate } from "../../util/display";
 import { Table, Checkbox } from "flowbite-react";
 import StatusBadge from "./StatusBadge";
 import useFetch from "../../hooks/useFetch";
+import Dropdown from "./Dropdown";
 
 export default function TaskRow({ task }) {
   const id = useParams().projectId;
@@ -79,7 +80,7 @@ export default function TaskRow({ task }) {
 
   return (
     <Table.Row
-      className={`${color} dark:border-gray-700 dark:bg-gray-800 cursor-pointer`}
+      className={`${color} dark:border-gray-700 dark:bg-gray-800`}
       key={task.id}
       onMouseEnter={setHoverColor}
       onMouseLeave={setLeaveColor}
@@ -89,7 +90,7 @@ export default function TaskRow({ task }) {
         <Checkbox
           checked={task.isDone}
           onChange={() => toggleTaskStatus()}
-          // prevent modal popup 
+          // prevent modal popup
           onClick={(e) => e.stopPropagation()}
         />
       </Table.Cell>
@@ -97,6 +98,9 @@ export default function TaskRow({ task }) {
       <Table.Cell>{formatDate(task.deadline)}</Table.Cell>
       <Table.Cell>
         <StatusBadge status={task.status} />
+      </Table.Cell>
+      <Table.Cell>
+        <Dropdown task={task} onLeave={setHoverColor} onHover={setLeaveColor} />
       </Table.Cell>
     </Table.Row>
   );

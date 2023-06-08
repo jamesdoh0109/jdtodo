@@ -9,6 +9,7 @@ export default function TaskTable({ tasks }) {
       <Table.HeadCell>Task name</Table.HeadCell>
       <Table.HeadCell className="w-24">Deadline</Table.HeadCell>
       <Table.HeadCell className="w-36">Status</Table.HeadCell>
+      <Table.HeadCell className="w-6"></Table.HeadCell>
     </Table.Head>
   );
 

@@ -83,7 +83,7 @@ export function checkForInputErrors(form) {
 
 async function checkTokenValidity(token) {
   const response = await fetch(
-    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.preview.app.github.dev/api/protected",
+    "/api/protected",
     {
       headers: {
         "Content-Type": "application/json",
