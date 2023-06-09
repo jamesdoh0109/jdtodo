@@ -25,7 +25,7 @@ export default function ProjectCard({ id, name, dateCreated }) {
 
   const handleDeleteProject = () => {
     const requestConfig = {
-      url: "/api/projects/" + id,
+      url: "api/projects/" + id,
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

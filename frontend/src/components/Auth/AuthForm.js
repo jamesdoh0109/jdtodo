@@ -55,7 +55,7 @@ export default function AuthForm({
   };
 
   const submitForm = () => {
-    const endpoint = `/api/${title.replace(/\s/g, "").toLowerCase()}`;
+    const endpoint = `api/${title.replace(/\s/g, "").toLowerCase()}`;
     const requestConfig = {
       url: endpoint,
       method: "POST",

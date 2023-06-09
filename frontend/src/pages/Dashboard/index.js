@@ -38,7 +38,7 @@ export default function Dashboard() {
       };
 
       const requestConfig = {
-        url: "/api/projects",
+        url: "api/projects",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token,

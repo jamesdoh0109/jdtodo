@@ -52,7 +52,7 @@ export default function ProjectDetail() {
       };
 
       const requestConfig = {
-        url: `/api/${id}/tasks`,
+        url: `api/${id}/tasks`,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token,

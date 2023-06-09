@@ -73,7 +73,7 @@ export default function ProjectForm({ token }) {
   };
 
   const submitForm = () => {
-    const endpoint = `/api/projects${
+    const endpoint = `api/projects${
       !creatingNew ? "/" + projectToBeEdited.id : ""
     }`;
     const requestConfig = {

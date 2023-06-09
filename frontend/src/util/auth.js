@@ -83,7 +83,7 @@ export function checkForInputErrors(form) {
 
 async function checkTokenValidity(token) {
   const response = await fetch(
-    "/api/protected",
+    "api/protected",
     {
       headers: {
         "Content-Type": "application/json",

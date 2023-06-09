@@ -83,8 +83,8 @@ export default function TaskForm() {
 
   const submitForm = () => {
     const endpoint = creatingNew
-      ? `/api/${id}/tasks`
-      : `/api/tasks/${taskToBeEdited.id}`;
+      ? `api/${id}/tasks`
+      : `api/tasks/${taskToBeEdited.id}`;
     const requestConfig = {
       url: endpoint,
       method: creatingNew ? "POST" : "PATCH",
