@@ -9,6 +9,7 @@ import TaskTable from "../../components/Task/TaskTable";
 import Loading from "../../components/common/Loading";
 import Button from "../../components/common/Button";
 import TaskForm from "../../components/Task/TaskForm";
+import Error from "../../components/common/Error";
 
 export default function ProjectDetail() {
   const id = useParams().projectId;
@@ -21,7 +22,7 @@ export default function ProjectDetail() {
     (project) => project.id === id
   );
 
-  const { isLoading, fetchData } = useFetch();
+  const { status, setStatus, isLoading, fetchData } = useFetch();
 
   const dispatch = useDispatch();
 
@@ -30,22 +31,34 @@ export default function ProjectDetail() {
     if (!tasksForCurrentProject) {
       const populateTasks = async (res) => {
         try {
-          const data = await res.json();
-          const tasks = data.tasks.map((task) => ({
-            id: task.task_id,
-            name: task.task_name,
-            deadline: task.task_deadline,
-            status: task.task_status,
-            description: task.task_description,
-            isDone: task.task_is_done,
-          }));
-          dispatch(
-            userDataActions.setTasksForAllProjects({
-              tasksForAllProjects: tasksForAllProjects
-                ? [...tasksForAllProjects, { id: id, tasks: tasks }]
-                : [{ id: id, tasks: tasks }],
-            })
-          );
+          if (res.status === 400) {
+            setStatus({
+              error: true,
+              message: "Project does not exist.",
+            });
+          } else if (res.status === 401) {
+            setStatus({
+              error: true,
+              message: "Access forbidden",
+            });
+          } else {
+            const data = await res.json();
+            const tasks = data.tasks.map((task) => ({
+              id: task.task_id,
+              name: task.task_name,
+              deadline: task.task_deadline,
+              status: task.task_status,
+              description: task.task_description,
+              isDone: task.task_is_done,
+            }));
+            dispatch(
+              userDataActions.setTasksForAllProjects({
+                tasksForAllProjects: tasksForAllProjects
+                  ? [...tasksForAllProjects, { id: id, tasks: tasks }]
+                  : [{ id: id, tasks: tasks }],
+              })
+            );
+          }
         } catch (e) {
           console.log(e);
         }
@@ -101,6 +114,7 @@ export default function ProjectDetail() {
         {!isLoading &&
           tasksForCurrentProject?.tasks.length > 0 &&
           dashboardWithTasks}
+        {status.error && <Error error={status.message} />}
       </div>
     </div>
   );
