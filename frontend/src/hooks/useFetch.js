@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const useFetch = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -8,7 +8,7 @@ const useFetch = () => {
     message: "request not made yet.",
   });
 
-  const fetchData = async (requestConfig, preFetchUpdateUI, applyData) => {
+  const fetchData = useCallback(async (requestConfig, preFetchUpdateUI, applyData) => {
     setIsLoading(true);
     preFetchUpdateUI && preFetchUpdateUI();
     try {
@@ -22,7 +22,7 @@ const useFetch = () => {
       setStatus({ error: true, message: e });
     }
     setIsLoading(false);
-  };
+  }, []);
 
   return {
     isLoading,

@@ -27,43 +27,43 @@ export default function ProjectDetail() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("useEffect");
-    if (!tasksForCurrentProject) {
-      const populateTasks = async (res) => {
-        try {
-          if (res.status === 400) {
-            setStatus({
-              error: true,
-              message: "Project does not exist.",
-            });
-          } else if (res.status === 401) {
-            setStatus({
-              error: true,
-              message: "Access forbidden",
-            });
-          } else {
-            const data = await res.json();
-            const tasks = data.tasks.map((task) => ({
-              id: task.task_id,
-              name: task.task_name,
-              deadline: task.task_deadline,
-              status: task.task_status,
-              description: task.task_description,
-              isDone: task.task_is_done,
-            }));
-            dispatch(
-              userDataActions.setTasksForAllProjects({
-                tasksForAllProjects: tasksForAllProjects
-                  ? [...tasksForAllProjects, { id: id, tasks: tasks }]
-                  : [{ id: id, tasks: tasks }],
-              })
-            );
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      };
+    const handleError = (e) => {
+      setStatus({
+        error: true,
+        message: e,
+      });
+    };
 
+    const populateTasks = async (res) => {
+      try {
+        if (res.status === 400) {
+          handleError("Project does not exist.");
+        } else if (res.status === 401) {
+          handleError("Access forbidden");
+        } else {
+          const data = await res.json();
+          const tasks = data.tasks.map((task) => ({
+            id: task.task_id,
+            name: task.task_name,
+            deadline: task.task_deadline,
+            status: task.task_status,
+            description: task.task_description,
+            isDone: task.task_is_done,
+          }));
+          dispatch(
+            userDataActions.setTasksForAllProjects({
+              tasksForAllProjects: tasksForAllProjects
+                ? [...tasksForAllProjects, { id: id, tasks: tasks }]
+                : [{ id: id, tasks: tasks }],
+            })
+          );
+        }
+      } catch (e) {
+        handleError(e);
+      }
+    };
+
+    if (!tasksForCurrentProject) {
       const requestConfig = {
         url: `/api/${id}/tasks`,
         headers: {
@@ -74,7 +74,15 @@ export default function ProjectDetail() {
       };
       fetchData(requestConfig, undefined, populateTasks);
     }
-  }, [id, token, dispatch, tasksForAllProjects, tasksForCurrentProject]); // why does putting fetchData in dependency cause so much rerender
+  }, [
+    id,
+    token,
+    tasksForCurrentProject,
+    tasksForAllProjects,
+    dispatch,
+    setStatus,
+    fetchData,
+  ]); 
 
   const openCreateTaskModal = () => {
     dispatch(formActions.onCreate());
