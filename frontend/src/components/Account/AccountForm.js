@@ -56,7 +56,7 @@ export function AccountForm({ title, formInputs }) {
   };
 
   const submitForm = () => {
-    const endpoint = `api/user/${id}${
+    const endpoint = `/api/user/${id}${
       isEditProfileForm ? "/details" : "/password"
     }`;
     const requestConfig = {
@@ -64,6 +64,7 @@ export function AccountForm({ title, formInputs }) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify(trimFormTrailingSpaces(form)),

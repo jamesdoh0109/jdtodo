@@ -62,12 +62,13 @@ export default function TaskRow({ task }) {
   };
 
   const toggleTaskStatus = () => {
-    const endpoint = `api/tasks/${task.id}`;
+    const endpoint = `/api/tasks/${task.id}`;
     const requestConfig = {
       url: endpoint,
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({

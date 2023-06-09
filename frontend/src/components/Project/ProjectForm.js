@@ -73,7 +73,7 @@ export default function ProjectForm({ token }) {
   };
 
   const submitForm = () => {
-    const endpoint = `api/projects${
+    const endpoint = `/api/projects${
       !creatingNew ? "/" + projectToBeEdited.id : ""
     }`;
     const requestConfig = {
@@ -81,6 +81,7 @@ export default function ProjectForm({ token }) {
       method: creatingNew ? "POST" : "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({

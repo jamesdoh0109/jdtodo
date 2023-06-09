@@ -74,10 +74,11 @@ export default function Dropdown({ task, onLeave, onHover }) {
   const handleOnDelete = (e) => {
     e.stopPropagation();
     const requestConfig = {
-      url: "api/tasks/" + task.id,
+      url: "/api/tasks/" + task.id,
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
     };

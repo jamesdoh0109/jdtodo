@@ -18,10 +18,11 @@ export default function DeleteAccount() {
 
   const handleDeleteAccount = () => {
     const requestConfig = {
-      url: "api/user/" + id,
+      url: "/api/user/" + id,
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
     };
