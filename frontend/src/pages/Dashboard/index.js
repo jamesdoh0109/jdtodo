@@ -71,7 +71,7 @@ export default function Dashboard() {
   const dashboardWithProjects = (
     <>
       {createProjectBtn}
-      <ul className="w-full grid mt-4 gap-y-7 pl-xl:grid-cols-g-xl pl-lg:grid-cols-g-lg pl-md:grid-cols-g-md pl-sm:grid-cols-g-sm pl-xs:grid-cols-g-xs justify-start">
+      <ul className="w-full grid py-4 gap-y-7 pl-xl:grid-cols-g-xl pl-lg:grid-cols-g-lg pl-md:grid-cols-g-md pl-sm:grid-cols-g-sm pl-xs:grid-cols-g-xs justify-start">
         {projects &&
           sortById(projects).map((project) => (
             <li key={project.id} className="mr-8">

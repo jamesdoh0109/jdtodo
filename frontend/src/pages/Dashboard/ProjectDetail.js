@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../../store/reducers/user-data";
 import { formActions } from "../../store/reducers/form";
 import { modalActions } from "../../store/reducers/modal";
+import { Dropdown } from "flowbite-react";
 import useFetch from "../../hooks/useFetch";
 import TaskTable from "../../components/Task/TaskTable";
 import Loading from "../../components/common/Loading";
@@ -21,6 +22,8 @@ export default function ProjectDetail() {
   const tasksForCurrentProject = tasksForAllProjects?.find(
     (project) => project.id === id
   );
+
+  const [currentSortBy, setCurrentSortBy] = useState("Sort By");
 
   const { status, setStatus, isLoading, fetchData } = useFetch();
 
@@ -82,12 +85,28 @@ export default function ProjectDetail() {
     dispatch,
     setStatus,
     fetchData,
-  ]); 
+  ]);
 
   const openCreateTaskModal = () => {
     dispatch(formActions.onCreate());
     dispatch(modalActions.toggle());
   };
+
+  const sortBy = (
+    <div className="mt-32 border-solid border border-slate-500 rounded-md px-3 py-2">
+      <Dropdown inline label={currentSortBy}>
+        <Dropdown.Item onClick={() => setCurrentSortBy("Deadline")}>
+          Deadline
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => setCurrentSortBy("Name")}>
+          Name
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => setCurrentSortBy("Status")}>
+          Status
+        </Dropdown.Item>
+      </Dropdown>
+    </div>
+  );
 
   const createTaskButton = (
     <div className="mt-32">
@@ -104,9 +123,16 @@ export default function ProjectDetail() {
 
   const dashboardWithTasks = (
     <>
-      {createTaskButton}
+      <div className="flex justify-between">
+        {createTaskButton}
+        {sortBy}
+      </div>
+
       <div className="mt-4">
-        <TaskTable tasks={tasksForCurrentProject?.tasks} />
+        <TaskTable
+          tasks={tasksForCurrentProject?.tasks}
+          sortBy={currentSortBy}
+        />
       </div>
     </>
   );
