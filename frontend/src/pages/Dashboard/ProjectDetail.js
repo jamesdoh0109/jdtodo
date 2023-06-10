@@ -128,7 +128,7 @@ export default function ProjectDetail() {
   const dashboardWithNoTasks = (
     <>
       {createTaskButton}
-      <p className="mt-4">You currently don't have any tasks.</p>
+      <p className="mt-4">This project currently doesn't have any tasks.</p>
     </>
   );
 
