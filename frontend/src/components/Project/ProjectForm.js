@@ -37,7 +37,10 @@ export default function ProjectForm({ token }) {
           projects: [...filteredProjects, editedProject],
         })
       );
-      dispatch(modalActions.toggle());
+      dispatch(modalActions.toggle({
+        modalOpen: false,
+        modalType: ""
+      }));
     } catch (e) {
       console.log(e);
     }
@@ -54,7 +57,10 @@ export default function ProjectForm({ token }) {
       dispatch(
         userDataActions.setProjects({ projects: [...projects, newProject] })
       );
-      dispatch(modalActions.toggle());
+      dispatch(modalActions.toggle({
+        modalOpen: false,
+        modalType: ""
+      }));
     } catch (e) {
       console.log(e);
     }
@@ -137,7 +143,10 @@ export default function ProjectForm({ token }) {
     <Button
       text="Close"
       onClick={() => {
-        dispatch(modalActions.toggle());
+        dispatch(modalActions.toggle({
+          modalOpen: false,
+          modalType: ""
+        }));
       }}
       isLoading={isLoading}
       color="slate"

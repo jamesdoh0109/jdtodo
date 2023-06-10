@@ -6,11 +6,11 @@ import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
 import { formatDate } from "../../util/display";
 import { Table, Checkbox } from "flowbite-react";
-import StatusBadge from "./StatusBadge";
 import useFetch from "../../hooks/useFetch";
+import StatusBadge from "./StatusBadge";
 import Dropdown from "./Dropdown";
 
-export default function TaskRow({ task }) {
+export default function TaskRow({ task, dropdownId }) {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
   const [color, setColor] = useState("bg-white");
@@ -33,7 +33,8 @@ export default function TaskRow({ task }) {
     setColor("bg-white");
   };
 
-  const handleOnEdit = () => {
+  const displayTaskDetail = () => {
+    // works but using form action for display?
     dispatch(
       formActions.onEdit({
         itemToBeEdited: {
@@ -46,7 +47,10 @@ export default function TaskRow({ task }) {
         },
       })
     );
-    dispatch(modalActions.toggle());
+    dispatch(modalActions.toggle({
+      modalOpen: true,
+      modalType: 'details'
+    }));
   };
 
   const displayEditedTask = () => {
@@ -85,7 +89,7 @@ export default function TaskRow({ task }) {
       key={task.id}
       onMouseEnter={setHoverColor}
       onMouseLeave={setLeaveColor}
-      onClick={handleOnEdit}
+      onClick={displayTaskDetail}
     >
       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
         <Checkbox
@@ -101,7 +105,7 @@ export default function TaskRow({ task }) {
         <StatusBadge status={task.status} />
       </Table.Cell>
       <Table.Cell>
-        <Dropdown task={task} onLeave={setHoverColor} onHover={setLeaveColor} />
+        <Dropdown task={task} onLeave={setHoverColor} onHover={setLeaveColor} dropdownId={dropdownId}/>
       </Table.Cell>
     </Table.Row>
   );

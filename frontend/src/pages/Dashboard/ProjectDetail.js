@@ -10,12 +10,15 @@ import TaskTable from "../../components/Task/TaskTable";
 import Loading from "../../components/common/Loading";
 import Button from "../../components/common/Button";
 import TaskForm from "../../components/Task/TaskForm";
+import TaskDetail from "../../components/Task/TaskDetail";
 import Error from "../../components/common/Error";
+import { dropdownActions } from "../../store/reducers/dropdown";
 
 export default function ProjectDetail() {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
   const modalOpen = useSelector((state) => state.modal.modalOpen);
+  const modalType = useSelector((state) => state.modal.modalType);
   const tasksForAllProjects = useSelector(
     (state) => state.userData.tasksForAllProjects
   );
@@ -89,7 +92,15 @@ export default function ProjectDetail() {
 
   const openCreateTaskModal = () => {
     dispatch(formActions.onCreate());
-    dispatch(modalActions.toggle());
+    dispatch(modalActions.toggle({
+      modalOpen: true,
+      modalType: 'form'
+    }));
+    dispatch(
+      dropdownActions.toggleDropdown({
+        dropdownId: -1,
+      })
+    );
   };
 
   const sortBy = (
@@ -140,7 +151,8 @@ export default function ProjectDetail() {
   return (
     <div className="w-full flex justify-center">
       <div className="w-4/5">
-        {modalOpen && <TaskForm />}
+        {modalOpen && modalType === "form" && <TaskForm />}
+        {modalOpen && modalType === "details" && <TaskDetail />}
         {isLoading && <Loading />}
         {!isLoading &&
           tasksForCurrentProject?.tasks.length === 0 &&

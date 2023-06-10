@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { dropdownActions } from "../../store/reducers/dropdown";
@@ -10,11 +9,9 @@ import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useFetch from "../../hooks/useFetch";
 
-export default function Dropdown({ task, onLeave, onHover }) {
+export default function Dropdown({ task, onLeave, onHover, dropdownId }) {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownIndex = useSelector((state) => state.dropdown.dropdownIndex);
 
   const tasksForAllProjects = useSelector(
     (state) => state.userData.tasksForAllProjects
@@ -27,20 +24,21 @@ export default function Dropdown({ task, onLeave, onHover }) {
 
   const dispatch = useDispatch();
 
-  const showDropdown = (id) => {
-    dispatch(
-      dropdownActions.toggleDropdown({
-        dropdownIndex: id,
-      })
-    );
-    setDropdownOpen((prevDropdownOpen) => !prevDropdownOpen);
+  const toggleDropdown = (id) => {
+    if (dropdownId === id) {
+      dispatch(
+        dropdownActions.toggleDropdown({
+          dropdownId: -1,
+        })
+      );
+    } else if (dropdownId === -1 || dropdownId !== id) {
+      dispatch(
+        dropdownActions.toggleDropdown({
+          dropdownId: id,
+        })
+      );
+    }
   };
-
-  // change dropdownOpen back to false, o.w. it will stay true and dropdown will be hidden
-  // meaning the user would have to click it twice for it to show again
-  if (dropdownOpen && dropdownIndex !== task.id) {
-    setDropdownOpen((prevDropdownOpen) => !prevDropdownOpen);
-  }
 
   const handleOnEdit = (e) => {
     e.stopPropagation();
@@ -56,8 +54,17 @@ export default function Dropdown({ task, onLeave, onHover }) {
         },
       })
     );
-    dispatch(modalActions.toggle());
-    setDropdownOpen((prevDropdownOpen) => !prevDropdownOpen);
+    dispatch(
+      modalActions.toggle({
+        modalOpen: true,
+        modalType: "form",
+      })
+    );
+    dispatch(
+      dropdownActions.toggleDropdown({
+        dropdownId: -1,
+      })
+    );
   };
 
   const undisplayDeletedTask = (res) => {
@@ -106,10 +113,10 @@ export default function Dropdown({ task, onLeave, onHover }) {
         onClick={(e) => {
           // prevent modal popup
           e.stopPropagation();
-          showDropdown(task.id);
+          toggleDropdown(task.id);
         }}
       />
-      {dropdownOpen && dropdownIndex === task.id && dropdown}
+      {dropdownId !== -1 && dropdownId === task.id && dropdown}
     </div>
   );
 }
