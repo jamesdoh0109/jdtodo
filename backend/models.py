@@ -36,7 +36,7 @@ class Project(db.Model):
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(500), default="This task has no description.")
+    description = db.Column(db.String(500), default="")
     deadline = db.Column(db.DateTime, default=datetime.datetime.now)
     status = db.Column(db.String(20), default="Not started")
     is_done = db.Column(db.Boolean, default=False)

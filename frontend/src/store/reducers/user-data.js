@@ -1,5 +1,93 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const filterTasks = (tasksForCurrentProject, idToBeFiltered) => tasksForCurrentProject.tasks.filter(
+  (task) => task.id !== idToBeFiltered
+);
+
+const updateProjectObject = (projectId, currentTasks, update) => ({
+  id: projectId,
+  tasks: update ? [...currentTasks, update] : currentTasks,
+});
+
+const updateProjectArray = (state, projectId, updatedProject) => {
+  const filteredProject = state.tasksForAllProjects.filter(
+    (project) => project.id !== projectId
+  );
+  state.tasksForAllProjects = [
+    ...filteredProject,
+    updatedProject,
+  ];
+}
+
+const createTask = (state, projectId, tasksForCurrentProject, data) => {
+  const newTask = {
+    id: data.task.task_id,
+    name: data.task.task_name,
+    deadline: data.task.task_deadline,
+    description: data.task.task_description,
+    status: data.task.task_status,
+    isDone: data.task.task_status === "Finished" ? true : false,
+  };
+
+  // project object containing the new task
+  const projectWithNewTask = updateProjectObject(projectId, tasksForCurrentProject.tasks, newTask);
+
+  // update the array of project objs by first filtering out the current project
+  // and re adding the project obj containing the new task
+  updateProjectArray(state, projectId, projectWithNewTask);
+};
+
+const editTask = (
+  state,
+  projectId,
+  tasksForCurrentProject,
+  taskToBeEdited,
+  task,
+  form
+) => {
+  // two types of edits: one using form and checkbox click
+  const editedTask = form
+    ? {
+        id: taskToBeEdited,
+        name: form.name,
+        deadline: form.deadline,
+        description: form.description,
+        status: form.status,
+        isDone: form.is_done,
+      }
+    : {
+        id: taskToBeEdited,
+        name: task.name,
+        deadline: task.deadline,
+        description: task.description,
+        status: task.isDone ? "Not started" : "Finished",
+        isDone: !task.isDone,
+      };
+
+  // update the tasks for the project by first filtering out the old task
+  // and adding the updated version
+  const filteredTasksWithoutEditedProject = filterTasks(tasksForCurrentProject, taskToBeEdited);
+  const projectWithEditedTask = updateProjectObject(projectId, filteredTasksWithoutEditedProject, editedTask);
+
+  // update the array of project objs by first filtering out the current project
+  // and re adding the project obj containing the new task
+  updateProjectArray(state, projectId, projectWithEditedTask);
+};
+
+const deleteTask = (
+  state,
+  projectId,
+  tasksForCurrentProject,
+  taskToBeDeleted
+) => {
+  const filteredTasksWithoutDeletedProject = filterTasks(tasksForCurrentProject, taskToBeDeleted);
+  const projectWithDeletedTask = updateProjectObject(projectId, filteredTasksWithoutDeletedProject);
+
+  // update the array of project objs by first filtering out the current project
+  // and re adding the project obj containing the new task
+  updateProjectArray(state, projectId, projectWithDeletedTask);
+};
+
 const userDataSlice = createSlice({
   name: "userData",
   initialState: {
@@ -23,89 +111,38 @@ const userDataSlice = createSlice({
     setEmail(state, action) {
       state.email = action.payload.email;
     },
-    // TODO: simplify and add updateProjects functionality
     updateTasks(state, action) {
-      let data, task, projectId, tasksForCurrentProject, taskToBeEdited, form;
+      const projectId = action.payload.projectId;
+      const tasksForCurrentProject = action.payload.tasksForCurrentProject;
       switch (action.payload.type) {
         case "CREATE":
-          ({ data, projectId, tasksForCurrentProject } = action.payload);
-          try {
-            const newTask = {
-              id: data.task.task_id,
-              name: data.task.task_name,
-              deadline: data.task.task_deadline,
-              description: data.task.task_description,
-              status: data.task.task_status,
-              isDone: data.task.task_status === "Finished" ? true : false,
-            };
-
-            // project object containing the new task
-            const projectWithNewTask = {
-              id: projectId,
-              tasks: [...tasksForCurrentProject.tasks, newTask],
-            };
-
-            // update the array of project objs by first filtering out the current project
-            // and re adding the project obj containing the new task
-            const filteredProjectArray = state.tasksForAllProjects.filter(
-              (project) => project.id !== projectId
-            );
-            state.tasksForAllProjects = [
-              ...filteredProjectArray,
-              projectWithNewTask,
-            ];
-          } catch (e) {
-            console.log(e);
-          }
-          return;
+          createTask(
+            state,
+            projectId,
+            tasksForCurrentProject,
+            action.payload.data
+          );
+          break;
         case "EDIT":
-          ({ taskToBeEdited, task, form, projectId, tasksForCurrentProject } =
-            action.payload);
-          try {
-            // two types of edits: one using form and checkbox click
-            const editedTask = form
-              ? {
-                  id: taskToBeEdited,
-                  name: form.name,
-                  deadline: form.deadline,
-                  description: form.description,
-                  status: form.status,
-                  isDone: form.is_done,
-                }
-              : {
-                  id: taskToBeEdited,
-                  name: task.name,
-                  deadline: task.deadline,
-                  description: task.description,
-                  status: task.isDone ? "Not started" : "Finished",
-                  isDone: !task.isDone,
-                };
-
-            // update the tasks for the project by first filtering out the old task
-            // and adding the updated version
-            const filteredTasks = tasksForCurrentProject.tasks.filter(
-              (task) => task.id !== taskToBeEdited
-            );
-            const projectWithUpdatedTask = {
-              id: projectId,
-              tasks: [...filteredTasks, editedTask],
-            };
-
-            // update the array of project objs by first filtering out the current project
-            // and re adding the project obj containing the new task
-            const filteredProjectArray = state.tasksForAllProjects.filter(
-              (project) => project.id !== projectId
-            );
-            state.tasksForAllProjects = [
-              ...filteredProjectArray,
-              projectWithUpdatedTask,
-            ];
-          } catch (e) {
-            console.log(e);
-          }
-          return;
+          editTask(
+            state,
+            projectId,
+            tasksForCurrentProject,
+            action.payload.taskToBeEdited,
+            action.payload.task,
+            action.payload.form
+          );
+          break;
+        case "DELETE":
+          deleteTask(
+            state,
+            projectId,
+            tasksForCurrentProject,
+            action.payload.taskToBeDeleted
+          );
+          break;
         default:
-          return;
+          break;
       }
     },
     updateProjects(state, action) {
@@ -113,6 +150,8 @@ const userDataSlice = createSlice({
         case "CREATE":
           return;
         case "EDIT":
+          return;
+        case "DELETE":
           return;
         default:
           return;

@@ -22,6 +22,7 @@ export default function DeleteAccount() {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
     };

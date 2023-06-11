@@ -83,10 +83,11 @@ export function checkForInputErrors(form) {
 
 async function checkTokenValidity(token) {
   const response = await fetch(
-    "https://jihundoh0109-humble-space-potato-57v96jp6q5gh77p6-5000.preview.app.github.dev/api/protected",
+    "/api/protected",
     {
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
     }

@@ -6,10 +6,11 @@ import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
 import { formatDate } from "../../util/display";
 import { Table, Checkbox } from "flowbite-react";
-import StatusBadge from "./StatusBadge";
 import useFetch from "../../hooks/useFetch";
+import StatusBadge from "./StatusBadge";
+import Dropdown from "./Dropdown";
 
-export default function TaskRow({ task }) {
+export default function TaskRow({ task, dropdownId }) {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
   const [color, setColor] = useState("bg-white");
@@ -32,7 +33,8 @@ export default function TaskRow({ task }) {
     setColor("bg-white");
   };
 
-  const handleOnEdit = () => {
+  const displayTaskDetail = () => {
+    // works but using form action for display?
     dispatch(
       formActions.onEdit({
         itemToBeEdited: {
@@ -45,7 +47,10 @@ export default function TaskRow({ task }) {
         },
       })
     );
-    dispatch(modalActions.toggle());
+    dispatch(modalActions.toggle({
+      modalOpen: true,
+      modalType: 'details'
+    }));
   };
 
   const displayEditedTask = () => {
@@ -67,6 +72,7 @@ export default function TaskRow({ task }) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
@@ -79,17 +85,17 @@ export default function TaskRow({ task }) {
 
   return (
     <Table.Row
-      className={`${color} dark:border-gray-700 dark:bg-gray-800 cursor-pointer`}
+      className={`${color} dark:border-gray-700 dark:bg-gray-800`}
       key={task.id}
       onMouseEnter={setHoverColor}
       onMouseLeave={setLeaveColor}
-      onClick={handleOnEdit}
+      onClick={displayTaskDetail}
     >
       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
         <Checkbox
           checked={task.isDone}
           onChange={() => toggleTaskStatus()}
-          // prevent modal popup 
+          // prevent modal popup
           onClick={(e) => e.stopPropagation()}
         />
       </Table.Cell>
@@ -97,6 +103,9 @@ export default function TaskRow({ task }) {
       <Table.Cell>{formatDate(task.deadline)}</Table.Cell>
       <Table.Cell>
         <StatusBadge status={task.status} />
+      </Table.Cell>
+      <Table.Cell>
+        <Dropdown task={task} onLeave={setHoverColor} onHover={setLeaveColor} dropdownId={dropdownId}/>
       </Table.Cell>
     </Table.Row>
   );

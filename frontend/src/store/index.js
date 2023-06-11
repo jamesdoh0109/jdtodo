@@ -3,6 +3,7 @@ import AuthReducer from "./reducers/auth";
 import ModalReducer from "./reducers/modal";
 import UserDataReducer from "./reducers/user-data";
 import FormReducer from "./reducers/form";
+import DropdownReducer from "./reducers/dropdown";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     modal: ModalReducer,
     userData: UserDataReducer,
     form: FormReducer,
+    dropdown: DropdownReducer,
   },
 });
 

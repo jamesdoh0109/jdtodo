@@ -43,7 +43,10 @@ export default function AuthForm({
     try {
       const data = await res.json();
       if (res.status !== 201 && res.status !== 200) {
-        setStatus({ error: true, message: data.error });
+        setStatus({
+          error: true,
+          message: data.error ? data.error : data.message,
+        });
       } else if (res.status === 200) {
         login(dispatch, navigate, data);
       } else if (res.status === 201) {
@@ -59,7 +62,10 @@ export default function AuthForm({
     const requestConfig = {
       url: endpoint,
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify(trimFormTrailingSpaces(form)),
     };
     fetchData(requestConfig, undefined, handleResponse);

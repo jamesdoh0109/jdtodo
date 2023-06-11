@@ -1,6 +1,6 @@
 import { Badge } from "flowbite-react";
 
-export default function StatusBadge({ status }) {
+export default function StatusBadge({ status, forTaskDetail }) {
   const color =
     status === "Finished"
       ? "success"
@@ -8,5 +8,13 @@ export default function StatusBadge({ status }) {
       ? "warning"
       : "failure";
 
-  return <Badge size="xs" color={color} className="flex justify-center">{status}</Badge>;
+  return (
+    <Badge
+      size="xs"
+      color={color}
+      className={forTaskDetail ? "inline-flex" : "flex justify-center"}
+    >
+      {status}
+    </Badge>
+  );
 }

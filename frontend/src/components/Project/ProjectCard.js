@@ -29,6 +29,7 @@ export default function ProjectCard({ id, name, dateCreated }) {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
     };
@@ -41,7 +42,10 @@ export default function ProjectCard({ id, name, dateCreated }) {
         itemToBeEdited: { id: id, name: name, dateCreated: dateCreated },
       })
     );
-    dispatch(modalActions.toggle());
+    dispatch(modalActions.toggle({
+      modalOpen: true,
+      modalType: 'form'
+    }));
   };
 
   const projectName = (

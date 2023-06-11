@@ -14,6 +14,7 @@ export default function Dashboard() {
   const token = useSelector((state) => state.auth.token);
   const projects = useSelector((state) => state.userData.projects);
   const modalOpen = useSelector((state) => state.modal.modalOpen);
+  const modalType = useSelector((state) => state.modal.modalType);
   const [initialLoading, setInitialLoading] = useState(true);
 
   const { isLoading, fetchData } = useFetch();
@@ -41,6 +42,7 @@ export default function Dashboard() {
         url: "/api/projects",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
           Authorization: "Bearer " + token,
         },
       };
@@ -51,7 +53,10 @@ export default function Dashboard() {
 
   const openCreateProjectModal = () => {
     dispatch(formActions.onCreate());
-    dispatch(modalActions.toggle());
+    dispatch(modalActions.toggle({
+      modalOpen: true,
+      modalType: 'form'
+    }));
   };
 
   const createProjectBtn = (
@@ -70,7 +75,7 @@ export default function Dashboard() {
   const dashboardWithProjects = (
     <>
       {createProjectBtn}
-      <ul className="w-full grid mt-4 gap-y-7 pl-xl:grid-cols-g-xl pl-lg:grid-cols-g-lg pl-md:grid-cols-g-md pl-sm:grid-cols-g-sm pl-xs:grid-cols-g-xs justify-start">
+      <ul className="w-full grid py-4 gap-y-7 pl-xl:grid-cols-g-xl pl-lg:grid-cols-g-lg pl-md:grid-cols-g-md pl-sm:grid-cols-g-sm pl-xs:grid-cols-g-xs justify-start">
         {projects &&
           sortById(projects).map((project) => (
             <li key={project.id} className="mr-8">
@@ -88,7 +93,7 @@ export default function Dashboard() {
   return (
     <div className="flex justify-center w-full">
       <div className="w-4/5">
-        {modalOpen && <ProjectForm token={token} />}
+        {modalOpen && modalType === "form" && <ProjectForm token={token} />}
         {isLoading && <Loading />}
         {!isLoading && projects?.length === 0 && dashboardWithNoProjects}
         {!isLoading && projects?.length > 0 && dashboardWithProjects}

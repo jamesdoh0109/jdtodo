@@ -48,7 +48,12 @@ export default function TaskForm() {
         tasksForCurrentProject: tasksForCurrentProject,
       })
     );
-    dispatch(modalActions.toggle());
+    dispatch(
+      modalActions.toggle({
+        modalOpen: false,
+        modalType: "",
+      })
+    );
   };
 
   const displayEditedTask = () => {
@@ -61,7 +66,12 @@ export default function TaskForm() {
         tasksForCurrentProject: tasksForCurrentProject,
       })
     );
-    dispatch(modalActions.toggle());
+    dispatch(
+      modalActions.toggle({
+        modalOpen: false,
+        modalType: "",
+      })
+    );
   };
 
   const handleOnSubmit = (e) => {
@@ -82,6 +92,7 @@ export default function TaskForm() {
   };
 
   const submitForm = () => {
+    console.log(form)
     const endpoint = creatingNew
       ? `/api/${id}/tasks`
       : `/api/tasks/${taskToBeEdited.id}`;
@@ -90,6 +101,7 @@ export default function TaskForm() {
       method: creatingNew ? "POST" : "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({ ...form, is_done: form.status === "Finished" }),
@@ -116,26 +128,13 @@ export default function TaskForm() {
       <div className="mt-3 block">
         <label htmlFor={id}>{label}</label>
       </div>
-      {type !== "options" ? (
-        <Input
-          id={id}
-          name={id}
-          type={type}
-          onChange={handleTaskChange}
-          value={form[id]}
-        />
-      ) : (
-        <select
-          id={id}
-          name={id}
-          onChange={handleTaskChange}
-          value={form.status}
-        >
-          <option value="Not started">Not started</option>
-          <option value="In progress">In progress</option>
-          <option value="Finished">Finished</option>
-        </select>
-      )}
+      <Input
+        id={id}
+        name={id}
+        type={type}
+        onChange={handleTaskChange}
+        value={form[id]}
+      />
     </>
   );
 
@@ -143,8 +142,8 @@ export default function TaskForm() {
     <div>
       {formInput("name", "Name", "text")}
       {formInput("deadline", "Deadline", "date")}
-      {formInput("status", "Status", "options")}
-      {formInput("description", "Description (optional)", "text")}
+      {formInput("status", "Status", "select")}
+      {formInput("description", "Description (optional)", "textarea")}
     </div>
   );
 
@@ -168,9 +167,14 @@ export default function TaskForm() {
     <Button
       text="Close"
       onClick={() => {
-        dispatch(modalActions.toggle());
+        dispatch(
+          modalActions.toggle({
+            modalOpen: false,
+            modalType: "",
+          })
+        );
       }}
-      isLoading={false}
+      isLoading={isLoading}
       color="slate"
     />
   );
