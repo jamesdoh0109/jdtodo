@@ -37,10 +37,12 @@ export default function ProjectForm({ token }) {
           projects: [...filteredProjects, editedProject],
         })
       );
-      dispatch(modalActions.toggle({
-        modalOpen: false,
-        modalType: ""
-      }));
+      dispatch(
+        modalActions.toggle({
+          modalOpen: false,
+          modalType: "",
+        })
+      );
     } catch (e) {
       console.log(e);
     }
@@ -57,10 +59,12 @@ export default function ProjectForm({ token }) {
       dispatch(
         userDataActions.setProjects({ projects: [...projects, newProject] })
       );
-      dispatch(modalActions.toggle({
-        modalOpen: false,
-        modalType: ""
-      }));
+      dispatch(
+        modalActions.toggle({
+          modalOpen: false,
+          modalType: "",
+        })
+      );
     } catch (e) {
       console.log(e);
     }
@@ -72,6 +76,11 @@ export default function ProjectForm({ token }) {
       setStatus({
         error: true,
         message: "Name must be less than 25 characters.",
+      });
+    } else if (projectName === "") {
+      setStatus({
+        error: true,
+        message: "Name is required.",
       });
     } else {
       submitForm();
@@ -143,10 +152,12 @@ export default function ProjectForm({ token }) {
     <Button
       text="Close"
       onClick={() => {
-        dispatch(modalActions.toggle({
-          modalOpen: false,
-          modalType: ""
-        }));
+        dispatch(
+          modalActions.toggle({
+            modalOpen: false,
+            modalType: "",
+          })
+        );
       }}
       isLoading={isLoading}
       color="slate"

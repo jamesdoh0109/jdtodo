@@ -39,9 +39,31 @@ function validateEditUserInput({ firstname, lastname, email }) {
   return null;
 }
 
+function validateForgotPasswordInput({ email }) {
+  if (hasEmptyFields(email)) {
+    return "Please enter your email.";
+  } else if (!checkValidEmail(email)) {
+    return "Email is not valid.";
+  }
+  return null;
+}
+
+function validateResetPasswordInput({ password, password2 }) {
+  if (hasEmptyFields(password, password2)) {
+    return "Both fields are required.";
+  } else if (password !== password2) {
+    return "Your passwords don't match.";
+  } else if (!checkValidPassword(password)) {
+    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number.";
+  }
+  return null;
+}
+
 function validateLoginInput({ email, password }) {
   if (hasEmptyFields(email, password)) {
     return "Both fields are required.";
+  } else if (!checkValidEmail(email)) {
+    return "Email is not valid.";
   }
   return null;
 }
@@ -68,14 +90,16 @@ function validateSignupInput({
 export function checkForInputErrors(form) {
   const numInputs = Object.keys(form).length;
   switch (numInputs) {
+    case 1:
+      return validateForgotPasswordInput(form);
     case 2:
-      return validateLoginInput(form);
+      return form.hasOwnProperty("password2")
+        ? validateResetPasswordInput(form)
+        : validateLoginInput(form);
     case 3:
-      if ("currentPassword" in form) {
-        return validateChangePasswordInput(form);
-      } else {
-        return validateEditUserInput(form);
-      }
+      return "currentPassword" in form
+        ? validateChangePasswordInput(form)
+        : validateEditUserInput(form);
     default:
       return validateSignupInput(form);
   }
@@ -83,7 +107,7 @@ export function checkForInputErrors(form) {
 
 async function checkTokenValidity(token) {
   const response = await fetch(
-    "/api/protected",
+    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.preview.app.github.dev/api/protected",
     {
       headers: {
         "Content-Type": "application/json",
@@ -137,6 +161,23 @@ export async function checkAuthAndRedirect(pageType) {
     if (tokenIsValid) {
       return redirect("/dashboard");
     }
+  }
+  return null;
+}
+
+export async function checkPasswordResetTokenAndRedirect(token) {
+  const response = await fetch(
+    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.preview.app.github.dev/api/verify_reset_password_token/" +
+      token,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+  );
+  if (response.status === 404 || response.status === 403) {
+    return redirect("/");
   }
   return null;
 }

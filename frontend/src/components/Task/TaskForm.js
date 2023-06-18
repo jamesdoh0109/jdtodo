@@ -92,7 +92,6 @@ export default function TaskForm() {
   };
 
   const submitForm = () => {
-    console.log(form)
     const endpoint = creatingNew
       ? `/api/${id}/tasks`
       : `/api/tasks/${taskToBeEdited.id}`;

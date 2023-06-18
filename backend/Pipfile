@@ -11,6 +11,8 @@ pyjwt = "*"
 flask-jwt-extended = "*"
 pytz = "*"
 mysqlclient = "*"
+itsdangerous = "*"
+flask-mail = "*"
 
 [dev-packages]
 

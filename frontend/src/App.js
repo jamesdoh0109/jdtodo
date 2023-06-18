@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { checkAuthAndRedirect } from "./util/auth";
+import { checkAuthAndRedirect, checkPasswordResetTokenAndRedirect } from "./util/auth";
 import { initialTokenFetchFromBrowswer } from "./store/reducers/auth";
 import { initialUserDataFetchFromBrowswer } from "./store/reducers/user-data";
 import Root from "./pages/Root";
@@ -11,6 +11,8 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard/index";
 import Account from "./pages/Account";
 import ProjectDetail from "./pages/Dashboard/ProjectDetail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +38,16 @@ function App() {
           loader: () => checkAuthAndRedirect("unprotected"),
         },
         {
+          path: "/forgot-password",
+          element: <ForgotPassword />,
+          loader: () => checkAuthAndRedirect("unprotected")
+        },
+        {
+          path: "/reset-password/:token",
+          element: <ResetPassword />,
+          loader: ({ params }) => checkPasswordResetTokenAndRedirect(params.token)
+        },
+        {
           path: "/signup",
           element: <Signup />,
           loader: () => checkAuthAndRedirect("unprotected"),
@@ -58,7 +70,6 @@ function App() {
       ],
     },
   ]);
-
   return <RouterProvider router={router} />;
 }
 

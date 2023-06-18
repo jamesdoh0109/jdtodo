@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../../store/reducers/user-data";
 import { formActions } from "../../store/reducers/form";
 import { modalActions } from "../../store/reducers/modal";
+import { dropdownActions } from "../../store/reducers/dropdown";
 import { Dropdown } from "flowbite-react";
 import useFetch from "../../hooks/useFetch";
 import TaskTable from "../../components/Task/TaskTable";
@@ -12,7 +13,6 @@ import Button from "../../components/common/Button";
 import TaskForm from "../../components/Task/TaskForm";
 import TaskDetail from "../../components/Task/TaskDetail";
 import Error from "../../components/common/Error";
-import { dropdownActions } from "../../store/reducers/dropdown";
 
 export default function ProjectDetail() {
   const id = useParams().projectId;
@@ -42,9 +42,9 @@ export default function ProjectDetail() {
 
     const populateTasks = async (res) => {
       try {
-        if (res.status === 400) {
+        if (res.status === 404) {
           handleError("Project does not exist.");
-        } else if (res.status === 401) {
+        } else if (res.status === 403) {
           handleError("Access forbidden");
         } else {
           const data = await res.json();

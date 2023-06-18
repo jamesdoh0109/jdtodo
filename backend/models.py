@@ -1,6 +1,8 @@
 from setup import db 
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import URLSafeTimedSerializer as Serializer
 import datetime
+import os 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,6 +11,7 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     hashed_password = db.Column(db.String(128), nullable=False)
     projects = db.relationship('Project', backref='user', lazy=True, cascade="all, delete")
+    reset_password_token = db.Column(db.String(128))
     
     def __init__(self, firstname, lastname, email, hashed_password):
         self.firstname = firstname
@@ -16,6 +19,19 @@ class User(db.Model):
         self.email = email
         self.hashed_password = hashed_password
 
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(os.environ.get('SERIALIZE_SECRET'), expires_sec)
+        return s.dumps({'user_id': self.id}, salt="password-reset-salt")
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(os.environ.get('SERIALIZE_SECRET'))
+        try:
+            user_id = s.loads(token, salt="password-reset-salt")['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
+            
     def __repr__(self):
         return '<User %r>' % self.id
 

@@ -6,6 +6,8 @@ import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
 import { formatDate } from "../../util/display";
 import { Table, Checkbox } from "flowbite-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import useFetch from "../../hooks/useFetch";
 import StatusBadge from "./StatusBadge";
 import Dropdown from "./Dropdown";
@@ -13,13 +15,15 @@ import Dropdown from "./Dropdown";
 export default function TaskRow({ task, dropdownId }) {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
-  const [color, setColor] = useState("bg-white");
   const tasksForAllProjects = useSelector(
     (state) => state.userData.tasksForAllProjects
   );
   const tasksForCurrentProject = tasksForAllProjects?.find(
     (project) => project.id === id
   );
+
+  const [color, setColor] = useState("bg-white");
+  const currentDate = new Date(formatDate(new Date().toDateString()));
 
   const { fetchData } = useFetch();
 
@@ -47,10 +51,12 @@ export default function TaskRow({ task, dropdownId }) {
         },
       })
     );
-    dispatch(modalActions.toggle({
-      modalOpen: true,
-      modalType: 'details'
-    }));
+    dispatch(
+      modalActions.toggle({
+        modalOpen: true,
+        modalType: "details",
+      })
+    );
   };
 
   const displayEditedTask = () => {
@@ -83,6 +89,10 @@ export default function TaskRow({ task, dropdownId }) {
     fetchData(requestConfig, displayEditedTask);
   };
 
+  const deadlinePassedWarning = (
+    <FontAwesomeIcon icon={faExclamationCircle} className="w-4 mr-2" />
+  );
+
   return (
     <Table.Row
       className={`${color} dark:border-gray-700 dark:bg-gray-800`}
@@ -99,13 +109,24 @@ export default function TaskRow({ task, dropdownId }) {
           onClick={(e) => e.stopPropagation()}
         />
       </Table.Cell>
-      <Table.Cell>{task.name}</Table.Cell>
+      <Table.Cell>
+        <>
+          {new Date(formatDate(task.deadline)) < currentDate &&
+            deadlinePassedWarning}
+          {task.name}
+        </>
+      </Table.Cell>
       <Table.Cell>{formatDate(task.deadline)}</Table.Cell>
       <Table.Cell>
         <StatusBadge status={task.status} />
       </Table.Cell>
       <Table.Cell>
-        <Dropdown task={task} onLeave={setHoverColor} onHover={setLeaveColor} dropdownId={dropdownId}/>
+        <Dropdown
+          task={task}
+          onLeave={setHoverColor}
+          onHover={setLeaveColor}
+          dropdownId={dropdownId}
+        />
       </Table.Cell>
     </Table.Row>
   );
