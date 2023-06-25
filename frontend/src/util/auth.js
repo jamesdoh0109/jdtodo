@@ -150,7 +150,7 @@ export async function checkAuthAndRedirect(pageType) {
   if (pageType === "protected" && !token) {
     return redirect("/login");
   } else if (pageType === "protected" && token) {
-    const tokenIsValid = await checkTokenValidity(token);
+    const tokenIsValid = await checkTokenValidity(token);  
     if (!tokenIsValid) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
@@ -169,12 +169,7 @@ export async function checkPasswordResetTokenAndRedirect(token) {
   const response = await fetch(
     "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.preview.app.github.dev/api/verify_reset_password_token/" +
       token,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
+     
   );
   if (response.status === 404 || response.status === 403) {
     return redirect("/");

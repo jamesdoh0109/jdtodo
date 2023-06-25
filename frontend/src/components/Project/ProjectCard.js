@@ -4,6 +4,7 @@ import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
 import { formActions } from "../../store/reducers/form";
 import { splitNameIntoLines } from "../../util/form";
+import { formatDate } from "../../util/display";
 import { Card } from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -18,9 +19,14 @@ export default function ProjectCard({ id, name, dateCreated }) {
 
   const dispatch = useDispatch();
 
-  const undisplayDeletedProject = (res) => {
-    const filteredProjects = projects.filter((project) => project.id !== id);
-    dispatch(userDataActions.setProjects({ projects: filteredProjects }));
+  const undisplayDeletedProject = () => {
+    dispatch(
+      userDataActions.updateProjects({
+        type: "DELETE",
+        projects: projects,
+        projectToBeDeleted: id,
+      })
+    );
   };
 
   const handleDeleteProject = () => {
@@ -42,10 +48,12 @@ export default function ProjectCard({ id, name, dateCreated }) {
         itemToBeEdited: { id: id, name: name, dateCreated: dateCreated },
       })
     );
-    dispatch(modalActions.toggle({
-      modalOpen: true,
-      modalType: 'form'
-    }));
+    dispatch(
+      modalActions.toggle({
+        modalOpen: true,
+        modalType: "form",
+      })
+    );
   };
 
   const projectName = (
@@ -56,10 +64,11 @@ export default function ProjectCard({ id, name, dateCreated }) {
 
   const projectCreatedDate = (
     <p className="font-normal text-gray-700 dark:text-gray-400 text-sm">
-      <i>Created on {dateCreated}</i>
+      <i>Created on {formatDate(dateCreated, true)}</i>
     </p>
   );
 
+  // icons for deleting and editing project
   const actionIcons = (
     <div className="flex mt-2">
       <FontAwesomeIcon

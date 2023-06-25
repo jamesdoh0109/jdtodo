@@ -51,8 +51,10 @@ export default function AuthForm({
           message: data.error ? data.error : data.message,
         });
       } else if (res.status === 200 && isLogInForm) {
+        // on successful login
         login(dispatch, navigate, data);
       } else if (res.status === 200 && isForgotPassword) {
+        // on sucessful entering of email for forgot password
         setStatus({
           error: false,
           message: data.message,
@@ -61,6 +63,7 @@ export default function AuthForm({
         res.status === 201 ||
         (res.status === 200 && isResetPassword)
       ) {
+        // on successful signup or successful password reset
         navigate("/login");
       }
     } catch (e) {

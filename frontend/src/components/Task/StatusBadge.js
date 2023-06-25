@@ -12,7 +12,7 @@ export default function StatusBadge({ status, forTaskDetail }) {
     <Badge
       size="xs"
       color={color}
-      className={forTaskDetail ? "inline-flex" : "flex justify-center"}
+      className={forTaskDetail ? "inline-flex mr-2" : "flex justify-center"}
     >
       {status}
     </Badge>

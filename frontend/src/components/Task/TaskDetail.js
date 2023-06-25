@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../../store/reducers/modal";
 import { formatDate } from "../../util/display";
+import { deadlinePassed } from "../../util/form";
 import Modal from "../common/Modal";
 import Button from "../common/Button";
 import StatusBadge from "./StatusBadge";
@@ -20,6 +21,10 @@ export default function TaskDetail() {
     <div>
       <h3 className="italic">Status</h3>
       <StatusBadge status={taskToBeShown.status} forTaskDetail={true} />
+      {/* show Overdue badge if deadline is passed and task isn't done */}
+      {deadlinePassed(taskToBeShown.deadline) && !taskToBeShown.isDone && (
+        <StatusBadge status="Overdue" forTaskDetail={true} />
+      )}
     </div>
   );
 
@@ -27,7 +32,7 @@ export default function TaskDetail() {
     <div>
       <hr className="mb-4" />
       <h3 className="italic">Deadline</h3>
-      {formatDate(taskToBeShown.deadline)}
+      {formatDate(taskToBeShown.deadline, true)}
     </div>
   );
 

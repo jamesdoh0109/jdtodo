@@ -5,7 +5,10 @@ import { userDataActions } from "../../store/reducers/user-data";
 import { formActions } from "../../store/reducers/form";
 import { modalActions } from "../../store/reducers/modal";
 import { dropdownActions } from "../../store/reducers/dropdown";
+import { deadlinePassed } from "../../util/form";
 import { Dropdown } from "flowbite-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import useFetch from "../../hooks/useFetch";
 import TaskTable from "../../components/Task/TaskTable";
 import Loading from "../../components/common/Loading";
@@ -13,6 +16,13 @@ import Button from "../../components/common/Button";
 import TaskForm from "../../components/Task/TaskForm";
 import TaskDetail from "../../components/Task/TaskDetail";
 import Error from "../../components/common/Error";
+
+function countOverdueTasks(tasks) {
+  const overdueTasks = tasks.filter((task) => {
+    return deadlinePassed(task.deadline) && !task.isDone;
+  });
+  return overdueTasks.length;
+}
 
 export default function ProjectDetail() {
   const id = useParams().projectId;
@@ -25,6 +35,11 @@ export default function ProjectDetail() {
   const tasksForCurrentProject = tasksForAllProjects?.find(
     (project) => project.id === id
   );
+
+  // runs on every render, might be able to use useMemo so that it only runs when necessary?
+  // is there a better way to calculate the number of overdue tasks?
+  const numOverdueTasks =
+    tasksForCurrentProject && countOverdueTasks(tasksForCurrentProject.tasks);
 
   const [currentSortBy, setCurrentSortBy] = useState("Sort By");
 
@@ -92,10 +107,12 @@ export default function ProjectDetail() {
 
   const openCreateTaskModal = () => {
     dispatch(formActions.onCreate());
-    dispatch(modalActions.toggle({
-      modalOpen: true,
-      modalType: 'form'
-    }));
+    dispatch(
+      modalActions.toggle({
+        modalOpen: true,
+        modalType: "form",
+      })
+    );
     dispatch(
       dropdownActions.toggleDropdown({
         dropdownId: -1,
@@ -104,7 +121,7 @@ export default function ProjectDetail() {
   };
 
   const sortBy = (
-    <div className="mt-32 border-solid border border-slate-500 rounded-md px-3 py-2">
+    <div className="l-lg-h:mt-32 l-md-h:mt-24 l-sm-h:mt-16 border-solid border border-slate-500 rounded-md px-3 py-2">
       <Dropdown inline label={currentSortBy}>
         <Dropdown.Item onClick={() => setCurrentSortBy("Deadline")}>
           Deadline
@@ -120,7 +137,7 @@ export default function ProjectDetail() {
   );
 
   const createTaskButton = (
-    <div className="mt-32">
+    <div className="l-lg-h:mt-32 l-md-h:mt-24 l-sm-h:mt-16">
       <Button text="Create new task" onClick={openCreateTaskModal} />
     </div>
   );
@@ -132,14 +149,29 @@ export default function ProjectDetail() {
     </>
   );
 
+  const overdueMessage =
+    numOverdueTasks && numOverdueTasks > 0 ? (
+      <>
+        <FontAwesomeIcon icon={faExclamationCircle} className="w-4 mr-2" />
+        <>
+          You have {numOverdueTasks} overdue{" "}
+          {numOverdueTasks === 1 ? "task" : "tasks"}.
+        </>
+      </>
+    ) : (
+      <></>
+    );
+
   const dashboardWithTasks = (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-2">
         {createTaskButton}
         {sortBy}
       </div>
-
-      <div className="mt-4">
+      <div>
+        {numOverdueTasks && numOverdueTasks > 0 ? overdueMessage : <></>}
+      </div>
+      <div className="mt-2 pb-12">
         <TaskTable
           tasks={tasksForCurrentProject?.tasks}
           sortBy={currentSortBy}

@@ -14,6 +14,7 @@ export default function ProjectForm({ token }) {
   const creatingNew = useSelector((state) => state.form.creatingNew);
   const projectToBeEdited = useSelector((state) => state.form.itemToBeEdited);
 
+  // if projectToBeEdited is null, we are creating a new project, not editing an existing one
   const [projectName, setProjectName] = useState(
     projectToBeEdited ? projectToBeEdited.name : ""
   );
@@ -22,49 +23,38 @@ export default function ProjectForm({ token }) {
 
   const dispatch = useDispatch();
 
-  const displayEditedProject = async (res) => {
-    try {
-      const editedProject = {
-        dateCreated: projectToBeEdited.dateCreated,
-        id: projectToBeEdited.id,
-        name: projectName,
-      };
-      const filteredProjects = projects.filter(
-        (project) => project.id !== projectToBeEdited.id
-      );
-      dispatch(
-        userDataActions.setProjects({
-          projects: [...filteredProjects, editedProject],
-        })
-      );
-      dispatch(
-        modalActions.toggle({
-          modalOpen: false,
-          modalType: "",
-        })
-      );
-    } catch (e) {
-      console.log(e);
-    }
+  const closeModalAfterSubmit = () => {
+    dispatch(
+      modalActions.toggle({
+        modalOpen: false,
+        modalType: "",
+      })
+    );
+  };
+
+  const displayEditedProject = async () => {
+    dispatch(
+      userDataActions.updateProjects({
+        type: "EDIT",
+        projects: projects,
+        projectToBeEdited: projectToBeEdited.id,
+        editedProject: { ...projectToBeEdited, name: projectName },
+      })
+    );
+    closeModalAfterSubmit();
   };
 
   const displayNewProject = async (res) => {
     try {
       const data = await res.json();
-      const newProject = {
-        dateCreated: data.project.date_created,
-        id: data.project.proj_id,
-        name: data.project.proj_name,
-      };
       dispatch(
-        userDataActions.setProjects({ projects: [...projects, newProject] })
-      );
-      dispatch(
-        modalActions.toggle({
-          modalOpen: false,
-          modalType: "",
+        userDataActions.updateProjects({
+          type: "CREATE",
+          projects: projects,
+          newProject: data.project,
         })
       );
+      closeModalAfterSubmit();
     } catch (e) {
       console.log(e);
     }
@@ -160,7 +150,6 @@ export default function ProjectForm({ token }) {
         );
       }}
       isLoading={isLoading}
-      color="slate"
     />
   );
 

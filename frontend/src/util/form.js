@@ -35,6 +35,10 @@ export function taskFormMissingRequiredFields (name, deadline, status) {
   return name === "" || deadline === "" || status === ""
 }
 
+export function taskDescriptionTooLong(description) {
+  return description.length > 300;
+}
+
 export function trimFormTrailingSpaces(form) {
   const passwordRelatedKeys = [
     "password",
@@ -54,14 +58,25 @@ export function trimFormTrailingSpaces(form) {
   );
 }
 
-export function formatDate(date) {
+export function formatDateISO(date) {
   const dateObj = new Date(date);
 
   const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
   const day = dateObj.getDate().toString().padStart(2, '0');
   const year = dateObj.getFullYear();
 
-  const formattedDate = `${year}-${month}-${day}`;
+  const hours = dateObj.getHours().toString().padStart(2, '0');
+  const minutes = dateObj.getMinutes().toString().padStart(2, '0');
 
+  const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+  
   return formattedDate;
+}
+
+export function getUserTimeZone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+export function deadlinePassed(deadline) {
+  return new Date(formatDateISO(deadline)) < new Date();
 }

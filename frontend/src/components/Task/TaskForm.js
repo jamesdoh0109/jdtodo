@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
 import {
-  formatDate,
+  formatDateISO,
+  getUserTimeZone,
+  taskDescriptionTooLong,
   taskFormMissingRequiredFields,
   taskNameTooLong,
 } from "../../util/form";
@@ -27,9 +29,10 @@ export default function TaskForm() {
     (project) => project.id === id
   );
 
+  // if we're creating a new task, set form values to be empty strings and "Not started" for status
   const [form, setForm] = useState({
     name: taskToBeEdited ? taskToBeEdited.name : "",
-    deadline: taskToBeEdited ? formatDate(taskToBeEdited.deadline) : "",
+    deadline: taskToBeEdited ? formatDateISO(taskToBeEdited.deadline) : "",
     description: taskToBeEdited ? taskToBeEdited.description : "",
     status: taskToBeEdited ? taskToBeEdited.status : "Not started",
   });
@@ -38,16 +41,7 @@ export default function TaskForm() {
 
   const dispatch = useDispatch();
 
-  const displayNewTask = async (res) => {
-    const data = await res.json();
-    dispatch(
-      userDataActions.updateTasks({
-        type: "CREATE",
-        data: data,
-        projectId: id,
-        tasksForCurrentProject: tasksForCurrentProject,
-      })
-    );
+  const closeModalAfterSubmit = () => {
     dispatch(
       modalActions.toggle({
         modalOpen: false,
@@ -56,22 +50,34 @@ export default function TaskForm() {
     );
   };
 
+  const displayNewTask = async (res) => {
+    try {
+      const data = await res.json();
+      dispatch(
+        userDataActions.updateTasks({
+          type: "CREATE",
+          newTask: data.task,
+          projectId: id,
+          tasksForCurrentProject: tasksForCurrentProject,
+        })
+      );
+      closeModalAfterSubmit();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const displayEditedTask = () => {
     dispatch(
       userDataActions.updateTasks({
         type: "EDIT",
         taskToBeEdited: taskToBeEdited.id,
-        form: { ...form, is_done: form.status === "Finished" },
+        editedTask: { ...form, isDone: form.status === "Finished" },
         projectId: id,
         tasksForCurrentProject: tasksForCurrentProject,
       })
     );
-    dispatch(
-      modalActions.toggle({
-        modalOpen: false,
-        modalType: "",
-      })
-    );
+    closeModalAfterSubmit();
   };
 
   const handleOnSubmit = (e) => {
@@ -85,6 +91,11 @@ export default function TaskForm() {
       setStatus({
         error: true,
         message: "Name must be less than 60 characters.",
+      });
+    } else if (taskDescriptionTooLong(form.description.trim())) {
+      setStatus({
+        error: true,
+        message: "Description must be less than 300 characters.",
       });
     } else {
       submitForm();
@@ -103,7 +114,11 @@ export default function TaskForm() {
         Accept: "application/json",
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({ ...form, is_done: form.status === "Finished" }),
+      body: JSON.stringify({
+        ...form,
+        is_done: form.status === "Finished",
+        user_time_zone: getUserTimeZone(),
+      }),
     };
     fetchData(
       requestConfig,
@@ -140,7 +155,7 @@ export default function TaskForm() {
   const formInputGroup = (
     <div>
       {formInput("name", "Name", "text")}
-      {formInput("deadline", "Deadline", "date")}
+      {formInput("deadline", "Deadline", "datetime-local")}
       {formInput("status", "Status", "select")}
       {formInput("description", "Description (optional)", "textarea")}
     </div>

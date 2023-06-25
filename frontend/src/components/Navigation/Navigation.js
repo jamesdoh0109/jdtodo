@@ -14,7 +14,7 @@ export default function Navigation() {
   };
 
   const loggedOutOptions = (
-    <Navbar.Collapse>
+    <Navbar.Collapse className="ml-3 text-lg">
       <NavLink to="/">Home</NavLink>
       <NavLink to="/login">Log In</NavLink>
       <NavLink to="/signup">Sign Up</NavLink>
@@ -22,7 +22,7 @@ export default function Navigation() {
   );
 
   const loggedInOptions = (
-    <Navbar.Collapse>
+    <Navbar.Collapse className="ml-3 text-lg">
       <NavLink to="/dashboard">Dashboard</NavLink>
       <NavLink to="/account">Account</NavLink>
       <NavLink onClick={handleLogout} to="/">
@@ -33,9 +33,9 @@ export default function Navigation() {
 
   return (
     <Navbar
-      fluid={true}
-      rounded={true}
-      className="fixed w-full"
+      fluid
+      rounded
+      className="fixed w-full z-30"
       style={{ backgroundColor: "rgb(226 232 240)" }} 
     >
       <NavLink to={token ? "/dashboard" : "/"}>

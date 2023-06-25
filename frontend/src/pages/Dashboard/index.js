@@ -15,6 +15,7 @@ export default function Dashboard() {
   const projects = useSelector((state) => state.userData.projects);
   const modalOpen = useSelector((state) => state.modal.modalOpen);
   const modalType = useSelector((state) => state.modal.modalType);
+  
   const [initialLoading, setInitialLoading] = useState(true);
 
   const { isLoading, fetchData } = useFetch();
@@ -60,7 +61,7 @@ export default function Dashboard() {
   };
 
   const createProjectBtn = (
-    <div className="mt-32">
+    <div className="l-lg-h:mt-32 l-md-h:mt-24 l-sm-h:mt-16">
       <Button text="Create new project" onClick={openCreateProjectModal} />
     </div>
   );
@@ -75,7 +76,7 @@ export default function Dashboard() {
   const dashboardWithProjects = (
     <>
       {createProjectBtn}
-      <ul className="w-full grid py-4 gap-y-7 pl-xl:grid-cols-g-xl pl-lg:grid-cols-g-lg pl-md:grid-cols-g-md pl-sm:grid-cols-g-sm pl-xs:grid-cols-g-xs justify-start">
+      <ul className="w-full grid pt-4 pb-12 gap-y-7 pl-xl:grid-cols-g-xl pl-lg:grid-cols-g-lg pl-md:grid-cols-g-md pl-sm:grid-cols-g-sm pl-xs:grid-cols-g-xs justify-start">
         {projects &&
           sortById(projects).map((project) => (
             <li key={project.id} className="mr-8">

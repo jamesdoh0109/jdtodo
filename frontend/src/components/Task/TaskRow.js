@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { formActions } from "../../store/reducers/form";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
+import { dropdownActions } from "../../store/reducers/dropdown";
 import { formatDate } from "../../util/display";
+import { deadlinePassed } from "../../util/form";
 import { Table, Checkbox } from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +14,7 @@ import useFetch from "../../hooks/useFetch";
 import StatusBadge from "./StatusBadge";
 import Dropdown from "./Dropdown";
 
-export default function TaskRow({ task, dropdownId }) {
+export default function TaskRow({ task, dropdownId, isDesktopVersion }) {
   const id = useParams().projectId;
   const token = useSelector((state) => state.auth.token);
   const tasksForAllProjects = useSelector(
@@ -23,7 +25,6 @@ export default function TaskRow({ task, dropdownId }) {
   );
 
   const [color, setColor] = useState("bg-white");
-  const currentDate = new Date(formatDate(new Date().toDateString()));
 
   const { fetchData } = useFetch();
 
@@ -38,7 +39,7 @@ export default function TaskRow({ task, dropdownId }) {
   };
 
   const displayTaskDetail = () => {
-    // works but using form action for display?
+    // works but using form action for displaying task detail on modal?
     dispatch(
       formActions.onEdit({
         itemToBeEdited: {
@@ -57,6 +58,11 @@ export default function TaskRow({ task, dropdownId }) {
         modalType: "details",
       })
     );
+    dispatch(
+      dropdownActions.toggleDropdown({
+        dropdownId: -1,
+      })
+    );
   };
 
   const displayEditedTask = () => {
@@ -64,7 +70,11 @@ export default function TaskRow({ task, dropdownId }) {
       userDataActions.updateTasks({
         type: "EDIT",
         taskToBeEdited: task.id,
-        task: task,
+        editedTask: {
+          ...task,
+          status: task.isDone ? "Not started" : "Finished",
+          isDone: !task.isDone,
+        },
         projectId: id,
         tasksForCurrentProject: tasksForCurrentProject,
       })
@@ -93,7 +103,7 @@ export default function TaskRow({ task, dropdownId }) {
     <FontAwesomeIcon icon={faExclamationCircle} className="w-4 mr-2" />
   );
 
-  return (
+  const desktopTableRow = (
     <Table.Row
       className={`${color} dark:border-gray-700 dark:bg-gray-800`}
       key={task.id}
@@ -111,7 +121,9 @@ export default function TaskRow({ task, dropdownId }) {
       </Table.Cell>
       <Table.Cell>
         <>
-          {new Date(formatDate(task.deadline)) < currentDate &&
+          {/* show warning if deadline is passed and task isn't done */}
+          {deadlinePassed(task.deadline) &&
+            !task.isDone &&
             deadlinePassedWarning}
           {task.name}
         </>
@@ -130,4 +142,42 @@ export default function TaskRow({ task, dropdownId }) {
       </Table.Cell>
     </Table.Row>
   );
+
+  const mobileTableRow = (
+    <li
+      className={`${color} border border-gray-400 py-4 dark:bg-gray-800 flex items-center justify-between rounded-md mb-2`}
+      key={task.id}
+      onClick={displayTaskDetail}
+    >
+      <div className="flex items-center">
+        <Checkbox
+          checked={task.isDone}
+          onChange={() => toggleTaskStatus()}
+          // prevent modal popup
+          onClick={(e) => e.stopPropagation()}
+          className="ml-4 mr-4"
+        />
+        <div className="flex flex-col">
+          <div className="inline">
+            {/* show warning if deadline is passed and task isn't done */}
+            {deadlinePassed(task.deadline) &&
+              !task.isDone &&
+              deadlinePassedWarning}
+            {task.name}
+          </div>
+          <StatusBadge status={task.status} className="mt-2" />
+        </div>
+      </div>
+      <div className="mr-10">
+        <Dropdown
+          task={task}
+          onLeave={setHoverColor}
+          onHover={setLeaveColor}
+          dropdownId={dropdownId}
+        />
+      </div>
+    </li>
+  );
+
+  return isDesktopVersion ? desktopTableRow : mobileTableRow;
 }

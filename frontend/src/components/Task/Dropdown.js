@@ -5,7 +5,7 @@ import { formActions } from "../../store/reducers/form";
 import { modalActions } from "../../store/reducers/modal";
 import { userDataActions } from "../../store/reducers/user-data";
 import { ListGroup } from "flowbite-react";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useFetch from "../../hooks/useFetch";
 
@@ -24,17 +24,22 @@ export default function Dropdown({ task, onLeave, onHover, dropdownId }) {
 
   const dispatch = useDispatch();
 
-  const toggleDropdown = (id) => {
-    if (dropdownId === id) {
+  const toggleDropdown = (taskId) => {
+    // if user clicks the toggle button for already open dropdown, close it
+    if (dropdownId === taskId) {
       dispatch(
         dropdownActions.toggleDropdown({
           dropdownId: -1,
         })
       );
-    } else if (dropdownId === -1 || dropdownId !== id) {
+    }
+    // if user clicks the toggle button and there is none open, OR
+    // if user clicks the toggle button for a task but dropdown is open for another task,
+    // then open the dropdown for the task corresponding to clicked toggle (closing the other one if it was open)
+    else if (dropdownId === -1 || dropdownId !== taskId) {
       dispatch(
         dropdownActions.toggleDropdown({
-          dropdownId: id,
+          dropdownId: taskId,
         })
       );
     }
@@ -108,8 +113,8 @@ export default function Dropdown({ task, onLeave, onHover, dropdownId }) {
   return (
     <div className="relative">
       <FontAwesomeIcon
-        icon={faEllipsisV}
-        className="cursor-pointer w-2"
+        icon={faEllipsisH}
+        className="cursor-pointer w-4"
         onClick={(e) => {
           // prevent modal popup
           e.stopPropagation();

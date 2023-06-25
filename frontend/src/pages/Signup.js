@@ -34,7 +34,7 @@ export default function Signup() {
       title="Sign Up"
       formInputs={signUpInputs}
       btnTxt="Sign up"
-      btnLoadingtTxt="Signing in..."
+      btnLoadingtTxt="Signing up..."
       callToAction="Log in"
     />
   );

@@ -7,7 +7,10 @@ from flask_jwt_extended import jwt_required
 from flask_mail import Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
+from tzlocal import get_localzone
 import re
+import pytz
 import jwt
 
 def has_empty_fields(*args, req_json):
@@ -168,6 +171,22 @@ def get_tasks_for_project(proj_id):
     ]
     return ({'tasks': task_list}), 200
 
+# use this helper function to convert the deadline in user's timezone to deadline in system timezone
+def convert_datetime_into_system_datetime(user_date_time, user_timezone):
+    date_obj = datetime.strptime(user_date_time, "%Y-%m-%dT%H:%M")
+
+    # Assign it the input timezone
+    input_tz = pytz.timezone(user_timezone)  # Replace with your input timezone
+    date_obj = input_tz.localize(date_obj)
+
+    # Get the system's local timezone
+    local_tz = get_localzone()
+
+    # Convert it to the system's local timezone
+    local_date_obj = date_obj.astimezone(local_tz)
+
+    return local_date_obj
+
 @app.route('/api/<proj_id>/tasks', methods=['POST'])
 @jwt_required()
 def create_task(proj_id):
@@ -178,9 +197,10 @@ def create_task(proj_id):
     if project.user_id != user_id:
         return jsonify({'error': 'You can\'t access someone else\'s project.'}), 403
     new_task_json = request.get_json()
-    if not new_task_json or has_empty_fields('name', 'deadline', 'status', req_json=new_task_json):
+    if not new_task_json or has_empty_fields('name', 'deadline', 'status', 'user_time_zone', req_json=new_task_json):
         return jsonify({'error': 'Missing or incomplete task data.'}), 400
-    task = Task(new_task_json['name'], new_task_json['deadline'], new_task_json['status'], proj_id)
+    deadline_in_system_time = convert_datetime_into_system_datetime(new_task_json['deadline'], new_task_json['user_time_zone'])
+    task = Task(new_task_json['name'], deadline_in_system_time, new_task_json['status'], proj_id)
     if 'description' in new_task_json and new_task_json['description'] != "":
         task.description = new_task_json['description']
     try:
@@ -205,7 +225,10 @@ def modify_task(task_id):
     updated_task_json = request.get_json()
     for field in ['name', 'deadline', 'status', 'description', 'is_done']:
         if field in updated_task_json and getattr(task, field) != updated_task_json[field]:
-            setattr(task, field, updated_task_json[field])
+            if field == 'deadline':
+                setattr(task, field, convert_datetime_into_system_datetime(updated_task_json[field], updated_task_json['user_time_zone']))
+            else:
+                setattr(task, field, updated_task_json[field])
     try:
         db.session.commit()
     except Exception as e:
@@ -320,6 +343,16 @@ def send_reset_email(user):
                   html=body)
     mail.send(msg)
 
+def send_reset_confirm_email(user):
+    link = "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.preview.app.github.dev/login"
+    body = f'<p>Hello {user.firstname} {user.lastname}!<br><br>You have successfully updated your password. To log in, please click <a href="{link}">here</a>.<br><br>Thanks,<br>JDTodo</p>'
+    msg = Message('Password Changed',
+                  sender=("JDTodo", "noreply@jdtodo.com"),
+                  recipients=[user.email],
+                  html=body)
+    mail.send(msg)
+
+# sending email with link to reset password for a given user
 @app.route('/api/forgot_password', methods=['POST'])
 def reset_request():
     forgot_password_json = request.get_json()
@@ -360,6 +393,7 @@ def reset_password(token):
     user.hashed_password = generate_password_hash(password)
     user.reset_password_token = None
     try:
+        send_reset_confirm_email(user)
         db.session.commit()
     except Exception as e:
         db.session.rollback()

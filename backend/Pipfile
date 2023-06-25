@@ -13,6 +13,7 @@ pytz = "*"
 mysqlclient = "*"
 itsdangerous = "*"
 flask-mail = "*"
+tzlocal = "*"
 
 [dev-packages]
 
