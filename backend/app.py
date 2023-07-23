@@ -1,10 +1,10 @@
 import os 
+from datetime import timedelta
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy  
 from flask_cors import CORS, cross_origin
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
-from datetime import timedelta
 
 db = SQLAlchemy()
 jwt = JWTManager()

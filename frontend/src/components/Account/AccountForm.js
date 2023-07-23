@@ -56,9 +56,7 @@ export function AccountForm({ title, formInputs }) {
   };
 
   const submitForm = () => {
-    const endpoint = `/api/user/${id}${
-      isEditProfileForm ? "/details" : "/password"
-    }`;
+    const endpoint = `/api/${isEditProfileForm ? "user" : "change_password"}/${id}`;
     const requestConfig = {
       url: endpoint,
       method: "PATCH",

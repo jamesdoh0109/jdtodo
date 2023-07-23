@@ -1,6 +1,6 @@
+import os 
 from backend.app import db 
 from itsdangerous import URLSafeTimedSerializer as Serializer
-import os 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
