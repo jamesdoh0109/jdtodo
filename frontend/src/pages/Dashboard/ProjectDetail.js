@@ -69,7 +69,7 @@ export default function ProjectDetail() {
             deadline: task.task_deadline,
             status: task.task_status,
             description: task.task_description,
-            isDone: task.task_is_done,
+            isDone: task.task_status === "Finished",
           }));
           dispatch(
             userDataActions.setTasksForAllProjects({

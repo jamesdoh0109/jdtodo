@@ -116,7 +116,6 @@ export default function TaskForm() {
       },
       body: JSON.stringify({
         ...form,
-        is_done: form.status === "Finished",
         user_time_zone: getUserTimeZone(),
       }),
     };
