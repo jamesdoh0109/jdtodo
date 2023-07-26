@@ -3,8 +3,8 @@ from backend.app import db
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(500), default="")
+    name = db.Column(db.String(60), nullable=False)
+    description = db.Column(db.String(300), default="")
     deadline = db.Column(db.DateTime, default=None)
     status = db.Column(db.String(20), default="Not started")
     proj_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)

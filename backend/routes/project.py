@@ -3,6 +3,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from backend.models.project import Project
 from backend.data_managers.project import get_project, get_projects, create_project, modify_project, delete_project
+from backend.validators.project import ProjectValidator
 
 project =  Blueprint('project', __name__)
 
@@ -17,14 +18,11 @@ def get_projects_route():
 @jwt_required()
 def create_project_route():
     user_id = get_jwt_identity()
-    new_project_json = request.get_json()
-    if not new_project_json:
-        return jsonify({'error': 'Missing request body'}), 400
-    name = new_project_json.get('name')
-    if not name or name == '':
-        return jsonify({'error': 'Project name is required'}), 400
-    if len(name) > 25:
-        return jsonify({'error': 'Name must be less than 25 characters'}), 400
+    create_project_json = request.get_json()
+    validator = ProjectValidator()
+    if not validator.validate_project_input(create_project_json):
+        return jsonify({'error': validator.error}), 400
+    name = create_project_json['name']
     project = create_project(name, user_id)
     if isinstance(project, Exception):
         return jsonify({'error': 'Server error: please try again'}), 500
@@ -35,15 +33,14 @@ def create_project_route():
 def modify_project_route(proj_id):
     user_id = get_jwt_identity()
     modified_project_json = request.get_json()
-    if not modified_project_json:
-        return jsonify({'error': 'Missing request body'}), 400
+    validator = ProjectValidator()
+    if not validator.validate_project_input(modified_project_json):
+        return jsonify({'error': validator.error}), 400
     project = get_project(proj_id)
     if project is None:
         return jsonify({'error': f'Project not found'}), 404
     if project.user_id != user_id:
         return jsonify({'error': 'Access denied'}), 403
-    if 'name' not in modified_project_json:
-        return jsonify({'error': 'Project name is required'}), 400
     modified_project = modify_project(project, modified_project_json['name'])
     if isinstance(modified_project, Exception):
         return jsonify({'error': 'Server error: please try again'}), 500

@@ -48,7 +48,7 @@ export default function AuthForm({
       if (res.status !== 201 && res.status !== 200) {
         setStatus({
           error: true,
-          message: data.error ? data.error : data.message,
+          message: data.error,
         });
       } else if (res.status === 200 && isLogInForm) {
         // on successful login
@@ -158,7 +158,7 @@ export default function AuthForm({
 
   const statusMsg = (
     <>
-      {!status.error && status.message === "Email successfully sent." && (
+      {!status.error && status.message === "Email successfully sent" && (
         <Message successMsg={status.message.toString()} />
       )}
       {status.error && <Message errorMsg={status.message.toString()} />}

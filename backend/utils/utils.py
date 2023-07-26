@@ -12,7 +12,7 @@ def has_empty_fields(*args, req_json):
     return False
 
 def check_valid_email(email):
-    regex = r'[^@]+@[^@]+\.[^@]+'
+    regex = r'^[\w+%.-]+@[\w.-]+\.[A-Za-z]{2,7}'
     return re.fullmatch(regex, email)
 
 def check_verify_password(password, password2):

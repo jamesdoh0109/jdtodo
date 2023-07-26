@@ -7,7 +7,7 @@ function hasEmptyFields(...args) {
 }
 
 function checkValidEmail(email) {
-  const regex = /[^@]+@[^@]+\.[^@]+/;
+  const regex = /^[\w+%.-]+@[\w.-]+\.[A-Za-z]{2,7}/;
   return regex.test(email);
 }
 
@@ -21,41 +21,41 @@ function validateChangePasswordInput({
   confirmPassword,
 }) {
   if (hasEmptyFields(currentPassword, newPassword, confirmPassword)) {
-    return "You can't have an empty field.";
-  } else if (newPassword !== confirmPassword) {
-    return "Your passwords don't match.";
+    return "Password fields cannot be empty";
   } else if (!checkValidPassword(newPassword)) {
-    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number.";
-  }
+    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
+  } else if (newPassword !== confirmPassword) {
+    return "Passwords must match";
+  } 
   return null;
 }
 
 function validateEditUserInput({ firstname, lastname, email }) {
   if (hasEmptyFields(firstname, lastname, email)) {
-    return "You can't have an empty field.";
+    return "All fields are required";
   } else if (!checkValidEmail(email)) {
-    return "Email is not valid.";
+    return "Please enter a valid email";
   }
   return null;
 }
 
 function validateForgotPasswordInput({ email }) {
   if (hasEmptyFields(email)) {
-    return "Please enter your email.";
+    return "Please enter your email";
   } else if (!checkValidEmail(email)) {
-    return "Email is not valid.";
+    return "Please enter a valid email";
   }
   return null;
 }
 
 function validateResetPasswordInput({ password, password2 }) {
   if (hasEmptyFields(password, password2)) {
-    return "Both fields are required.";
-  } else if (password !== password2) {
-    return "Your passwords don't match.";
+    return "Both fields are required";
   } else if (!checkValidPassword(password)) {
-    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number.";
-  }
+    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
+  } else if (password !== password2) {
+    return "Your passwords don't match";
+  } 
   return null;
 }
 
@@ -76,13 +76,13 @@ function validateSignupInput({
   password2,
 }) {
   if (hasEmptyFields(firstname, lastname, email, password, password2)) {
-    return "All 5 fields are required.";
+    return "All 5 fields are required";
   } else if (!checkValidEmail(email)) {
-    return "Email is not valid.";
+    return "Email is not valid";
   } else if (password !== password2) {
-    return "Your passwords don't match.";
+    return "Your passwords don't match";
   } else if (!checkValidPassword(password)) {
-    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number.";
+    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
   }
   return null;
 }
