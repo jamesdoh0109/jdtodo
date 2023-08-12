@@ -33,8 +33,7 @@ def create_task_for_project_route(proj_id):
         return jsonify({'error': f'Project not found'}), 404
     if project.user_id != user_id:
         return jsonify({'error': 'Access denied'}), 403
-    deadline_in_system_time = convert_datetime_into_system_datetime(create_task_json['deadline'], create_task_json['user_time_zone'])
-    task = create_task_for_project(proj_id, deadline_in_system_time, create_task_json)
+    task = create_task_for_project(proj_id, create_task_json)
     if isinstance(task, Exception):
         return jsonify({'error': 'Server error: please try again'}), 500
     return jsonify({'message': 'Task successfully created', 'task': task}), 201
@@ -45,17 +44,17 @@ def modify_task_for_project_route(task_id):
     user_id = get_jwt_identity()
     modified_task_json = request.get_json()
     validator = TaskValidator()
-    if not validator.validate_task_inputs(modified_task_json):
-        return jsonify({'error': validator.error}), 400
+    #if not validator.validate_task_inputs(modified_task_json):
+       # return jsonify({'error': validator.error}), 400
     task = get_task(task_id)
     if task is None:
-        return jsonify({'error': f'Task not found'}), 400
+        return jsonify({'error': f'Task not found'}), 404
     if task.project.user_id != user_id:
         return jsonify({'error': 'Access denied'}), 403
     modified_task = modify_task_for_project(task, modified_task_json)
     if isinstance(modified_task, Exception): 
         return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': 'Task successfully updated'}), 200
+    return jsonify({'message': 'Task successfully updated', 'task': modified_task}), 200
 
 @task.route('/api/tasks/<task_id>', methods=['DELETE'])
 @jwt_required()

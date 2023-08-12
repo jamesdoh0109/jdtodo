@@ -18,6 +18,10 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
     db.init_app(app)
 
+    #app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+    #app.config['JWT_COOKIE_SECURE'] = True
+    #app.config['JWT_COOKIE_SAMESITE'] ='None'
+    #app.config['JWT_COOKIE_CSRF_PROTECT'] = True
     app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')  
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
     jwt.init_app(app)

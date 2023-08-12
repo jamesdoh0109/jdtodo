@@ -20,8 +20,8 @@ def get_tasks_for_project(proj_id):
     ]
     return task_list
 
-def create_task_for_project(proj_id, deadline_in_system_time, new_task_json):
-    task = Task(new_task_json['name'], deadline_in_system_time, new_task_json['status'], proj_id)
+def create_task_for_project(proj_id, new_task_json):
+    task = Task(new_task_json['name'], new_task_json['deadline'], new_task_json['status'], proj_id)
     if 'description' in new_task_json and new_task_json['description'] != "":
         task.description = new_task_json['description']
     try:
@@ -37,16 +37,14 @@ def create_task_for_project(proj_id, deadline_in_system_time, new_task_json):
 def modify_task_for_project(task, modified_task_json):
     for field in ['name', 'deadline', 'status', 'description']:
         if field in modified_task_json and getattr(task, field) != modified_task_json[field]:
-            if field == 'deadline':
-                setattr(task, field, convert_datetime_into_system_datetime(modified_task_json[field], modified_task_json['user_time_zone']))
-            else:
-                setattr(task, field, modified_task_json[field])
+            setattr(task, field, modified_task_json[field])
     try:
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         return e 
-    task_obj = {'task_id': task.id, 'task_name': task.name}
+    task_obj = {'task_id': task.id, 'task_name': task.name, 'task_deadline': task.deadline,
+                'task_description': task.description, 'task_status': task.status}
     return task_obj
 
 def delete_task_for_project(task):

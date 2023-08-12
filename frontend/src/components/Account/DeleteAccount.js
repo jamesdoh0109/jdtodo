@@ -2,7 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../util/auth";
 import useFetch from "../../hooks/useFetch";
-import Button from "../common/Button";
+import AccountFormTitle from "./form/AccountFormTitle";
+import ButtonOnClick from "../common/Button/ButtonOnClick";
 
 export default function DeleteAccount() {
   const id = useSelector((state) => state.userData.id);
@@ -31,7 +32,7 @@ export default function DeleteAccount() {
 
   return (
     <>
-      <h1 className="text-2xl font-medium">Delete Account</h1>
+      <AccountFormTitle title="Delete Account" />
       <p className="pt-7 pb-8">
         Hello <span className="font-bold inline">{fullname}</span>
         !
@@ -41,10 +42,10 @@ export default function DeleteAccount() {
         confirm below to make sure this is the action you want to take.
       </p>
       <div>
-        <Button
-          text="Confirm"
+        <ButtonOnClick
+          text={isLoading ? "Deleting" : "Confirm"}
           onClick={handleDeleteAccount}
-          isLoading={isLoading}
+          disabled={isLoading}
         />
       </div>
     </>

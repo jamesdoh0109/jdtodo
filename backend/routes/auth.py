@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
+from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend.models.user import User
@@ -25,7 +25,12 @@ def login_route():
     user_obj = {'id': user.id, 'firstname': user.firstname,
                 'lastname': user.lastname, 'email': user.email}
     access_token = create_access_token(identity=user.id)
-    return jsonify({'message': 'Login success.', 'access_token': access_token, 'user': user_obj}), 200
+    #refresh_token = create_refresh_token(identity=user.id)
+    #resp = jsonify({'message': 'Login success', 'user': user_obj})
+    #set_access_cookies(resp, access_token)
+    #set_refresh_cookies(resp, refresh_token)
+    #return resp, 200
+    return jsonify({'message': 'Login success', 'access_token': access_token, 'user': user_obj}), 200
 
 @auth.route('/api/signup', methods=['POST'])
 def signup_route():
@@ -57,8 +62,8 @@ def change_password_route(user_id):
         return jsonify({'error': f'User {user_id} not found'}), 404
     if user.id != jwt_user_id:
         return jsonify({'error': 'You can\'t edit someone else\'s password.'}), 403
-    current_password = change_password_json['currentPassword']
-    password = change_password_json['newPassword']
+    current_password = change_password_json['passwordCurrent']
+    password = change_password_json['passwordNew']
     if not check_password_hash(user.hashed_password, current_password):
         return jsonify({'error': 'Your current password is incorrect'}), 400
     if check_password_hash(user.hashed_password, password):
@@ -79,10 +84,10 @@ def send_reset_password_link_route():
     user = get_user_by_email(email)
     if user is None:
         return jsonify({'error': f'User not found'}), 404
-    modified_user = send_reset_password_link(user)
-    if isinstance(modified_user, Exception):
+    user = send_reset_password_link(user)
+    if isinstance(user, Exception):
         return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({' ': 'Email successfully sent'}), 200
+    return jsonify({'message': 'Email successfully sent'}), 200
 
 @auth.route('/api/reset_password/<token>', methods=['PATCH'])
 def reset_password_route(token):

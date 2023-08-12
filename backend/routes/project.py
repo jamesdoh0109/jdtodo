@@ -7,6 +7,13 @@ from backend.validators.project import ProjectValidator
 
 project =  Blueprint('project', __name__)
 
+@project.route('/api/projects/<proj_id>', methods=['GET'])
+@jwt_required
+def get_project_route(proj_id):
+    user_id = get_jwt_identity()
+    project = get_project(proj_id)
+    return jsonify({'project': project}), 200
+    
 @project.route('/api/projects', methods=['GET'])
 @jwt_required()
 def get_projects_route():

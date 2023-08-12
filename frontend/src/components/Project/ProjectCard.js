@@ -1,102 +1,35 @@
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { modalActions } from "../../store/reducers/modal";
-import { userDataActions } from "../../store/reducers/user-data";
-import { formActions } from "../../store/reducers/form";
 import { splitNameIntoLines } from "../../util/form";
 import { formatDate } from "../../util/display";
 import { Card } from "flowbite-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
-import useFetch from "../../hooks/useFetch";
+import ProjectDeleteIcon from "./ProjectDeleteIcon";
+import ProjectEditIcon from "./ProjectEditIcon";
 
-export default function ProjectCard({ id, name, dateCreated }) {
-  const projects = useSelector((state) => state.userData.projects);
-  const token = useSelector((state) => state.auth.token);
-  const formattedName = splitNameIntoLines(name);
-
-  const { fetchData } = useFetch();
-
-  const dispatch = useDispatch();
-
-  const undisplayDeletedProject = () => {
-    dispatch(
-      userDataActions.updateProjects({
-        type: "DELETE",
-        projects: projects,
-        projectToBeDeleted: id,
-      })
-    );
-  };
-
-  const handleDeleteProject = () => {
-    const requestConfig = {
-      url: "/api/projects/" + id,
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    };
-    fetchData(requestConfig, undisplayDeletedProject);
-  };
-
-  const openEditProjectModal = () => {
-    dispatch(
-      formActions.onEdit({
-        itemToBeEdited: { id: id, name: name, dateCreated: dateCreated },
-      })
-    );
-    dispatch(
-      modalActions.toggle({
-        modalOpen: true,
-        modalType: "form",
-      })
-    );
-  };
-
-  const projectName = (
-    <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white w-48 mb-auto mt-2.5">
-      {formattedName}
-    </h5>
-  );
-
-  const projectCreatedDate = (
-    <p className="font-normal text-gray-700 dark:text-gray-400 text-sm">
-      <i>Created on {formatDate(dateCreated, true)}</i>
-    </p>
-  );
-
-  // icons for deleting and editing project
-  const actionIcons = (
-    <div className="flex mt-2">
-      <FontAwesomeIcon
-        icon={faTrash}
-        className="cursor-pointer w-4 mr-2"
-        onClick={(e) => {
-          e.preventDefault();
-          handleDeleteProject();
-        }}
-      />
-      <FontAwesomeIcon
-        icon={faEdit}
-        className="cursor-pointer w-4"
-        onClick={(e) => {
-          e.preventDefault();
-          openEditProjectModal();
-        }}
-      />
-    </div>
+export default function ProjectCard({
+  projectId,
+  projectName,
+  projectDateUpdated,
+}) {
+  const formattedName = splitNameIntoLines(projectName);
+  const formattedDate = formatDate(
+    projectDateUpdated,
+    true // show time
   );
 
   return (
-    <Link className="cursor-default" to={"/dashboard/" + id}>
+    <Link className="cursor-default" to={"/dashboard/" + projectId}>
       <Card className="hover:opacity-70 w-60 h-52">
-        {projectName}
+        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white w-48 mb-auto mt-2.5">
+          {formattedName}
+        </h5>
         <div className="mt-auto mb-2.5">
-          {projectCreatedDate}
-          {actionIcons}
+          <p className="font-normal text-gray-700 dark:text-gray-400 text-sm">
+            <i>Last updated: {formattedDate}</i>
+          </p>
+          <div className="flex mt-2">
+            <ProjectDeleteIcon projectId={projectId} />
+            <ProjectEditIcon projectId={projectId} projectName={projectName} />
+          </div>
         </div>
       </Card>
     </Link>

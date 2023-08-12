@@ -25,7 +25,7 @@ def modify_user_route(user_id):
         return jsonify({'error': 'Email already exists'}), 409
     if isinstance(modified_user, Exception):
         return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': 'User successfully updated'}), 200
+    return jsonify({'message': 'User successfully updated', 'user': {'firstname': modified_user.firstname, 'lastname': modified_user.lastname, 'email': modified_user.email}}), 200
 
 @user.route('/api/user/<user_id>', methods=['DELETE'])
 @jwt_required()

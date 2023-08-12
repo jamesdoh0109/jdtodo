@@ -1,0 +1,66 @@
+import { useForm } from "react-hook-form";
+import { prepareForm, submitData } from "../../../util/form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import ButtonSubmit from "../../common/Button/ButtonSubmit";
+import Message from "../../common/Message";
+import FormInput from "../../common/FormInput";
+
+export default function AuthForm({
+  formInputs,
+  fetchData,
+  handleResponse,
+  status,
+  additionalAction,
+  isLoading,
+  requestURL,
+  requestMethod,
+  btnTxt = "Submit",
+  btnDisabledTxt = "Submitting",
+  schemaObj,
+}) {
+  const onSubmit = (data) =>
+    submitData(requestURL, requestMethod, fetchData, handleResponse, data);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    defaultValues: prepareForm(formInputs),
+    resolver: yupResolver(yup.object(schemaObj)),
+    mode: "onChange",
+  });
+
+  return (
+    <form
+      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      {formInputs.map(({ id, name, type, placeholder }) => (
+        <FormInput
+          key={id}
+          id={id}
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          errors={errors}
+          register={register}
+        />
+      ))}
+      <div className="flex items-center justify-between">
+        <ButtonSubmit
+          text={isLoading ? btnDisabledTxt : btnTxt}
+          disabled={isLoading || !isValid}
+        />
+        {additionalAction}
+      </div>
+      <Message
+        messageObj={{
+          message: status.message.toString(),
+          error: status.error,
+        }}
+      />
+    </form>
+  );
+}

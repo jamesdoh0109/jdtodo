@@ -1,3 +1,4 @@
+import datetime 
 from backend.app import db
 from backend.models.project import Project 
 
@@ -25,6 +26,8 @@ def create_project(name, user_id):
 
 def modify_project(project, modified_project_name):
     project.name = modified_project_name
+    project.date_created = datetime.datetime.now()
+    print(datetime.datetime.now())
     try:
         db.session.commit()
     except Exception as e:

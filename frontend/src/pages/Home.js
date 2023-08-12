@@ -1,4 +1,4 @@
-import Button from "../components/common/Button";
+import ButtonToLink from "../components/common/Button/ButtonToLink";
 
 function Home() {
   return (
@@ -6,8 +6,8 @@ function Home() {
       <div className="mx-auto flex flex-col gap-9">
         <h1 className="text-5xl font-bold">JDTodo</h1>
         <div className="buttons flex flex-col gap-3">
-          <Button href="/login" text="Log In"/>
-          <Button href="/signup" text="Sign Up"/>
+          <ButtonToLink href="/login" text="Log In"/>
+          <ButtonToLink href="/signup" text="Sign Up"/>
         </div>
       </div>
     </div>

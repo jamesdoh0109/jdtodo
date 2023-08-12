@@ -24,11 +24,11 @@ class AuthValidator(Validator):
         return True 
     
     def validate_signup_inputs(self, signup_json):
-        if self.request_has_missing_body_or_empty_fields(signup_json, 'firstname', 'lastname', 'email', 'password', 'password2'):
+        if self.request_has_missing_body_or_empty_fields(signup_json, 'firstname', 'lastname', 'email', 'password', 'passwordConfirm'):
             return False 
         email = signup_json['email']
         password = signup_json['password']
-        password_confirm = signup_json['password2']
+        password_confirm = signup_json['passwordConfirm']
         if not self.check_valid_email(email):
             self.error = 'Email is not valid'
             return False 
@@ -37,10 +37,10 @@ class AuthValidator(Validator):
         return True 
     
     def validate_change_password_inputs(self, change_password_json):
-        if self.request_has_missing_body_or_empty_fields(change_password_json, 'currentPassword', 'newPassword', 'confirmPassword'):
+        if self.request_has_missing_body_or_empty_fields(change_password_json, 'passwordCurrent', 'passwordNew', 'passwordConfirm'):
             return False 
-        password = change_password_json['newPassword']
-        password_confirm = change_password_json['confirmPassword']
+        password = change_password_json['passwordNew']
+        password_confirm = change_password_json['passwordConfirm']
         if not self.request_has_valid_password_inputs(password, password_confirm):
             return False 
         return True 
@@ -51,10 +51,10 @@ class AuthValidator(Validator):
         return True 
     
     def validate_reset_password_inputs(self, reset_password_json):
-        if self.request_has_missing_body_or_empty_fields(reset_password_json, 'password', 'password2'):
+        if self.request_has_missing_body_or_empty_fields(reset_password_json, 'password', 'passwordConfirm'):
             return False 
         password = reset_password_json['password']
-        password_confirm = reset_password_json['password2']
+        password_confirm = reset_password_json['passwordConfirm']
         if not self.request_has_valid_password_inputs(password, password_confirm):
             return False 
         return True 

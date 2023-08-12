@@ -1,9 +1,44 @@
 import { redirect } from "react-router-dom";
 import { authActions } from "../store/reducers/auth";
-import { userDataActions } from "../store/reducers/user-data";
+import { userDataActions } from "../store/reducers/userData";
+import * as yup from "yup";
 
-function hasEmptyFields(...args) {
+export const emailValidator = yup
+  .string()
+  .email("Email is not valid")
+  .required("Email is required");
+
+export const passwordValidator = yup
+  .string()
+  .required("Password is required");
+
+export const passwordNewValidator = yup
+  .string()
+  .min(8, "Password must contain at least 8 characters")
+  .matches(
+    /^(?=.*[A-Z])(?=.*\d)/,
+    "Password must contain at least 1 uppercase letter and 1 number"
+  )
+  .required("Password is required");
+
+export const passwordConfirmValidator = (password) =>
+  yup
+    .string()
+    .oneOf(password, "Passwords must match")
+    .required("Please verify your password");
+
+export const firstnameValidator = yup
+  .string()
+  .required("First name is required");
+
+export const lastnameValidator = yup.string().required("Last name is required");
+
+export function hasEmptyFields(...args) {
   return args.includes("");
+}
+
+function fieldIsEmpty(field) {
+  return field === "";
 }
 
 function checkValidEmail(email) {
@@ -15,76 +50,67 @@ function checkValidPassword(password) {
   return password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
 }
 
-function validateChangePasswordInput({
-  currentPassword,
-  newPassword,
-  confirmPassword,
-}) {
-  if (hasEmptyFields(currentPassword, newPassword, confirmPassword)) {
-    return "Password fields cannot be empty";
-  } else if (!checkValidPassword(newPassword)) {
-    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
-  } else if (newPassword !== confirmPassword) {
-    return "Passwords must match";
-  } 
-  return null;
-}
-
-function validateEditUserInput({ firstname, lastname, email }) {
-  if (hasEmptyFields(firstname, lastname, email)) {
-    return "All fields are required";
-  } else if (!checkValidEmail(email)) {
-    return "Please enter a valid email";
+export function validateChangePasswordInputs(
+  { passwordCurrent, passwordNew, passwordConfirm },
+  errors
+) {
+  if (!checkValidPassword(passwordNew) && passwordNew !== "") {
+    errors.passwordNew =
+      "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
+  } else if (passwordNew !== passwordConfirm && passwordConfirm !== "") {
+    errors.passwordConfirm = "Passwords must match";
   }
-  return null;
+  return errors;
 }
 
-function validateForgotPasswordInput({ email }) {
-  if (hasEmptyFields(email)) {
-    return "Please enter your email";
-  } else if (!checkValidEmail(email)) {
-    return "Please enter a valid email";
+export function validateEditUserInputs({ firstname, lastname, email }, errors) {
+  if (!checkValidEmail(email) && email !== "") {
+    errors.email = "Email is not valid";
   }
-  return null;
+  return errors;
 }
 
-function validateResetPasswordInput({ password, password2 }) {
-  if (hasEmptyFields(password, password2)) {
-    return "Both fields are required";
-  } else if (!checkValidPassword(password)) {
-    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
-  } else if (password !== password2) {
-    return "Your passwords don't match";
-  } 
-  return null;
-}
-
-function validateLoginInput({ email, password }) {
-  if (hasEmptyFields(email, password)) {
-    return "Both fields are required.";
-  } else if (!checkValidEmail(email)) {
-    return "Email is not valid.";
+export function validateForgotPasswordInput({ email }, errors) {
+  if (!checkValidEmail(email) && email !== "") {
+    errors.email = "Email is not valid";
   }
-  return null;
+  return errors;
 }
 
-function validateSignupInput({
-  firstname,
-  lastname,
-  email,
-  password,
-  password2,
-}) {
-  if (hasEmptyFields(firstname, lastname, email, password, password2)) {
-    return "All 5 fields are required";
-  } else if (!checkValidEmail(email)) {
-    return "Email is not valid";
-  } else if (password !== password2) {
-    return "Your passwords don't match";
-  } else if (!checkValidPassword(password)) {
-    return "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
+export function validateResetPasswordInputs(
+  { password, passwordConfirm },
+  errors
+) {
+  if (!checkValidPassword(password) && password !== "") {
+    errors.password =
+      "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
+  } else if (password !== passwordConfirm && passwordConfirm !== "") {
+    errors.passwordConfirm = "Passwords must match";
   }
-  return null;
+  return errors;
+}
+
+export function validateLogInInputs({ email, password }, errors) {
+  if (!checkValidEmail(email) && email !== "") {
+    errors.email = "Email is not valid";
+  }
+  return errors;
+}
+
+export function validateSignUpInputs(
+  { firstname, lastname, email, password, passwordConfirm },
+  errors
+) {
+  if (!checkValidEmail(email) && email !== "") {
+    errors.email = "Email is not valid";
+  }
+  if (!checkValidPassword(password) && password !== "") {
+    errors.password =
+      "Password must contain at least 8 characters, 1 uppercase letter, and 1 number";
+  } else if (password !== passwordConfirm && passwordConfirm !== "") {
+    errors.passwordConfirm = "Passwords must match";
+  }
+  return errors;
 }
 
 export function checkForInputErrors(form) {
@@ -94,20 +120,20 @@ export function checkForInputErrors(form) {
       return validateForgotPasswordInput(form);
     case 2:
       return form.hasOwnProperty("password2")
-        ? validateResetPasswordInput(form)
-        : validateLoginInput(form);
+        ? validateResetPasswordInputs(form)
+        : validateLogInInputs(form);
     case 3:
       return "currentPassword" in form
-        ? validateChangePasswordInput(form)
-        : validateEditUserInput(form);
+        ? validateChangePasswordInputs(form)
+        : validateEditUserInputs(form);
     default:
-      return validateSignupInput(form);
+      return validateSignUpInputs(form);
   }
 }
 
 async function checkTokenValidity(token) {
   const response = await fetch(
-    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.preview.app.github.dev/api/protected",
+    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.app.github.dev/api/protected",
     {
       headers: {
         "Content-Type": "application/json",
@@ -128,7 +154,7 @@ export function logout(dispatch, navigate) {
   dispatch(userDataActions.setFirstname({ firstname: "" }));
   dispatch(userDataActions.setLastname({ lastname: "" }));
   dispatch(userDataActions.setEmail({ email: "" }));
-  dispatch(userDataActions.setProjects({ projects: null }));
+  //dispatch(userDataActions.setProjects({ projects: null }));
   navigate("/");
 }
 
@@ -150,7 +176,7 @@ export async function checkAuthAndRedirect(pageType) {
   if (pageType === "protected" && !token) {
     return redirect("/login");
   } else if (pageType === "protected" && token) {
-    const tokenIsValid = await checkTokenValidity(token);  
+    const tokenIsValid = await checkTokenValidity(token);
     if (!tokenIsValid) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
@@ -167,9 +193,8 @@ export async function checkAuthAndRedirect(pageType) {
 
 export async function checkPasswordResetTokenAndRedirect(token) {
   const response = await fetch(
-    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.preview.app.github.dev/api/verify_reset_password_token/" +
-      token,
-     
+    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.app.github.dev/api/verify_reset_password_token/" +
+      token
   );
   if (response.status === 404 || response.status === 403) {
     return redirect("/");

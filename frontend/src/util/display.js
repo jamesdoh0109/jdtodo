@@ -67,3 +67,19 @@ export function sortByStatus(tasks) {
     }
   });
 };
+
+export function getSortedTasks(tasks, currentSortBy) {
+  if (currentSortBy === "Sort By") {
+    return sortById(tasks);
+  } else if (currentSortBy === "Deadline") {
+    return sortByDeadline(tasks);
+  } else if (currentSortBy === "Name") {
+    return sortByName(tasks);
+  } else {
+    return sortByStatus(tasks);
+  }
+};
+
+export function projectsObjIsPartial(projects) {
+  return !(projects && 'name' in projects[0])
+}

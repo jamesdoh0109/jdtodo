@@ -2,12 +2,12 @@ import { useCallback, useState } from "react";
 
 const useFetch = () => {
   const BASE_URL =
-    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.preview.app.github.dev";
+    "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.app.github.dev";
 
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState({
     error: false,
-    message: "request not made yet.",
+    message: "",
   });
 
   const fetchData = useCallback(

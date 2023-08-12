@@ -1,21 +1,31 @@
-export default function Message({ errorMsg, successMsg }) {
-  if (errorMsg) {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faWarning } from "@fortawesome/free-solid-svg-icons";
+
+export default function Message({ messageObj }) {
+  const message = messageObj.message;
+  const isError = messageObj.error;
+
+  if (isError) {
     return (
-      <div
-        className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 text-left mb-6"
-        role="alert"
-      >
-        {errorMsg}
+      <div className="flex">
+        <FontAwesomeIcon
+          icon={faWarning}
+          className="cursor-pointer w-3 mr-1"
+          style={{ color: "#dc2626" }}
+        />
+        <div className="text-red-600 text-xs text-left">{message}</div>
       </div>
     );
   }
-  if (successMsg) {
+  if (message) {
     return (
-      <div
-        className="bg-teal-100 border-t-4 border-teal-500 text-teal-900 p-4 text-left mb-6"
-        role="alert"
-      >
-        {successMsg}
+      <div className="flex">
+        <FontAwesomeIcon
+          icon={faCheck}
+          className="cursor-pointer w-3 mr-1"
+          style={{ color: "16a349" }}
+        />
+        <div className="text-green-600 text-xs text-left">{message}</div>
       </div>
     );
   }

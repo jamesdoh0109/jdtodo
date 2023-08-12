@@ -23,7 +23,7 @@ def check_valid_password(password):
 
 # use this helper function to convert the deadline in user's timezone to deadline in system timezone
 def convert_datetime_into_system_datetime(user_date_time, user_timezone):
-    date_obj = datetime.strptime(user_date_time, "%Y-%m-%dT%H:%M")
+    date_obj = datetime.strptime(user_date_time, "%Y-%m-%dT%H:%M:%S.%fZ")
 
     # Assign it the input timezone
     input_tz = pytz.timezone(user_timezone)  # Replace with your input timezone
@@ -40,7 +40,7 @@ def convert_datetime_into_system_datetime(user_date_time, user_timezone):
 def send_reset_email(user):
     token = user.get_reset_token()
     user.reset_password_token = token
-    link = f"https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.preview.app.github.dev/reset-password/{token}"
+    link = f"https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.app.github.dev/reset-password/{token}"
     body = f'<p>Hello {user.firstname} {user.lastname}!<br><br>To reset your password, please click <a href="{link}">here</a>. If you did not make this request, then simply ignore this email, and no changes will be made.<br><br>Thanks,<br>JDTodo</p>'
     msg = Message('Password Reset Request',
                   sender=("JDTodo", "noreply@jdtodo.com"),
@@ -49,10 +49,11 @@ def send_reset_email(user):
     mail.send(msg)
 
 def send_reset_confirm_email(user):
-    link = "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.preview.app.github.dev/login"
+    link = "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.app.github.dev/login"
     body = f'<p>Hello {user.firstname} {user.lastname}!<br><br>You have successfully updated your password. To log in, please click <a href="{link}">here</a>.<br><br>Thanks,<br>JDTodo</p>'
     msg = Message('Password Changed',
                   sender=("JDTodo", "noreply@jdtodo.com"),
                   recipients=[user.email],
                   html=body)
     mail.send(msg)
+
