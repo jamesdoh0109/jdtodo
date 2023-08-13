@@ -1,8 +1,10 @@
 import { emailValidator } from "../util/validator";
-import useFetch from "../hooks/useFetch";
+import { useMutateData } from "../hooks/useDataOperations";
+import useStatus from "../hooks/useStatus";
 import AuthNavigation from "../components/Auth/AuthNavigation";
 import AuthFormTitle from "../components/Auth/form/AuthFormTitle";
 import AuthForm from "../components/Auth/form/AuthForm";
+import { onErrorAfterSubmit } from "../util/form";
 
 const forgotPasswordInput = [
   {
@@ -14,29 +16,21 @@ const forgotPasswordInput = [
 ];
 
 export default function ForgotPassword() {
-  const { status, setStatus, isLoading, fetchData } = useFetch();
+  const { status, setStatus } = useStatus();
+
+  const requestConfig = {
+    url: "/api/forgot_password",
+    method: "POST",
+  };
+
+  const { mutate: onSendEmail, isLoading } = useMutateData(requestConfig, {
+    onSuccess: () =>
+      setStatus({ error: false, message: "Email successfully sent!" }),
+    onError: (error) => onErrorAfterSubmit(error, setStatus),
+  });
 
   const schemaObj = {
     email: emailValidator,
-  };
-
-  const handleResponse = async (res) => {
-    try {
-      const data = await res.json();
-      if (res.status !== 200) {
-        setStatus({
-          error: true,
-          message: data.error,
-        });
-      } else {
-        setStatus({
-          error: false,
-          message: data.message,
-        });
-      }
-    } catch (e) {
-      setStatus({ error: true, message: e });
-    }
   };
 
   return (
@@ -44,10 +38,10 @@ export default function ForgotPassword() {
       <div className="mx-auto flex flex-col gap-5 w-80">
         <AuthFormTitle title="Forgot Password" />
         <AuthForm
+          submit={onSendEmail}
           formInputs={forgotPasswordInput}
-          fetchData={fetchData}
-          handleResponse={handleResponse}
           status={status}
+          isLoading={isLoading}
           additionalAction={
             <AuthNavigation
               action="Back to login"
@@ -55,9 +49,6 @@ export default function ForgotPassword() {
               isLoading={isLoading}
             />
           }
-          isLoading={isLoading}
-          requestURL="/api/forgot_password"
-          requestMethod="POST"
           btnTxt="Submit"
           btnDisabledTxt="Submitting"
           schemaObj={schemaObj}

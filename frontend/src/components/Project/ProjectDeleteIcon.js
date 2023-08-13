@@ -1,18 +1,14 @@
-import { useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMutateData } from "../../hooks/useDataOperations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProjectDeleteIcon({ projectId }) {
-  const token = useSelector((state) => state.auth.token);
-
   const queryClient = useQueryClient();
 
   const requestConfig = {
     url: "/api/projects/" + projectId,
     method: "DELETE",
-    token: token,
   };
 
   const { mutate: deleteProject } = useMutateData(requestConfig, {
@@ -26,7 +22,7 @@ export default function ProjectDeleteIcon({ projectId }) {
         oldProjects,
       };
     },
-    onError: (_error, _task, context) => {
+    onError: (_error, _project, context) => {
       queryClient.setQueryData(["projects"], context.oldProjects);
     },
     onSettled: () => {

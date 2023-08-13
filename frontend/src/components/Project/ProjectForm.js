@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutateData } from "../../hooks/useDataOperations";
-import { onSuccessAfterCreateOrEditData } from "../../util/form";
+import { onSuccessAfterSubmit } from "../../util/form";
 import { projectNameValidator } from "../../util/validator";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -30,7 +30,7 @@ export default function ProjectForm() {
 
   const { mutate: createOrEditProject, isLoading } = useMutateData(
     requestConfig,
-    onSuccessAfterCreateOrEditData(
+    onSuccessAfterSubmit(
       queryClient,
       ["projects"],
       (data) => ({

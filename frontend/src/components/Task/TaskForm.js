@@ -8,7 +8,7 @@ import {
   taskDescriptionValidator,
   taskNameValidator,
 } from "../../util/validator";
-import { formatDateISO, onSuccessAfterCreateOrEditData } from "../../util/form";
+import { formatDateISO, onSuccessAfterSubmit } from "../../util/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import TaskModalTitle from "./TaskModalTitle";
@@ -64,7 +64,7 @@ export default function TaskForm() {
 
   const { mutate: createOrEditTask, isLoading } = useMutateData(
     requestConfig,
-    onSuccessAfterCreateOrEditData(
+    onSuccessAfterSubmit(
       queryClient,
       ["tasks", projectId],
       (data) => ({

@@ -1,6 +1,4 @@
-import { useMutateData } from "../hooks/useDataOperations";
-import { modalActions } from "../store/reducers/modal";
-import { hasEmptyFields } from "./auth";
+
 import { closeModal } from "./modal";
 
 export function prepareForm(formInputs) {
@@ -31,33 +29,6 @@ export function splitNameIntoLines(name) {
   return lines.join(" ");
 }
 
-export function projectNameTooLong(name) {
-  return name.length > 25;
-}
-
-export function taskNameTooLong(name) {
-  return name.length > 60;
-}
-
-export function taskFormMissingRequiredFields(name, deadline, status) {
-  return name === "" || deadline === "" || status === "";
-}
-
-export function taskDescriptionTooLong(description) {
-  return description.length > 300;
-}
-
-export function formatTaskFromServer(task) {
-  return {
-    id: task.task_id,
-    name: task.task_name,
-    deadline: task.task_deadline,
-    description: task.task_description,
-    status: task.task_status,
-    isDone: task.task_status === "Finished" ? true : false,
-  };
-}
-
 export function trimFormTrailingSpaces(form) {
   const trimExceptions = [
     "password",
@@ -77,12 +48,6 @@ export function trimFormTrailingSpaces(form) {
   );
 }
 
-export function formHasErrors(values, errors) {
-  return (
-    Object.keys(errors).length !== 0 || hasEmptyFields(...Object.values(values))
-  );
-}
-
 export function formatDateISO(date) {
   const dateObj = new Date(date);
 
@@ -98,46 +63,11 @@ export function formatDateISO(date) {
   return formattedDate;
 }
 
-export function getUserTimeZone() {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
-}
-
 export function deadlinePassed(deadline) {
   return new Date(formatDateISO(deadline)) < new Date();
 }
 
-export async function submitData(
-  requestURL,
-  requestMethod,
-  fetchData,
-  handleResponse,
-  data,
-  token
-) {
-  const headers = {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  };
-  if (token) {
-    headers.Authorization = "Bearer " + token;
-  }
-  const requestConfig = {
-    url: requestURL,
-    method: requestMethod,
-    headers: headers,
-  };
-  if (data) {
-    requestConfig.body = JSON.stringify(trimFormTrailingSpaces(data));
-  }
-
-  await fetchData(
-    requestConfig,
-    undefined, // no need to do any prefetching for form submission so pass in undefined
-    handleResponse
-  );
-}
-
-export const onSuccessAfterCreateOrEditData = (
+export const onSuccessAfterSubmit = (
   queryClient,
   dataKey,
   transformDataFn,
@@ -159,3 +89,6 @@ export const onSuccessAfterCreateOrEditData = (
     closeModal(dispatch, formResetRequired);
   },
 });
+
+export const onErrorAfterSubmit = (error, setStatus) =>
+  setStatus({ error: true, message: error.toString().substring(7) });

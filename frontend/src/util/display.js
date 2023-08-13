@@ -79,7 +79,3 @@ export function getSortedTasks(tasks, currentSortBy) {
     return sortByStatus(tasks);
   }
 };
-
-export function projectsObjIsPartial(projects) {
-  return !(projects && 'name' in projects[0])
-}

@@ -1,12 +1,10 @@
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { Checkbox } from "flowbite-react";
 import { useMutateData } from "../../hooks/useDataOperations";
 
 export default function TaskCheckBox({ className, checked, task }) {
   const taskId = task.id;
-  const token = useSelector((state) => state.auth.token);
   const projectId = useParams().projectId;
 
   const queryClient = useQueryClient();
@@ -14,7 +12,6 @@ export default function TaskCheckBox({ className, checked, task }) {
   const requestConfig = {
     url: `/api/tasks/${taskId}`,
     method: "PATCH",
-    token: token,
   };
 
   const { mutate: toggleTaskStatus } = useMutateData(requestConfig, {

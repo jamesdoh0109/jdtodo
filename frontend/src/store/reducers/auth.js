@@ -3,27 +3,17 @@ import { createSlice } from "@reduxjs/toolkit";
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    token: null,
+    isAuthenticated: false,
   },
   reducers: {
-    setToken(state, action) {
-      state.token = action.payload.token;
+    onLogin(state) {
+      state.isAuthenticated = true;
     },
+    onLogout(state) {
+      state.isAuthenticated = false; 
+    }
   },
 });
-
-export const initialTokenFetchFromBrowswer = () => {
-  return (dispatch) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(
-        authActions.setToken({
-          token: token,
-        })
-      );
-    }
-  };
-};
 
 export const authActions = authSlice.actions;
 export default authSlice.reducer;

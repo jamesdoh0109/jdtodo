@@ -11,8 +11,8 @@ export const useQueryData = (requestConfig, key, select) => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: "Bearer " + requestConfig.token,
       },
+      credentials: "include",
     });
     const json = await res.json();
     const formattedJson = select(json);
@@ -32,10 +32,13 @@ export const useMutateData = (requestConfig, sideEffect) => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: "Bearer " + requestConfig.token,
       },
+      credentials: "include",
     });
     const json = await res.json();
+    if (res.status !== 200 && res.status !== 201) {
+      throw new Error(json.error)
+    }
     return json;
   };
   return useMutation((data) => mutateData(data), {

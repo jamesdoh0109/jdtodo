@@ -1,34 +1,31 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../util/auth";
-import useFetch from "../../hooks/useFetch";
 import AccountFormTitle from "./form/AccountFormTitle";
 import ButtonOnClick from "../common/Button/ButtonOnClick";
+import { useMutateData } from "../../hooks/useDataOperations";
+import { authActions } from "../../store/reducers/auth";
 
 export default function DeleteAccount() {
   const id = useSelector((state) => state.userData.id);
   const firstname = useSelector((state) => state.userData.firstname);
   const lastname = useSelector((state) => state.userData.lastname);
   const fullname = `${firstname} ${lastname}`;
-  const token = useSelector((state) => state.auth.token);
-
-  const { isLoading, fetchData } = useFetch();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleDeleteAccount = () => {
-    const requestConfig = {
-      url: "/api/user/" + id,
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    };
-    fetchData(requestConfig, undefined, () => logout(dispatch, navigate));
+  const requestConfig = {
+    url: "/api/user/" + id,
+    method: "DELETE",
   };
+
+  const { mutate: onDeleteAccount, isLoading } = useMutateData(requestConfig, {
+    onSuccess: () => {
+      dispatch(authActions.onLogout());
+      logout(dispatch, navigate);
+    },
+  });
 
   return (
     <>
@@ -44,7 +41,7 @@ export default function DeleteAccount() {
       <div>
         <ButtonOnClick
           text={isLoading ? "Deleting" : "Confirm"}
-          onClick={handleDeleteAccount}
+          onClick={() => onDeleteAccount()}
           disabled={isLoading}
         />
       </div>

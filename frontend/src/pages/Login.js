@@ -1,12 +1,14 @@
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../util/auth";
 import { emailValidator, passwordValidator } from "../util/validator";
-import useFetch from "../hooks/useFetch";
+import { useMutateData } from "../hooks/useDataOperations";
+import { authActions } from "../store/reducers/auth";
+import useStatus from "../hooks/useStatus";
 import AccountCTA from "../components/Auth/AccountCTA";
 import AuthNavigation from "../components/Auth/AuthNavigation";
 import AuthFormTitle from "../components/Auth/form/AuthFormTitle";
 import AuthForm from "../components/Auth/form/AuthForm";
+import { onErrorAfterSubmit } from "../util/form";
 
 const loginInputs = [
   {
@@ -24,30 +26,26 @@ const loginInputs = [
 ];
 
 export default function Login() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { status, setStatus, isLoading, fetchData } = useFetch();
+  const { status, setStatus } = useStatus();
+
+  const requestConfig = {
+    url: "/api/login",
+    method: "POST",
+  };
+
+  const { mutate: onLogin, isLoading } = useMutateData(requestConfig, {
+    onSuccess: (data) => {
+      dispatch(authActions.onLogin());
+      login(dispatch, data);
+    },
+    onError: (error) => onErrorAfterSubmit(error, setStatus),
+  });
 
   const schemaObj = {
     email: emailValidator,
     password: passwordValidator,
-  };
-
-  const handleResponse = async (res) => {
-    try {
-      const data = await res.json();
-      if (res.status !== 200) {
-        setStatus({
-          error: true,
-          message: data.error,
-        });
-      } else {
-        login(dispatch, navigate, data);
-      }
-    } catch (e) {
-      setStatus({ error: true, message: e });
-    }
   };
 
   return (
@@ -55,10 +53,10 @@ export default function Login() {
       <div className="mx-auto flex flex-col gap-5 w-80">
         <AuthFormTitle title="Log In" />
         <AuthForm
+          submit={onLogin}
           formInputs={loginInputs}
-          fetchData={fetchData}
-          handleResponse={handleResponse}
           status={status}
+          isLoading={isLoading}
           additionalAction={
             <AuthNavigation
               action="Forgot Password?"
@@ -66,9 +64,6 @@ export default function Login() {
               isLoading={isLoading}
             />
           }
-          isLoading={isLoading}
-          requestURL="/api/login"
-          requestMethod="POST"
           btnTxt="Log In"
           btnDisabledTxt="Logging In"
           schemaObj={schemaObj}

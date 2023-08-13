@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token, create_refresh_token, set_access_cookies, set_refresh_cookies
+from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token, set_access_cookies, unset_jwt_cookies
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend.models.user import User
@@ -24,13 +24,17 @@ def login_route():
         return jsonify({'error': 'Incorrect password'}), 401
     user_obj = {'id': user.id, 'firstname': user.firstname,
                 'lastname': user.lastname, 'email': user.email}
+    resp = jsonify({'message': 'Login success', 'user': user_obj})
     access_token = create_access_token(identity=user.id)
-    #refresh_token = create_refresh_token(identity=user.id)
-    #resp = jsonify({'message': 'Login success', 'user': user_obj})
-    #set_access_cookies(resp, access_token)
-    #set_refresh_cookies(resp, refresh_token)
-    #return resp, 200
-    return jsonify({'message': 'Login success', 'access_token': access_token, 'user': user_obj}), 200
+    set_access_cookies(resp, access_token)
+    return resp, 200
+    #return jsonify({'message': 'Login success', 'access_token': access_token, 'user': user_obj}), 200
+
+@auth.route("/api/logout", methods=["POST"])
+def logout():
+    resp = jsonify({"message": "Logout success"})
+    unset_jwt_cookies(resp)
+    return resp
 
 @auth.route('/api/signup', methods=['POST'])
 def signup_route():

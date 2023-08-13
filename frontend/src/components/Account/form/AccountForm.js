@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { prepareForm, submitData } from "../../../util/form";
+import { prepareForm } from "../../../util/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import ButtonSubmit from "../../common/Button/ButtonSubmit";
@@ -8,29 +7,14 @@ import Message from "../../common/Message";
 import FormInput from "../../common/FormInput";
 
 export default function AccountForm({
+  submit,
   formInputs,
-  fetchData,
-  handleResponse,
   status,
   isLoading,
-  requestURL,
-  requestMethod,
   btnTxt = "Save Changes",
   btnDisabledTxt = "Saving Changes",
   schemaObj,
 }) {
-  const token = useSelector((state) => state.auth.token);
-
-  const onSubmit = (data) =>
-    submitData(
-      requestURL,
-      requestMethod,
-      fetchData,
-      handleResponse,
-      data,
-      token
-    );
-
   const {
     register,
     handleSubmit,
@@ -42,7 +26,7 @@ export default function AccountForm({
   });
 
   return (
-    <form className="pt-7 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
+    <form className="pt-7 pb-8 mb-4" onSubmit={handleSubmit(submit)}>
       {formInputs.map(({ id, name, type, label }) => (
         <FormInput
           key={id}

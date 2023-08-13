@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { prepareForm, submitData } from "../../../util/form";
+import { prepareForm } from "../../../util/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import ButtonSubmit from "../../common/Button/ButtonSubmit";
@@ -7,21 +7,16 @@ import Message from "../../common/Message";
 import FormInput from "../../common/FormInput";
 
 export default function AuthForm({
+  submit,
   formInputs,
-  fetchData,
-  handleResponse,
   status,
-  additionalAction,
   isLoading,
-  requestURL,
-  requestMethod,
+  additionalAction,
   btnTxt = "Submit",
   btnDisabledTxt = "Submitting",
   schemaObj,
 }) {
-  const onSubmit = (data) =>
-    submitData(requestURL, requestMethod, fetchData, handleResponse, data);
-
+  
   const {
     register,
     handleSubmit,
@@ -35,7 +30,7 @@ export default function AuthForm({
   return (
     <form
       className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(submit)}
     >
       {formInputs.map(({ id, name, type, placeholder }) => (
         <FormInput

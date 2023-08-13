@@ -1,17 +1,26 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../util/auth";
 import { Navbar } from "flowbite-react";
+import { authActions } from "../../store/reducers/auth";
+import { useMutateData } from "../../hooks/useDataOperations";
 
 export default function Navigation() {
-  const token = useSelector((state) => state.auth.token);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout(dispatch, navigate);
+  const requestConfig = {
+    url: "/api/logout",
+    method: "POST",
   };
+
+  const { mutate: onLogout } = useMutateData(requestConfig, {
+    onSuccess: () => {
+      dispatch(authActions.onLogout());
+      logout(dispatch);
+    },
+  });
 
   const loggedOutOptions = (
     <Navbar.Collapse className="ml-3 text-lg">
@@ -25,9 +34,7 @@ export default function Navigation() {
     <Navbar.Collapse className="ml-3 text-lg">
       <NavLink to="/dashboard">Dashboard</NavLink>
       <NavLink to="/account">Account</NavLink>
-      <NavLink onClick={handleLogout} to="/">
-        Log Out
-      </NavLink>
+      <button onClick={() => onLogout()}>Log Out</button>
     </Navbar.Collapse>
   );
 
@@ -36,15 +43,15 @@ export default function Navigation() {
       fluid
       rounded
       className="fixed w-full z-30"
-      style={{ backgroundColor: "rgb(226 232 240)" }} 
+      style={{ backgroundColor: "rgb(226 232 240)" }}
     >
-      <NavLink to={token ? "/dashboard" : "/"}>
+      <NavLink to={isAuthenticated ? "/dashboard" : "/"}>
         <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white ml-3">
           JDTodo
         </span>
       </NavLink>
       <Navbar.Toggle />
-      {token ? loggedInOptions : loggedOutOptions}
+      {isAuthenticated ? loggedInOptions : loggedOutOptions}
     </Navbar>
   );
 }
