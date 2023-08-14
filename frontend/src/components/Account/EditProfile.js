@@ -1,15 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../../store/reducers/userData";
-import AccountForm from "./form/AccountForm";
-import AccountFormTitle from "./form/AccountFormTitle";
 import {
   emailValidator,
   firstnameValidator,
   lastnameValidator,
 } from "../../util/validator";
-import useStatus from "../../hooks/useStatus";
 import { useMutateData } from "../../hooks/useDataOperations";
 import { onErrorAfterSubmit } from "../../util/form";
+import useStatus from "../../hooks/useStatus";
+import AccountForm from "./AccountForm";
 
 export default function EditProfile() {
   const firstname = useSelector((state) => state.userData.firstname);
@@ -70,7 +69,7 @@ export default function EditProfile() {
 
   return (
     <>
-      <AccountFormTitle title="Edit Profile" />
+      <h1 className="text-2xl font-medium">Edit Profile</h1>
       <AccountForm
         submit={onEditProfile}
         formInputs={editProfileInputs}

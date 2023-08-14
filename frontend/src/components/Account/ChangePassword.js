@@ -4,12 +4,11 @@ import {
   passwordNewValidator,
   passwordValidator,
 } from "../../util/validator";
+import { onErrorAfterSubmit } from "../../util/form";
 import { useMutateData } from "../../hooks/useDataOperations";
 import * as yup from "yup";
-import AccountForm from "./form/AccountForm";
-import AccountFormTitle from "./form/AccountFormTitle";
+import AccountForm from "./AccountForm";
 import useStatus from "../../hooks/useStatus";
-import { onErrorAfterSubmit } from "../../util/form";
 
 const passwordInputs = [
   {
@@ -60,7 +59,7 @@ export default function ChangePassword() {
 
   return (
     <>
-      <AccountFormTitle title="Change Password" />
+      <h1 className="text-2xl font-medium">Change Password</h1>
       <AccountForm
         submit={onChangePassword}
         formInputs={passwordInputs}

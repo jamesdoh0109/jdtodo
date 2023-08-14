@@ -1,10 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../../util/auth";
-import AccountFormTitle from "./form/AccountFormTitle";
-import ButtonOnClick from "../common/Button/ButtonOnClick";
 import { useMutateData } from "../../hooks/useDataOperations";
 import { authActions } from "../../store/reducers/auth";
+import { logout } from "../../util/auth";
+import ButtonOnClick from "../common/Button/ButtonOnClick";
 
 export default function DeleteAccount() {
   const id = useSelector((state) => state.userData.id);
@@ -13,7 +11,6 @@ export default function DeleteAccount() {
   const fullname = `${firstname} ${lastname}`;
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const requestConfig = {
     url: "/api/user/" + id,
@@ -22,14 +19,14 @@ export default function DeleteAccount() {
 
   const { mutate: onDeleteAccount, isLoading } = useMutateData(requestConfig, {
     onSuccess: () => {
-      dispatch(authActions.onLogout());
-      logout(dispatch, navigate);
+      dispatch(authActions.deauthenticateUser());
+      logout(dispatch);
     },
   });
 
   return (
     <>
-      <AccountFormTitle title="Delete Account" />
+      <h1 className="text-2xl font-medium">Delete Account</h1>
       <p className="pt-7 pb-8">
         Hello <span className="font-bold inline">{fullname}</span>
         !

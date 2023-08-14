@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { authActions } from "../../store/reducers/auth";
@@ -6,7 +6,7 @@ import { checkTokenValidity } from "../../util/auth";
 
 export default function RequireAuth({ pageProtected }) {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = useSelector((state) => state.auth.isLoading);
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -15,11 +15,11 @@ export default function RequireAuth({ pageProtected }) {
     const checkIsAuthenticated = async () => {
       const tokenValid = await checkTokenValidity();
       if (!tokenValid) {
-        isAuthenticated && dispatch(authActions.onLogout());
+        isAuthenticated && dispatch(authActions.deauthenticateUser());
       } else {
-        !isAuthenticated && dispatch(authActions.onLogin());
+        !isAuthenticated && dispatch(authActions.authenticateUser());
       }
-      setIsLoading(false);
+      dispatch(authActions.completeLoading());
     };
     checkIsAuthenticated();
   }, [dispatch, isAuthenticated]);

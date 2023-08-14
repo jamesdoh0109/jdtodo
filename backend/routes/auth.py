@@ -28,13 +28,12 @@ def login_route():
     access_token = create_access_token(identity=user.id)
     set_access_cookies(resp, access_token)
     return resp, 200
-    #return jsonify({'message': 'Login success', 'access_token': access_token, 'user': user_obj}), 200
 
 @auth.route("/api/logout", methods=["POST"])
 def logout():
     resp = jsonify({"message": "Logout success"})
     unset_jwt_cookies(resp)
-    return resp
+    return resp, 200
 
 @auth.route('/api/signup', methods=['POST'])
 def signup_route():

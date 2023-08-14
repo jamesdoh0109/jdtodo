@@ -12,15 +12,19 @@ export const taskDeadlineValidator = yup
 export const taskDescriptionValidator = yup
   .string()
   .max(300, "Description must contain less than 300 characters");
-  
+
 export const projectNameValidator = yup
   .string()
   .max(25, "Project name must contain less than 25 characters")
   .required("Project name is required");
 
+const customEmailRegex = /^[\w+%.-]+@[\w.-]+\.[A-Za-z]{2,7}$/;
+
 export const emailValidator = yup
   .string()
-  .email("Email is not valid")
+  .test("email", "Email is not valid", (value) => {
+    return customEmailRegex.test(value || "");
+  })
   .required("Email is required");
 
 export const passwordValidator = yup.string().required("Password is required");

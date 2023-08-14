@@ -1,4 +1,3 @@
-
 import { closeModal } from "./modal";
 
 export function prepareForm(formInputs) {

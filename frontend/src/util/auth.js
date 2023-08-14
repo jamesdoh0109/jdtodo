@@ -37,5 +37,5 @@ export async function checkResetPasswordToken(token) {
     "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.app.github.dev/api/verify_reset_password_token/" +
       token
   );
-  return response.status !== 404 && response.status !== 403
+  return response.status !== 404 && response.status !== 403;
 }

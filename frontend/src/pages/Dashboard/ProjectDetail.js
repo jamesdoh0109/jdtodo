@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { deadlinePassed } from "../../util/form";
@@ -12,28 +12,15 @@ import ButtonOpenModal from "../../components/common/Button/ButtonOpenModal";
 import TaskSortBy from "../../components/Task/TaskSortBy";
 import TaskOverdueWarningMessage from "../../components/Task/TaskOverdueWarningMessage";
 
-// do something about this 
-function countOverdueTasks(tasks) {
-  const overdueTasks = tasks.filter((task) => {
-    return deadlinePassed(task.deadline) && !task.isDone;
-  });
-  return overdueTasks.length;
-}
-
 export default function ProjectDetail() {
-  const token = useSelector((state) => state.auth.token);
   const modalOpen = useSelector((state) => state.modal.modalOpen);
   const modalType = useSelector((state) => state.modal.modalType);
   const projectId = useParams().projectId;
 
   const [currentSortBy, setCurrentSortBy] = useState("Sort By");
 
-  const numOverdueTasks = 0;
-  //tasks && countOverdueTasks(tasks);
-
   const requestConfig = {
     url: `/api/${projectId}/tasks`,
-    token: token,
   };
 
   const select = (data) =>
@@ -50,6 +37,13 @@ export default function ProjectDetail() {
     requestConfig,
     ["tasks", projectId],
     select
+  );
+
+  const numOverdueTasks = useMemo(
+    () =>
+      tasks?.filter((task) => deadlinePassed(task.deadline) && !task.isDone)
+        .length,
+    [tasks]
   );
 
   return (

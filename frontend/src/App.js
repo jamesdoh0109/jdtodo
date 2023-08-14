@@ -13,6 +13,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import RequireAuth from "./components/Auth/RequireAuth";
 import RequireResetPasswordToken from "./components/Auth/RequireResetPasswordToken";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,25 +25,22 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<RequireAuth pageProtected={false} />}>
-          <Route path="/" element={<Root />}>
+        <Route path="/" element={<Root />}>
+          <Route element={<RequireAuth pageProtected={false} />}>
             <Route path="" element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
           </Route>
-        </Route>
-        <Route element={<RequireAuth pageProtected={true} />}>
-          <Route path="/" element={<Root />}>
+          <Route element={<RequireAuth pageProtected={true} />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="dashboard/:projectId" element={<ProjectDetail />} />
             <Route path="account" element={<Account />} />
           </Route>
-        </Route>
-        <Route element={<RequireResetPasswordToken />}>
-          <Route path="/" element={<Root />}>
+          <Route element={<RequireResetPasswordToken />}>
             <Route path="/reset-password/:token" element={<ResetPassword />} />
           </Route>
+          <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

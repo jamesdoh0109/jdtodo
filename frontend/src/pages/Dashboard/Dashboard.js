@@ -6,13 +6,11 @@ import ProjectList from "../../components/Project/ProjectList";
 import ButtonOpenModal from "../../components/common/Button/ButtonOpenModal";
 
 export default function Dashboard() {
-  const token = useSelector((state) => state.auth.token);
   const modalOpen = useSelector((state) => state.modal.modalOpen);
   const modalType = useSelector((state) => state.modal.modalType);
 
   const requestConfig = {
     url: "/api/projects",
-    token: token,
   };
 
   const select = (data) =>

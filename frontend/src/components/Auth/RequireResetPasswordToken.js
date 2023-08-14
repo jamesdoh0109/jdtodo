@@ -16,7 +16,7 @@ export default function RequireResetPasswordToken() {
       setIsLoading(false);
     };
     checkIsAuthenticated();
-  }, []);
+  }, [resetPasswordToken]);
 
   return (
     !isLoading &&

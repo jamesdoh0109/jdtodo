@@ -1,14 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useMutateData } from "../hooks/useDataOperations";
+import { onErrorAfterSubmit } from "../util/form";
 import {
   passwordConfirmValidator,
   passwordNewValidator,
 } from "../util/validator";
-import { useMutateData } from "../hooks/useDataOperations";
 import * as yup from "yup";
 import useStatus from "../hooks/useStatus";
 import AuthFormTitle from "../components/Auth/form/AuthFormTitle";
 import AuthForm from "../components/Auth/form/AuthForm";
-import { onErrorAfterSubmit } from "../util/form";
 
 const resetPasswordInput = [
   {
@@ -26,14 +26,14 @@ const resetPasswordInput = [
 ];
 
 export default function ResetPassword() {
-  const navigate = useNavigate();
+  const resetPasswordToken = useParams().token;
 
-  const token = useParams().token;
+  const navigate = useNavigate();
 
   const { status, setStatus } = useStatus();
 
   const requestConfig = {
-    url: `/api/reset_password/${token}`,
+    url: `/api/reset_password/${resetPasswordToken}`,
     method: "PATCH",
   };
 

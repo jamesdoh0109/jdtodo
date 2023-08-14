@@ -4,9 +4,14 @@ export function formatDate(date, showTime = false) {
   const month = dateObj.getMonth() + 1; // Months are zero-based, so we add 1
   const day = dateObj.getDate();
   const year = dateObj.getFullYear();
-  const time = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  const time = dateObj.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-  const formattedDate = `${month}/${day}/${year}${showTime ? " at " + time : ""}`;
+  const formattedDate = `${month}/${day}/${year}${
+    showTime ? " at " + time : ""
+  }`;
 
   return formattedDate;
 }
@@ -51,7 +56,7 @@ export function sortByStatus(tasks) {
   const statusOrder = {
     "Not started": 1,
     "In progress": 2,
-    "Finished": 3,
+    Finished: 3,
   };
 
   return tasks.slice().sort((task1, task2) => {
@@ -66,7 +71,7 @@ export function sortByStatus(tasks) {
       return 0;
     }
   });
-};
+}
 
 export function getSortedTasks(tasks, currentSortBy) {
   if (currentSortBy === "Sort By") {
@@ -78,4 +83,4 @@ export function getSortedTasks(tasks, currentSortBy) {
   } else {
     return sortByStatus(tasks);
   }
-};
+}

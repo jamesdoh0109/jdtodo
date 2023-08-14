@@ -1,14 +1,14 @@
 import { useDispatch } from "react-redux";
-import { login } from "../util/auth";
-import { emailValidator, passwordValidator } from "../util/validator";
-import { useMutateData } from "../hooks/useDataOperations";
 import { authActions } from "../store/reducers/auth";
+import { useMutateData } from "../hooks/useDataOperations";
+import { login } from "../util/auth";
+import { onErrorAfterSubmit } from "../util/form";
+import { emailValidator, passwordValidator } from "../util/validator";
 import useStatus from "../hooks/useStatus";
 import AccountCTA from "../components/Auth/AccountCTA";
 import AuthNavigation from "../components/Auth/AuthNavigation";
 import AuthFormTitle from "../components/Auth/form/AuthFormTitle";
 import AuthForm from "../components/Auth/form/AuthForm";
-import { onErrorAfterSubmit } from "../util/form";
 
 const loginInputs = [
   {
@@ -37,7 +37,7 @@ export default function Login() {
 
   const { mutate: onLogin, isLoading } = useMutateData(requestConfig, {
     onSuccess: (data) => {
-      dispatch(authActions.onLogin());
+      dispatch(authActions.authenticateUser());
       login(dispatch, data);
     },
     onError: (error) => onErrorAfterSubmit(error, setStatus),

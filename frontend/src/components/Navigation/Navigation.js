@@ -1,12 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../util/auth";
-import { Navbar } from "flowbite-react";
 import { authActions } from "../../store/reducers/auth";
 import { useMutateData } from "../../hooks/useDataOperations";
+import { logout } from "../../util/auth";
+import { Navbar } from "flowbite-react";
 
 export default function Navigation() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isLoading = useSelector((state) => state.auth.isLoading);
 
   const dispatch = useDispatch();
 
@@ -17,7 +18,7 @@ export default function Navigation() {
 
   const { mutate: onLogout } = useMutateData(requestConfig, {
     onSuccess: () => {
-      dispatch(authActions.onLogout());
+      dispatch(authActions.deauthenticateUser());
       logout(dispatch);
     },
   });
@@ -51,7 +52,7 @@ export default function Navigation() {
         </span>
       </NavLink>
       <Navbar.Toggle />
-      {isAuthenticated ? loggedInOptions : loggedOutOptions}
+      {!isLoading && (isAuthenticated ? loggedInOptions : loggedOutOptions)}
     </Navbar>
   );
 }

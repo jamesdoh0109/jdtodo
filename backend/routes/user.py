@@ -1,6 +1,5 @@
 from flask import request, jsonify, Blueprint
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
 from sqlalchemy.exc import IntegrityError
 from backend.data_managers.user import get_user_by_id, modify_user, delete_user
 from backend.validators.user import UserValidator
@@ -39,4 +38,6 @@ def delete_user_route(user_id):
     deleted_user = delete_user(user)
     if isinstance(deleted_user, Exception):
         return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': 'User deleted successfully'}), 200
+    resp = jsonify({'message': 'User deleted successfully'})
+    unset_jwt_cookies(resp)
+    return resp, 200
