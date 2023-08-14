@@ -74,12 +74,6 @@ export default function TaskDropdown({
         oldTasks,
       };
     },
-    onError: (_error, _task, context) => {
-      queryClient.setQueryData(["tasks", projectId], context.oldTasks);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(["tasks", projectId]);
-    },
   });
 
   return (
