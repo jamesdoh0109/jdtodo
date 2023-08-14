@@ -1,19 +1,19 @@
 import { useNavigate } from "react-router-dom";
-import { useMutateData } from "../hooks/useDataOperations";
-import { onErrorAfterSubmit } from "../util/form";
+import { useMutateData } from "hooks/useDataOperations";
+import { onErrorAfterSubmit } from "util/form";
 import {
   emailValidator,
   firstnameValidator,
   lastnameValidator,
   passwordConfirmValidator,
   passwordNewValidator,
-} from "../util/validator";
+} from "util/validator";
 import * as yup from "yup";
-import useStatus from "../hooks/useStatus";
-import AccountCTA from "../components/Auth/AccountCTA";
-import AuthNavigation from "../components/Auth/AuthNavigation";
-import AuthFormTitle from "../components/Auth/form/AuthFormTitle";
-import AuthForm from "../components/Auth/form/AuthForm";
+import useStatus from "hooks/useStatus";
+import AccountCTA from "components/Auth/AccountCTA";
+import AuthNavigation from "components/Auth/AuthNavigation";
+import AuthFormTitle from "components/Auth/form/AuthFormTitle";
+import AuthForm from "components/Auth/form/AuthForm";
 
 const signupInputs = [
   {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
-import { checkResetPasswordToken } from "../../util/auth";
+import { checkResetPasswordToken } from "util/auth";
 
 export default function RequireResetPasswordToken() {
   const resetPasswordToken = useParams().token;

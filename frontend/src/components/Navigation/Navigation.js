@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../../store/reducers/auth";
-import { useMutateData } from "../../hooks/useDataOperations";
-import { logout } from "../../util/auth";
+import { authActions } from "store/reducers/auth";
+import { useMutateData } from "hooks/useDataOperations";
+import { logout } from "util/auth";
 import { Navbar } from "flowbite-react";
 
 export default function Navigation() {

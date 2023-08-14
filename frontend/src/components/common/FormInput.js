@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Message from "./Message";
-import Input from "./Input/Input";
-import TextArea from "./Input/TextArea";
-import Select from "./Input/Select";
+import Message from "components/common/Message";
+import Input from "components/common/Input/Input";
+import TextArea from "components/common/Input/TextArea";
+import Select from "components/common/Input/Select";
 
 export default function FormInput({
   id,

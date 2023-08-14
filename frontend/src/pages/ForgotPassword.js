@@ -1,10 +1,10 @@
-import { useMutateData } from "../hooks/useDataOperations";
-import { onErrorAfterSubmit } from "../util/form";
-import { emailValidator } from "../util/validator";
-import useStatus from "../hooks/useStatus";
-import AuthNavigation from "../components/Auth/AuthNavigation";
-import AuthFormTitle from "../components/Auth/form/AuthFormTitle";
-import AuthForm from "../components/Auth/form/AuthForm";
+import { useMutateData } from "hooks/useDataOperations";
+import { onErrorAfterSubmit } from "util/form";
+import { emailValidator } from "util/validator";
+import useStatus from "hooks/useStatus";
+import AuthNavigation from "components/Auth/AuthNavigation";
+import AuthFormTitle from "components/Auth/form/AuthFormTitle";
+import AuthForm from "components/Auth/form/AuthForm";
 
 const forgotPasswordInput = [
   {

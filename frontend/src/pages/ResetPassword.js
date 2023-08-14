@@ -1,14 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutateData } from "../hooks/useDataOperations";
-import { onErrorAfterSubmit } from "../util/form";
+import { useMutateData } from "hooks/useDataOperations";
+import { onErrorAfterSubmit } from "util/form";
 import {
   passwordConfirmValidator,
   passwordNewValidator,
 } from "../util/validator";
 import * as yup from "yup";
-import useStatus from "../hooks/useStatus";
-import AuthFormTitle from "../components/Auth/form/AuthFormTitle";
-import AuthForm from "../components/Auth/form/AuthForm";
+import useStatus from "hooks/useStatus";
+import AuthFormTitle from "components/Auth/form/AuthFormTitle";
+import AuthForm from "components/Auth/form/AuthForm";
 
 const resetPasswordInput = [
   {

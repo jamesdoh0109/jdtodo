@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { splitNameIntoLines } from "../../util/form";
-import { formatDate } from "../../util/display";
+import { splitNameIntoLines } from "util/form";
+import { formatDate } from "util/display";
 import { Card } from "flowbite-react";
-import ProjectDeleteIcon from "./ProjectDeleteIcon";
-import ProjectEditIcon from "./ProjectEditIcon";
+import ProjectDeleteIcon from "components/Project/ProjectDeleteIcon";
+import ProjectEditIcon from "components/Project/ProjectEditIcon";
 
 export default function ProjectCard({
   projectId,

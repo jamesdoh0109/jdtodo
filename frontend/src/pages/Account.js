@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Tabs } from "flowbite-react";
-import EditProfile from "../components/Account/EditProfile";
-import DeleteAccount from "../components/Account/DeleteAccount";
-import ChangePassword from "../components/Account/ChangePassword";
+import EditProfile from "components/Account/EditProfile";
+import DeleteAccount from "components/Account/DeleteAccount";
+import ChangePassword from "components/Account/ChangePassword";
 
 const customTheme = {
   base: "flex flex-col gap-2",

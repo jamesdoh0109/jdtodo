@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { trimFormTrailingSpaces } from "../util/form";
+import { trimFormTrailingSpaces } from "util/form";
 
 const BASE_URL =
   "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.app.github.dev";

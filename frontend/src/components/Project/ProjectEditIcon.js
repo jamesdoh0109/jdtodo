@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { projectFormActions } from "../../store/reducers/projectForm";
-import { openFormModal } from "../../util/modal";
+import { projectFormActions } from "store/reducers/projectForm";
+import { openFormModal } from "util/modal";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

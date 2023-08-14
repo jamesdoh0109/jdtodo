@@ -1,4 +1,4 @@
-import { closeModal } from "./modal";
+import { closeModal } from "util/modal";
 
 export function prepareForm(formInputs) {
   // create the initial form object (input's names as keys and empty string as the initial values)

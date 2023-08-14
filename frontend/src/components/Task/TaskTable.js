@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table } from "flowbite-react";
-import TaskRow from "./TaskRow";
+import TaskRow from "components/Task/TaskRow";
 
 export default function TaskTable({ sortedTasks }) {
   const [isDesktopVersion, setIsDesktopVersion] = useState(

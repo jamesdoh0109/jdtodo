@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { taskFormActions } from "../../../store/reducers/taskForm";
-import { dropdownActions } from "../../../store/reducers/dropdown";
-import { openFormModal } from "../../../util/modal";
-import ButtonOnClick from "./ButtonOnClick";
+import { taskFormActions } from "store/reducers/taskForm";
+import { dropdownActions } from "store/reducers/dropdown";
+import { openFormModal } from "util/modal";
+import ButtonOnClick from "components/common/Button/ButtonOnClick";
 
 export default function ButtonOpenModal({ btnTxt, modalFor }) {
   const taskToBeShown = useSelector((state) => state.taskDetail.itemToBeShown);

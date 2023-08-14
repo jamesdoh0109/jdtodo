@@ -1,6 +1,6 @@
-import { modalActions } from "../store/reducers/modal";
-import { projectFormActions } from "../store/reducers/projectForm";
-import { taskFormActions } from "../store/reducers/taskForm";
+import { modalActions } from "store/reducers/modal";
+import { projectFormActions } from "store/reducers/projectForm";
+import { taskFormActions } from "store/reducers/taskForm";
 
 export function openFormModal(dispatch) {
   dispatch(

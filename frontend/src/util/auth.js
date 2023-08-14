@@ -1,4 +1,4 @@
-import { userDataActions } from "../store/reducers/userData";
+import { userDataActions } from "store/reducers/userData";
 
 export function login(dispatch, userData) {
   localStorage.setItem("user", JSON.stringify(userData.user));

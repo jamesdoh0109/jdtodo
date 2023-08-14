@@ -1,15 +1,15 @@
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { useMutateData } from "../../hooks/useDataOperations";
-import { onSuccessAfterSubmit } from "../../util/form";
-import { projectNameValidator } from "../../util/validator";
+import { useMutateData } from "hooks/useDataOperations";
+import { onSuccessAfterSubmit } from "util/form";
+import { projectNameValidator } from "util/validator";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import ButtonSubmit from "../common/Button/ButtonSubmit";
-import Modal from "../common/Modal";
-import FormInput from "../common/FormInput";
-import ButtonCloseModal from "../common/Button/ButtonCloseModal";
+import ButtonSubmit from "components/common/Button/ButtonSubmit";
+import Modal from "components/common/Modal";
+import FormInput from "components/common/FormInput";
+import ButtonCloseModal from "components/common/Button/ButtonCloseModal";
 
 export default function ProjectForm() {
   const projectToBeEdited = useSelector(

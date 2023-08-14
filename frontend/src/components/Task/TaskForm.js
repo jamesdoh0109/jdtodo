@@ -2,20 +2,20 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMutateData } from "../../hooks/useDataOperations";
+import { useMutateData } from "hooks/useDataOperations";
 import {
   taskDeadlineValidator,
   taskDescriptionValidator,
   taskNameValidator,
-} from "../../util/validator";
-import { formatDateISO, onSuccessAfterSubmit } from "../../util/form";
+} from "util/validator";
+import { formatDateISO, onSuccessAfterSubmit } from "util/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import TaskModalTitle from "./TaskModalTitle";
-import FormInput from "../common/FormInput";
-import ButtonSubmit from "../common/Button/ButtonSubmit";
-import ButtonCloseModal from "../common/Button/ButtonCloseModal";
-import Modal from "../common/Modal";
+import TaskModalTitle from "components/Task/TaskModalTitle";
+import FormInput from "components/common/FormInput";
+import ButtonSubmit from "components/common/Button/ButtonSubmit";
+import ButtonCloseModal from "components/common/Button/ButtonCloseModal";
+import Modal from "components/common/Modal";
 
 const taskInputs = [
   {

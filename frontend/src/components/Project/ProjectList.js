@@ -1,5 +1,5 @@
-import { sortById } from "../../util/display";
-import ProjectCard from "./ProjectCard";
+import { sortById } from "util/display";
+import ProjectCard from "components/Project/ProjectCard";
 
 export default function ProjectList({ projects }) {
   if (projects.length > 0) {

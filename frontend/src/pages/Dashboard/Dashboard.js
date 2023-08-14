@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import { useQueryData } from "../../hooks/useDataOperations";
-import ProjectForm from "../../components/Project/ProjectForm";
-import Loading from "../../components/common/Loading";
-import ProjectList from "../../components/Project/ProjectList";
-import ButtonOpenModal from "../../components/common/Button/ButtonOpenModal";
+import { useQueryData } from "hooks/useDataOperations";
+import ProjectForm from "components/Project/ProjectForm";
+import Loading from "components/common/Loading";
+import ProjectList from "components/Project/ProjectList";
+import ButtonOpenModal from "components/common/Button/ButtonOpenModal";
 
 export default function Dashboard() {
   const modalOpen = useSelector((state) => state.modal.modalOpen);

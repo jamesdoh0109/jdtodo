@@ -1,4 +1,4 @@
-import ButtonToLink from "../components/common/Button/ButtonToLink";
+import ButtonToLink from "components/common/Button/ButtonToLink";
 
 function Home() {
   return (

@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { taskDetailActions } from "../../store/reducers/taskDetail";
-import { modalActions } from "../../store/reducers/modal";
-import { dropdownActions } from "../../store/reducers/dropdown";
-import { formatDate } from "../../util/display";
-import { deadlinePassed } from "../../util/form";
+import { taskDetailActions } from "store/reducers/taskDetail";
+import { modalActions } from "store/reducers/modal";
+import { dropdownActions } from "store/reducers/dropdown";
+import { formatDate } from "util/display";
+import { deadlinePassed } from "util/form";
 import { Table } from "flowbite-react";
-import TaskStatusBadge from "./TaskStatusBadge";
-import TaskDropdown from "./TaskDropdown";
-import TaskCheckBox from "./TaskCheckBox";
-import TaskOverdueWarningIcon from "./TaskOverdueWarningIcon";
+import TaskStatusBadge from "components/Task/TaskStatusBadge";
+import TaskDropdown from "components/Task/TaskDropdown";
+import TaskCheckBox from "components/Task/TaskCheckBox";
+import TaskOverdueWarningIcon from "components/Task/TaskOverdueWarningIcon";
 
 export default function TaskRow({ task, isDesktopVersion }) {
   const taskIsOverdue = deadlinePassed(task.deadline) && !task.isDone;

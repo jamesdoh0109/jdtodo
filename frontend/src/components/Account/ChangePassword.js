@@ -3,12 +3,12 @@ import {
   passwordConfirmValidator,
   passwordNewValidator,
   passwordValidator,
-} from "../../util/validator";
-import { onErrorAfterSubmit } from "../../util/form";
-import { useMutateData } from "../../hooks/useDataOperations";
+} from "util/validator";
+import { onErrorAfterSubmit } from "util/form";
+import { useMutateData } from "hooks/useDataOperations";
 import * as yup from "yup";
-import AccountForm from "./AccountForm";
-import useStatus from "../../hooks/useStatus";
+import AccountForm from "components/Account/AccountForm";
+import useStatus from "hooks/useStatus";
 
 const passwordInputs = [
   {

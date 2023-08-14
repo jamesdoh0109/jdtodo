@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import { formatDate } from "../../util/display";
-import { deadlinePassed } from "../../util/form";
-import Modal from "../common/Modal";
-import TaskStatusBadge from "./TaskStatusBadge";
-import ButtonCloseModal from "../common/Button/ButtonCloseModal";
-import TaskModalTitle from "./TaskModalTitle";
-import ButtonOpenModal from "../common/Button/ButtonOpenModal";
+import { formatDate } from "util/display";
+import { deadlinePassed } from "util/form";
+import Modal from "components/common/Modal";
+import TaskStatusBadge from "components/Task/TaskStatusBadge";
+import ButtonCloseModal from "components/common/Button/ButtonCloseModal";
+import TaskModalTitle from "components/Task/TaskModalTitle";
+import ButtonOpenModal from "components/common/Button/ButtonOpenModal";
 
 export default function TaskDetail() {
   const taskToBeShown = useSelector((state) => state.taskDetail.itemToBeShown);

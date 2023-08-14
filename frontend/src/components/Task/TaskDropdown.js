@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMutateData } from "../../hooks/useDataOperations";
-import { dropdownActions } from "../../store/reducers/dropdown";
-import { taskFormActions } from "../../store/reducers/taskForm";
-import { modalActions } from "../../store/reducers/modal";
+import { useMutateData } from "hooks/useDataOperations";
+import { dropdownActions } from "store/reducers/dropdown";
+import { taskFormActions } from "store/reducers/taskForm";
+import { modalActions } from "store/reducers/modal";
 import { ListGroup } from "flowbite-react";
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

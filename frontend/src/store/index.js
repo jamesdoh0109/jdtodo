@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import AuthReducer from "./reducers/auth";
-import ModalReducer from "./reducers/modal";
-import UserDataReducer from "./reducers/userData";
-import ProjectFormReducer from "./reducers/projectForm";
-import TaskFormReducer from "./reducers/taskForm";
-import TaskDetailReducer from "./reducers/taskDetail";
-import DropdownReducer from "./reducers/dropdown";
+import AuthReducer from "store/reducers/auth";
+import ModalReducer from "store/reducers/modal";
+import UserDataReducer from "store/reducers/userData";
+import ProjectFormReducer from "store/reducers/projectForm";
+import TaskFormReducer from "store/reducers/taskForm";
+import TaskDetailReducer from "store/reducers/taskDetail";
+import DropdownReducer from "store/reducers/dropdown";
 
 const store = configureStore({
   reducer: {

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { Checkbox } from "flowbite-react";
-import { useMutateData } from "../../hooks/useDataOperations";
+import { useMutateData } from "hooks/useDataOperations";
 
 export default function TaskCheckBox({ className, checked, task }) {
   const taskId = task.id;

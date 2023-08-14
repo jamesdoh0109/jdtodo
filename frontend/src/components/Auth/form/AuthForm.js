@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import { prepareForm } from "../../../util/form";
+import { prepareForm } from "util/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import ButtonSubmit from "../../common/Button/ButtonSubmit";
-import Message from "../../common/Message";
-import FormInput from "../../common/FormInput";
+import ButtonSubmit from "components/common/Button/ButtonSubmit";
+import Message from "components/common/Message";
+import FormInput from "components/common/FormInput";
 
 export default function AuthForm({
   submit,

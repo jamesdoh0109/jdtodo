@@ -1,16 +1,16 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { deadlinePassed } from "../../util/form";
-import { getSortedTasks } from "../../util/display";
-import { useQueryData } from "../../hooks/useDataOperations";
-import TaskTable from "../../components/Task/TaskTable";
-import Loading from "../../components/common/Loading";
-import TaskForm from "../../components/Task/TaskForm";
-import TaskDetail from "../../components/Task/TaskDetail";
-import ButtonOpenModal from "../../components/common/Button/ButtonOpenModal";
-import TaskSortBy from "../../components/Task/TaskSortBy";
-import TaskOverdueWarningMessage from "../../components/Task/TaskOverdueWarningMessage";
+import { deadlinePassed } from "util/form";
+import { getSortedTasks } from "util/display";
+import { useQueryData } from "hooks/useDataOperations";
+import TaskTable from "components/Task/TaskTable";
+import Loading from "components/common/Loading";
+import TaskForm from "components/Task/TaskForm";
+import TaskDetail from "components/Task/TaskDetail";
+import ButtonOpenModal from "components/common/Button/ButtonOpenModal";
+import TaskSortBy from "components/Task/TaskSortBy";
+import TaskOverdueWarningMessage from "components/Task/TaskOverdueWarningMessage";
 
 export default function ProjectDetail() {
   const modalOpen = useSelector((state) => state.modal.modalOpen);

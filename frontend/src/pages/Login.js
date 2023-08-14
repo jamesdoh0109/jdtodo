@@ -1,14 +1,14 @@
 import { useDispatch } from "react-redux";
-import { authActions } from "../store/reducers/auth";
-import { useMutateData } from "../hooks/useDataOperations";
-import { login } from "../util/auth";
-import { onErrorAfterSubmit } from "../util/form";
-import { emailValidator, passwordValidator } from "../util/validator";
-import useStatus from "../hooks/useStatus";
-import AccountCTA from "../components/Auth/AccountCTA";
-import AuthNavigation from "../components/Auth/AuthNavigation";
-import AuthFormTitle from "../components/Auth/form/AuthFormTitle";
-import AuthForm from "../components/Auth/form/AuthForm";
+import { authActions } from "store/reducers/auth";
+import { useMutateData } from "hooks/useDataOperations";
+import { login } from "util/auth";
+import { onErrorAfterSubmit } from "util/form";
+import { emailValidator, passwordValidator } from "util/validator";
+import useStatus from "hooks/useStatus";
+import AccountCTA from "components/Auth/AccountCTA";
+import AuthNavigation from "components/Auth/AuthNavigation";
+import AuthFormTitle from "components/Auth/form/AuthFormTitle";
+import AuthForm from "components/Auth/form/AuthForm";
 
 const loginInputs = [
   {

@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
-import { userDataActions } from "../../store/reducers/userData";
+import { userDataActions } from "store/reducers/userData";
 import {
   emailValidator,
   firstnameValidator,
   lastnameValidator,
-} from "../../util/validator";
-import { useMutateData } from "../../hooks/useDataOperations";
-import { onErrorAfterSubmit } from "../../util/form";
-import useStatus from "../../hooks/useStatus";
-import AccountForm from "./AccountForm";
+} from "util/validator";
+import { useMutateData } from "hooks/useDataOperations";
+import { onErrorAfterSubmit } from "util/form";
+import useStatus from "hooks/useStatus";
+import AccountForm from "components/Account/AccountForm";
 
 export default function EditProfile() {
   const firstname = useSelector((state) => state.userData.firstname);

@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useMutateData } from "../../hooks/useDataOperations";
-import { authActions } from "../../store/reducers/auth";
-import { logout } from "../../util/auth";
-import ButtonOnClick from "../common/Button/ButtonOnClick";
+import { useMutateData } from "hooks/useDataOperations";
+import { authActions } from "store/reducers/auth";
+import { logout } from "util/auth";
+import ButtonOnClick from "components/common/Button/ButtonOnClick";
 
 export default function DeleteAccount() {
   const id = useSelector((state) => state.userData.id);

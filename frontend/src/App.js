@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { initialUserDataFetchFromBrowswer } from "./store/reducers/userData";
-import Root from "./pages/Root";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Account from "./pages/Account";
-import ProjectDetail from "./pages/Dashboard/ProjectDetail";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import RequireAuth from "./components/Auth/RequireAuth";
-import RequireResetPasswordToken from "./components/Auth/RequireResetPasswordToken";
-import PageNotFound from "./pages/PageNotFound";
+import { initialUserDataFetchFromBrowswer } from "store/reducers/userData";
+import Root from "pages/Root";
+import Home from "pages/Home";
+import Login from "pages/Login";
+import Signup from "pages/Signup";
+import Dashboard from "pages/Dashboard/Dashboard";
+import Account from "pages/Account";
+import ProjectDetail from "pages/Dashboard/ProjectDetail";
+import ForgotPassword from "pages/ForgotPassword";
+import ResetPassword from "pages/ResetPassword";
+import RequireAuth from "components/Auth/RequireAuth";
+import RequireResetPasswordToken from "components/Auth/RequireResetPasswordToken";
+import PageNotFound from "pages/PageNotFound";
 
 function App() {
   const dispatch = useDispatch();
