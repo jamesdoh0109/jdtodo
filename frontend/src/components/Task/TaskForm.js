@@ -45,7 +45,6 @@ const taskInputs = [
 ];
 
 export default function TaskForm() {
-  const token = useSelector((state) => state.auth.token);
   const taskToBeEdited = useSelector((state) => state.taskForm.itemToBeEdited);
   const isCreatingNew = taskToBeEdited.id === -1;
   const projectId = useParams().projectId;
@@ -59,7 +58,7 @@ export default function TaskForm() {
       ? `/api/${projectId}/tasks`
       : `/api/tasks/${taskToBeEdited.id}`,
     method: isCreatingNew ? "POST" : "PATCH",
-    token: token,
+
   };
 
   const { mutate: createOrEditTask, isLoading } = useMutateData(

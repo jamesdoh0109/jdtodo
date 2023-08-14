@@ -2,24 +2,7 @@ from backend.app import mail
 from flask_mail import Message
 from datetime import datetime
 from tzlocal import get_localzone
-import re 
 import pytz
-
-def has_empty_fields(*args, req_json):
-    for field in args:
-        if field not in req_json or not req_json[field].strip():
-            return True
-    return False
-
-def check_valid_email(email):
-    regex = r'^[\w+%.-]+@[\w.-]+\.[A-Za-z]{2,7}'
-    return re.fullmatch(regex, email)
-
-def check_verify_password(password, password2):
-    return password == password2
-
-def check_valid_password(password):
-    return (len(password) >= 8 and any([c.isupper() for c in password]) and any([c.isdigit() for c in password]))
 
 # use this helper function to convert the deadline in user's timezone to deadline in system timezone
 def convert_datetime_into_system_datetime(user_date_time, user_timezone):

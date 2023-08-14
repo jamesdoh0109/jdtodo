@@ -44,8 +44,8 @@ def modify_task_for_project_route(task_id):
     user_id = get_jwt_identity()
     modified_task_json = request.get_json()
     validator = TaskValidator()
-    #if not validator.validate_task_inputs(modified_task_json):
-       # return jsonify({'error': validator.error}), 400
+    if not validator.validate_task_inputs(modified_task_json):
+       return jsonify({'error': validator.error}), 400
     task = get_task(task_id)
     if task is None:
         return jsonify({'error': f'Task not found'}), 404

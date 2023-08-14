@@ -58,10 +58,13 @@ export default function EditProfile() {
   const { mutate: onEditProfile, isLoading } = useMutateData(requestConfig, {
     onSuccess: (data) => {
       dispatch(
-        userDataActions.setFirstname({ firstname: data.user.firstname })
+        userDataActions.setUser({
+          id: id,
+          firstname: data.user.firstname,
+          lastname: data.user.lastname,
+          email: data.user.email,
+        })
       );
-      dispatch(userDataActions.setLastname({ lastname: data.user.lastname }));
-      dispatch(userDataActions.setEmail({ email: data.user.email }));
       setStatus({ error: false, message: "Successfully updated!" });
     },
     onError: (error) => onErrorAfterSubmit(error, setStatus),

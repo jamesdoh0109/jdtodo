@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMutateData } from "../../hooks/useDataOperations";
 import { dropdownActions } from "../../store/reducers/dropdown";
@@ -16,7 +16,6 @@ export default function TaskDropdown({
   dropdownId,
 }) {
   const taskId = task.id;
-  const token = useSelector((state) => state.auth.token);
   const projectId = useParams().projectId;
 
   const queryClient = useQueryClient();
@@ -62,7 +61,6 @@ export default function TaskDropdown({
   const requestConfig = {
     url: "/api/tasks/" + taskId,
     method: "DELETE",
-    token: token,
   };
 
   const { mutate: deleteTask } = useMutateData(requestConfig, {

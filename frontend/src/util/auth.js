@@ -2,20 +2,19 @@ import { userDataActions } from "../store/reducers/userData";
 
 export function login(dispatch, userData) {
   localStorage.setItem("user", JSON.stringify(userData.user));
-  dispatch(userDataActions.setId({ id: userData.user.id }));
   dispatch(
-    userDataActions.setFirstname({ firstname: userData.user.firstname })
+    userDataActions.setUser({
+      id: userData.user.id,
+      firstname: userData.user.firstname,
+      lastname: userData.user.lastname,
+      email: userData.user.email,
+    })
   );
-  dispatch(userDataActions.setLastname({ lastname: userData.user.lastname }));
-  dispatch(userDataActions.setEmail({ email: userData.user.email }));
 }
 
 export function logout(dispatch) {
   localStorage.removeItem("user");
-  dispatch(userDataActions.setId({ id: -1 }));
-  dispatch(userDataActions.setFirstname({ firstname: "" }));
-  dispatch(userDataActions.setLastname({ lastname: "" }));
-  dispatch(userDataActions.setEmail({ email: "" }));
+  dispatch(userDataActions.removeUser());
 }
 
 export async function checkTokenValidity() {

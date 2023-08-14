@@ -57,13 +57,11 @@ export function formatDateISO(date) {
   const hours = dateObj.getHours().toString().padStart(2, "0");
   const minutes = dateObj.getMinutes().toString().padStart(2, "0");
 
-  const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
-
-  return formattedDate;
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
 export function deadlinePassed(deadline) {
-  return new Date(formatDateISO(deadline)) < new Date();
+  return new Date(deadline) < new Date();
 }
 
 export const onSuccessAfterSubmit = (

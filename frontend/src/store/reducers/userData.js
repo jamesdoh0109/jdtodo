@@ -9,17 +9,17 @@ const userDataSlice = createSlice({
     email: "",
   },
   reducers: {
-    setId(state, action) {
+    setUser(state, action) {
       state.id = action.payload.id;
-    },
-    setFirstname(state, action) {
       state.firstname = action.payload.firstname;
-    },
-    setLastname(state, action) {
       state.lastname = action.payload.lastname;
-    },
-    setEmail(state, action) {
       state.email = action.payload.email;
+    },
+    removeUser(state) {
+      state.id = -1;
+      state.firstname = "";
+      state.lastname = "";
+      state.email = "";
     },
   },
 });
@@ -30,22 +30,10 @@ export const initialUserDataFetchFromBrowswer = () => {
     if (user) {
       const formattedUser = JSON.parse(user);
       dispatch(
-        userDataActions.setId({
+        userDataActions.setUser({
           id: formattedUser.id,
-        })
-      );
-      dispatch(
-        userDataActions.setFirstname({
           firstname: formattedUser.firstname,
-        })
-      );
-      dispatch(
-        userDataActions.setLastname({
           lastname: formattedUser.lastname,
-        })
-      );
-      dispatch(
-        userDataActions.setEmail({
           email: formattedUser.email,
         })
       );

@@ -12,7 +12,6 @@ import FormInput from "../common/FormInput";
 import ButtonCloseModal from "../common/Button/ButtonCloseModal";
 
 export default function ProjectForm() {
-  const token = useSelector((state) => state.auth.token);
   const projectToBeEdited = useSelector(
     (state) => state.projectForm.itemToBeEdited
   );
@@ -25,7 +24,6 @@ export default function ProjectForm() {
   const requestConfig = {
     url: `/api/projects${!isCreatingNew ? "/" + projectToBeEdited.id : ""}`,
     method: isCreatingNew ? "POST" : "PATCH",
-    token: token,
   };
 
   const { mutate: createOrEditProject, isLoading } = useMutateData(
