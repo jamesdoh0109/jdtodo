@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useQueryData } from "hooks/useDataOperations";
 import { Tabs } from "flowbite-react";
 import EditProfile from "components/Account/EditProfile";
 import DeleteAccount from "components/Account/DeleteAccount";
 import ChangePassword from "components/Account/ChangePassword";
+import Loading from "components/common/Loading";
 
 const customTheme = {
   base: "flex flex-col gap-2",
@@ -25,6 +27,16 @@ const customTheme = {
 export default function Account() {
   const [activeSection, setActiveSection] = useState("Profile");
 
+  const requestConfig = {
+    url: "/api/user",
+  };
+
+  const { isLoading, data: user } = useQueryData(
+    requestConfig,
+    ["user"],
+    (data) => data.user
+  );
+
   const toggleSections = (
     <Tabs.Group aria-label="Default tabs" theme={customTheme}>
       <Tabs.Item
@@ -33,21 +45,21 @@ export default function Account() {
         onClick={() => setActiveSection("Profile")}
         className="text-md"
       >
-        <EditProfile />
+        <EditProfile user={user} />
       </Tabs.Item>
       <Tabs.Item
         active={activeSection === "Change Password"}
         title="Change Password"
         onClick={() => setActiveSection("Change Password")}
       >
-        <ChangePassword />
+        <ChangePassword user={user} />
       </Tabs.Item>
       <Tabs.Item
         active={activeSection === "Delete Account"}
         title="Delete Account"
         onClick={() => setActiveSection("Delete Account")}
       >
-        <DeleteAccount />
+        <DeleteAccount user={user} />
       </Tabs.Item>
     </Tabs.Group>
   );
@@ -55,9 +67,12 @@ export default function Account() {
   return (
     <div className="flex justify-center w-full">
       <div className="w-4/5">
-        <div className="l-lg-h:mt-32 l-md-h:mt-24 l-sm-h:mt-16">
-          {toggleSections}
-        </div>
+        {isLoading && <Loading />}
+        {!isLoading && (
+          <div className="l-lg-h:mt-32 l-md-h:mt-24 l-sm-h:mt-16">
+            {toggleSections}
+          </div>
+        )}
       </div>
     </div>
   );

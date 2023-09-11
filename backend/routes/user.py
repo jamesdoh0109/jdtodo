@@ -1,7 +1,7 @@
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies, create_access_token, set_access_cookies
 
-from backend.services.user import login_service, create_user_service, modify_user_service, delete_user_service, change_password_service, send_reset_password_link_service, reset_password_service, verify_reset_password_token_service
+from backend.services.user import login_service, get_logged_in_user_service, create_user_service, modify_user_service, delete_user_service, change_password_service, send_reset_password_link_service, reset_password_service, verify_reset_password_token_service
 from backend.utils.utils import check_error_and_return_json_response
 
 user = Blueprint('user', __name__)
@@ -29,6 +29,16 @@ def signup_route():
     signup_json = request.get_json()
     error, message, status_code = create_user_service(signup_json).values()
     return check_error_and_return_json_response(error, message, status_code)
+
+@user.route('/api/user', methods=['GET'])
+@jwt_required()
+def get_logged_in_user_route():
+    jwt_user_id = get_jwt_identity()
+    user, message, status_code = get_logged_in_user_service(jwt_user_id).values()
+    if user:
+        return jsonify({'user': user, 'message': message}), status_code
+    else:
+        return jsonify({'error': message}), status_code
 
 @user.route('/api/user/<user_id>', methods=['PATCH'])
 @jwt_required()

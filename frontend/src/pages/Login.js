@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux";
 import { authActions } from "store/reducers/auth";
 import { useMutateData } from "hooks/useDataOperations";
-import { login } from "util/auth";
 import { onErrorAfterSubmit } from "util/form";
 import { emailValidator, passwordValidator } from "util/validator";
 import useStatus from "hooks/useStatus";
@@ -36,9 +35,8 @@ export default function Login() {
   };
 
   const { mutate: onLogin, isLoading } = useMutateData(requestConfig, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       dispatch(authActions.authenticateUser());
-      login(dispatch, data);
     },
     onError: (error) => onErrorAfterSubmit(error, setStatus),
   });

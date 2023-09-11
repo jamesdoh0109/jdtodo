@@ -1,11 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useMutateData } from "hooks/useDataOperations";
 import { authActions } from "store/reducers/auth";
-import { logout } from "util/auth";
 import ButtonOnClick from "components/common/Button/ButtonOnClick";
 
-export default function DeleteAccount() {
-  const { id, firstname, lastname } = useSelector((state) => state.userData);
+export default function DeleteAccount({ user }) {
+  const { id, firstname, lastname } = user;
   const fullname = `${firstname} ${lastname}`;
 
   const dispatch = useDispatch();
@@ -18,7 +17,6 @@ export default function DeleteAccount() {
   const { mutate: onDeleteAccount, isLoading } = useMutateData(requestConfig, {
     onSuccess: () => {
       dispatch(authActions.deauthenticateUser());
-      logout(dispatch);
     },
   });
 

@@ -1,22 +1,3 @@
-import { userDataActions } from "store/reducers/userData";
-
-export function login(dispatch, userData) {
-  localStorage.setItem("user", JSON.stringify(userData.user));
-  dispatch(
-    userDataActions.setUser({
-      id: userData.user.id,
-      firstname: userData.user.firstname,
-      lastname: userData.user.lastname,
-      email: userData.user.email,
-    })
-  );
-}
-
-export function logout(dispatch) {
-  localStorage.removeItem("user");
-  dispatch(userDataActions.removeUser());
-}
-
 export async function checkTokenValidity() {
   const resp = await fetch(
     "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-5000.app.github.dev/api/protected",

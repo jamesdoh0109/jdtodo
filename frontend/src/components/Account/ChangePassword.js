@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import {
   passwordConfirmValidator,
   createPasswordValidator,
@@ -31,8 +30,8 @@ const passwordInputs = [
   },
 ];
 
-export default function ChangePassword() {
-  const id = useSelector((state) => state.userData.id);
+export default function ChangePassword({ user }) {
+  const id = user;
 
   const { status, setStatus } = useStatus();
 

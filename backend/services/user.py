@@ -25,6 +25,12 @@ def create_user_service(signup_json):
         return {'error': True, 'message': 'Server error: please try again', 'status_code': 500}
     return {'error': False, 'message': 'User successfully created', 'status_code': 201}
 
+def get_logged_in_user_service(jwt_user_id):
+    user = get_user_by_id(jwt_user_id)
+    if user is None:
+        return {'user': None, 'message': 'User not found', 'status_code': 404}
+    return {'user': user.to_dict(), 'message': 'User successfully fetched', 'status_code': 200}
+
 @validate_user_json("is_modify_user_json_valid", "modified_user")
 def modify_user_service(modified_user_json, user_id, jwt_user_id):
     user = get_user_by_id(user_id)

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { authActions } from "store/reducers/auth";
 import { useMutateData } from "hooks/useDataOperations";
-import { logout } from "util/auth";
 import { Navbar } from "flowbite-react";
 
 export default function Navigation() {
@@ -21,7 +20,6 @@ export default function Navigation() {
     onSuccess: () => {
       dispatch(authActions.deauthenticateUser());
       queryClient.clear();
-      logout(dispatch);
     },
   });
 

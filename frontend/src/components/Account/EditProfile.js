@@ -1,5 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
-import { userDataActions } from "store/reducers/userData";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   emailValidator,
   firstnameValidator,
@@ -10,10 +9,10 @@ import { onErrorAfterSubmit } from "util/form";
 import useStatus from "hooks/useStatus";
 import AccountForm from "components/Account/AccountForm";
 
-export default function EditProfile() {
-  const { id, email, firstname, lastname } = useSelector((state) => state.userData);
+export default function EditProfile({ user }) {
+  const { id, email, firstname, lastname } = user;
 
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const editProfileInputs = [
     {
@@ -54,17 +53,16 @@ export default function EditProfile() {
 
   const { mutate: onEditProfile, isLoading } = useMutateData(requestConfig, {
     onSuccess: (data) => {
-      dispatch(
-        userDataActions.setUser({
-          id: id,
-          firstname: data.user.firstname,
-          lastname: data.user.lastname,
-          email: data.user.email,
-        })
-      );
       setStatus({ error: false, message: "Successfully updated!" });
+      const previousUserData = queryClient.getQueryData(['user']);
+      queryClient.setQueryData(['user'], data.user);
+      return { previousUserData };
     },
-    onError: (error) => onErrorAfterSubmit(error, setStatus),
+    onError: (error, _variables, context) => {
+        onErrorAfterSubmit(error, setStatus)
+        // Revert the cache back to the previous state if the mutation fails
+        queryClient.setQueryData(['user'], context.previousUserData);
+    },
   });
 
   return (

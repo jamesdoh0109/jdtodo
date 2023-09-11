@@ -1,7 +1,4 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { initialUserDataFetchFromBrowswer } from "store/reducers/userData";
 import Root from "pages/Root";
 import Home from "pages/Home";
 import Login from "pages/Login";
@@ -16,12 +13,6 @@ import RequireResetPasswordToken from "components/Auth/RequireResetPasswordToken
 import PageNotFound from "pages/PageNotFound";
 
 function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(initialUserDataFetchFromBrowswer());
-  }, [dispatch]);
-
   return (
     <BrowserRouter>
       <Routes>
