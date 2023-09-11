@@ -3,14 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 const projectFormSlice = createSlice({
   name: "projectForm",
   initialState: {
-    itemToBeEdited: { id: -1, name: "" },
+    itemToBeEdited: { id: undefined, name: "" },
   },
   reducers: {
     onEdit(state, action) {
       state.itemToBeEdited = action.payload.itemToBeEdited;
     },
     onReset(state) {
-      state.itemToBeEdited = { id: -1, name: "" };
+      state.itemToBeEdited = { id: undefined, name: "" };
     },
   },
 });

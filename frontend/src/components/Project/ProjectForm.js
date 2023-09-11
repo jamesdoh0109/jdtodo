@@ -1,25 +1,29 @@
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { useMutateData } from "hooks/useDataOperations";
-import { onSuccessAfterSubmit } from "util/form";
+import { handleCreateOrEdit } from "util/form";
 import { projectNameValidator } from "util/validator";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutateData } from "hooks/useDataOperations";
+import useStatus from "hooks/useStatus";
 import * as yup from "yup";
 import ButtonSubmit from "components/common/Button/ButtonSubmit";
 import Modal from "components/common/Modal";
 import FormInput from "components/common/FormInput";
 import ButtonCloseModal from "components/common/Button/ButtonCloseModal";
+import Message from "components/common/Message";
 
 export default function ProjectForm() {
   const projectToBeEdited = useSelector(
     (state) => state.projectForm.itemToBeEdited
   );
-  const isCreatingNew = projectToBeEdited.id === -1;
+  const isCreatingNew = !projectToBeEdited.id;
 
   const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
+
+  const { status, setStatus } = useStatus();
 
   const requestConfig = {
     url: `/api/projects${!isCreatingNew ? "/" + projectToBeEdited.id : ""}`,
@@ -28,17 +32,18 @@ export default function ProjectForm() {
 
   const { mutate: createOrEditProject, isLoading } = useMutateData(
     requestConfig,
-    onSuccessAfterSubmit(
+    handleCreateOrEdit(
       queryClient,
       ["projects"],
       (data) => ({
         id: data.project.proj_id,
         name: data.project.proj_name,
-        dateUpdated: data.project.date_created,
+        dateUpdated: data.project.date_updated,
       }),
       isCreatingNew,
       dispatch,
-      "project"
+      "project",
+      setStatus
     )
   );
 
@@ -47,7 +52,7 @@ export default function ProjectForm() {
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    defaultValues: { name: isCreatingNew ? "" : projectToBeEdited.name },
+    defaultValues: { name: isCreatingNew ? null : projectToBeEdited.name },
     resolver: yupResolver(
       yup.object({
         name: projectNameValidator,
@@ -89,8 +94,14 @@ export default function ProjectForm() {
             disabled={isLoading}
             formResetRequired={{ required: !isCreatingNew, for: "project" }}
           />
+          <Message
+            messageObj={{
+              message: status.message.toString(),
+              error: status.error,
+            }}
+          />
         </div>
       </form>
     </Modal>
-  );
+  );  
 }

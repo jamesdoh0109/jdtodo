@@ -6,8 +6,7 @@ import ProjectList from "components/Project/ProjectList";
 import ButtonOpenModal from "components/common/Button/ButtonOpenModal";
 
 export default function Dashboard() {
-  const modalOpen = useSelector((state) => state.modal.modalOpen);
-  const modalType = useSelector((state) => state.modal.modalType);
+  const { modalOpen, modalType } = useSelector((state) => state.modal);
 
   const requestConfig = {
     url: "/api/projects",
@@ -17,7 +16,7 @@ export default function Dashboard() {
     data.projects.map((project) => ({
       id: project.proj_id,
       name: project.proj_name,
-      dateUpdated: project.date_created,
+      dateUpdated: project.date_updated,
     }));
 
   const { isLoading, data: projects } = useQueryData(

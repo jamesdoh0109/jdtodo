@@ -5,9 +5,7 @@ import { logout } from "util/auth";
 import ButtonOnClick from "components/common/Button/ButtonOnClick";
 
 export default function DeleteAccount() {
-  const id = useSelector((state) => state.userData.id);
-  const firstname = useSelector((state) => state.userData.firstname);
-  const lastname = useSelector((state) => state.userData.lastname);
+  const { id, firstname, lastname } = useSelector((state) => state.userData);
   const fullname = `${firstname} ${lastname}`;
 
   const dispatch = useDispatch();

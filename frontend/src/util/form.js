@@ -5,7 +5,7 @@ export function prepareForm(formInputs) {
   return formInputs.reduce(
     (form, input) => ({
       ...form,
-      [input.name]: input.value ? input.value : "",
+      [input.name]: input.value ? input.value : null,
     }),
     {}
   );
@@ -40,7 +40,7 @@ export function trimFormTrailingSpaces(form) {
     Object.entries(form).map(([key, value]) => {
       // we consider trailing spaces in password part of password
       if (!trimExceptions.includes(key)) {
-        return [key, value.trim()];
+        return [key, value ? value.trim() : value];
       }
       return [key, value];
     })
@@ -64,13 +64,14 @@ export function deadlinePassed(deadline) {
   return new Date(deadline) < new Date();
 }
 
-export const onSuccessAfterSubmit = (
+export const handleCreateOrEdit = (
   queryClient,
   dataKey,
   transformDataFn,
   isCreatingNew,
   dispatch,
-  formFor
+  formFor,
+  setStatus
 ) => ({
   onSuccess: (data) => {
     queryClient.setQueryData(dataKey, (oldQueryData) => {
@@ -85,6 +86,7 @@ export const onSuccessAfterSubmit = (
     const formResetRequired = { required: !isCreatingNew, for: formFor };
     closeModal(dispatch, formResetRequired);
   },
+  onError: (error) => onErrorAfterSubmit(error, setStatus),
 });
 
 export const onErrorAfterSubmit = (error, setStatus) =>

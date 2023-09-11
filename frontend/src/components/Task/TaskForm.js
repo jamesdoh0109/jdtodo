@@ -2,20 +2,23 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMutateData } from "hooks/useDataOperations";
 import {
   taskDeadlineValidator,
   taskDescriptionValidator,
   taskNameValidator,
 } from "util/validator";
-import { formatDateISO, onSuccessAfterSubmit } from "util/form";
+import { formatDateISO, handleCreateOrEdit } from "util/form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutateData } from "hooks/useDataOperations";
+import useStatus from "hooks/useStatus";
 import * as yup from "yup";
 import TaskModalTitle from "components/Task/TaskModalTitle";
 import FormInput from "components/common/FormInput";
 import ButtonSubmit from "components/common/Button/ButtonSubmit";
 import ButtonCloseModal from "components/common/Button/ButtonCloseModal";
 import Modal from "components/common/Modal";
+
+import Message from "components/common/Message";
 
 const taskInputs = [
   {
@@ -46,24 +49,25 @@ const taskInputs = [
 
 export default function TaskForm() {
   const taskToBeEdited = useSelector((state) => state.taskForm.itemToBeEdited);
-  const isCreatingNew = taskToBeEdited.id === -1;
+  const isCreatingNew = !taskToBeEdited.id;
   const projectId = useParams().projectId;
 
   const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
 
+  const { status, setStatus } = useStatus();
+
   const requestConfig = {
     url: isCreatingNew
       ? `/api/${projectId}/tasks`
       : `/api/tasks/${taskToBeEdited.id}`,
     method: isCreatingNew ? "POST" : "PATCH",
-
   };
 
   const { mutate: createOrEditTask, isLoading } = useMutateData(
     requestConfig,
-    onSuccessAfterSubmit(
+    handleCreateOrEdit(
       queryClient,
       ["tasks", projectId],
       (data) => ({
@@ -76,7 +80,8 @@ export default function TaskForm() {
       }),
       isCreatingNew,
       dispatch,
-      "task"
+      "task",
+      setStatus
     )
   );
 
@@ -86,9 +91,9 @@ export default function TaskForm() {
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
-      name: isCreatingNew ? "" : taskToBeEdited.name,
-      deadline: isCreatingNew ? "" : formatDateISO(taskToBeEdited.deadline),
-      description: isCreatingNew ? "" : taskToBeEdited.description,
+      name: isCreatingNew ? null : taskToBeEdited.name,
+      deadline: isCreatingNew ? null : formatDateISO(taskToBeEdited.deadline),
+      description: isCreatingNew ? null : taskToBeEdited.description,
       status: isCreatingNew ? "Not started" : taskToBeEdited.status,
     },
     resolver: yupResolver(
@@ -100,7 +105,7 @@ export default function TaskForm() {
     ),
     mode: "onChange",
   });
-  
+
   return (
     <Modal>
       <form
@@ -135,8 +140,14 @@ export default function TaskForm() {
             disabled={isLoading}
             formResetRequired={{ required: !isCreatingNew, for: "task" }}
           />
+          <Message
+            messageObj={{
+              message: status.message.toString(),
+              error: status.error,
+            }}
+          />
         </div>
       </form>
-    </Modal>
+    </Modal> 
   );
 }

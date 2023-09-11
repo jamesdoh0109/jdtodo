@@ -1,73 +1,48 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from backend.data_managers.project import get_project 
-from backend.data_managers.task import get_task, get_tasks_for_project, create_task_for_project, modify_task_for_project, delete_task_for_project
-from backend.utils.utils import convert_datetime_into_system_datetime
-from backend.validators.task import TaskValidator
+
+from backend.services.task import get_tasks_for_project_service, create_task_for_project_service, modify_task_for_project_service, delete_task_for_project_service
+from backend.utils.utils import check_error_and_return_json_response
 
 task =  Blueprint('task', __name__)
 
-@task.route('/api/<proj_id>/tasks', methods=['GET'])
+@task.route('/api/<project_id>/tasks', methods=['GET'])
 @jwt_required()
-def get_tasks_for_project_route(proj_id):
+def get_tasks_for_project_route(project_id):
     user_id = get_jwt_identity()
-    project = get_project(proj_id)
-    if project is None:
-        return jsonify({'error': f'Project not found'}), 404
-    if project.user_id != user_id:
-        return jsonify({'error': 'Access denied'}), 403
-    tasks = get_tasks_for_project(proj_id)
-    return jsonify({'tasks': tasks}), 200
+    tasks, message, status_code = get_tasks_for_project_service(user_id, project_id).values()
+    if tasks or tasks == []:
+        return jsonify({'tasks': tasks, 'message': message}), status_code
+    else:
+        return jsonify({'error': message}), status_code
 
-@task.route('/api/<proj_id>/tasks', methods=['POST'])
+@task.route('/api/<project_id>/tasks', methods=['POST'])
 @jwt_required()
-def create_task_for_project_route(proj_id):
+def create_task_for_project_route(project_id):
     user_id = get_jwt_identity()
     create_task_json = request.get_json()
-    validator = TaskValidator()
-    if not validator.validate_task_inputs(create_task_json):
-        return jsonify({'error': validator.error}), 400
-    project = get_project(proj_id)
-    if project is None:
-        return jsonify({'error': f'Project not found'}), 404
-    if project.user_id != user_id:
-        return jsonify({'error': 'Access denied'}), 403
-    task = create_task_for_project(proj_id, create_task_json)
-    if isinstance(task, Exception):
-        return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': 'Task successfully created', 'task': task}), 201
+    created_task, message, status_code = create_task_for_project_service(create_task_json, user_id, project_id).values()
+    if created_task:
+        return jsonify({'task': created_task, 'message': message}), status_code
+    else:
+        return jsonify({'error': message}), status_code 
 
 @task.route('/api/tasks/<task_id>', methods=['PATCH'])
 @jwt_required()
 def modify_task_for_project_route(task_id):
     user_id = get_jwt_identity()
     modified_task_json = request.get_json()
-    validator = TaskValidator()
-    if not validator.validate_task_inputs(modified_task_json):
-       return jsonify({'error': validator.error}), 400
-    task = get_task(task_id)
-    if task is None:
-        return jsonify({'error': f'Task not found'}), 404
-    if task.project.user_id != user_id:
-        return jsonify({'error': 'Access denied'}), 403
-    modified_task = modify_task_for_project(task, modified_task_json)
-    if isinstance(modified_task, Exception): 
-        return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': 'Task successfully updated', 'task': modified_task}), 200
+    modified_task, message, status_code = modify_task_for_project_service(modified_task_json, user_id, task_id).values()
+    if modified_task:
+        return jsonify({'task': modified_task, 'message': message}), status_code
+    else:
+        return jsonify({'error': message}), status_code 
 
 @task.route('/api/tasks/<task_id>', methods=['DELETE'])
 @jwt_required()
 def delete_task_for_project_route(task_id):
     user_id = get_jwt_identity()
-    task = get_task(task_id)
-    if task is None:
-        return jsonify({'error': f'Task not found'}), 400
-    if task.project.user_id != user_id:
-        return jsonify({'error': 'Access denied'}), 403
-    deleted_task = delete_task_for_project(task)
-    if isinstance(deleted_task, Exception):
-        return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': f'Task deleted successfully'}), 200
-
+    error, message, status_code = delete_task_for_project_service(user_id, task_id).values()
+    return check_error_and_return_json_response(error, message, status_code)
         

@@ -13,8 +13,7 @@ import TaskSortBy from "components/Task/TaskSortBy";
 import TaskOverdueWarningMessage from "components/Task/TaskOverdueWarningMessage";
 
 export default function ProjectDetail() {
-  const modalOpen = useSelector((state) => state.modal.modalOpen);
-  const modalType = useSelector((state) => state.modal.modalType);
+  const { modalOpen, modalType } = useSelector((state) => state.modal);
   const projectId = useParams().projectId;
 
   const [currentSortBy, setCurrentSortBy] = useState("Sort By");

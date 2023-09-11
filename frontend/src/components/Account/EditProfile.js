@@ -11,10 +11,7 @@ import useStatus from "hooks/useStatus";
 import AccountForm from "components/Account/AccountForm";
 
 export default function EditProfile() {
-  const firstname = useSelector((state) => state.userData.firstname);
-  const lastname = useSelector((state) => state.userData.lastname);
-  const email = useSelector((state) => state.userData.email);
-  const id = useSelector((state) => state.userData.id);
+  const { id, email, firstname, lastname } = useSelector((state) => state.userData);
 
   const dispatch = useDispatch();
 

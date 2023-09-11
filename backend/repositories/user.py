@@ -1,29 +1,59 @@
 from sqlalchemy.exc import IntegrityError
+
 from backend.app import db
 from backend.models.user import User
 from backend.utils.utils import send_reset_email, send_reset_confirm_email
 
-def signup(firstname, lastname, email, password):
+def get_user_by_id(user_id):
+    return User.query.filter_by(id=user_id).first()
+
+def get_user_by_email(user_email):
+    return User.query.filter_by(email=user_email).first()
+
+def get_user_by_token(token):
+    return User.verify_reset_token(token)
+
+def create_user(firstname, lastname, email, password):
     new_user = User(firstname, lastname, email, password)
     try:
         db.session.add(new_user)
         db.session.commit()
+        return new_user.to_dict()
     except IntegrityError as e:
         db.session.rollback()
         return e
     except Exception as e:
         db.session.rollback()
         return e
-    return new_user
+    
+def modify_user(user, modified_user_json):
+    user.update_from_dict(modified_user_json)
+    try:
+        db.session.commit()
+        return user.to_dict()
+    except IntegrityError as e:
+        db.session.rollback()
+        return e
+    except Exception as e:
+        db.session.rollback()
+        return e
+
+def delete_user(user):
+    try:
+        db.session.delete(user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return e
 
 def change_password(user, new_password):
     user.hashed_password = new_password
     try:
         db.session.commit()
+        return user
     except Exception as e:
         db.session.rollback()
         return e
-    return user
 
 def reset_password(user, new_password):
     user.hashed_password = new_password
@@ -31,18 +61,16 @@ def reset_password(user, new_password):
     try:
         send_reset_confirm_email(user)
         db.session.commit()
+        return user
     except Exception as e:
         db.session.rollback()
         return e
-    return user
 
 def send_reset_password_link(user):
     try:
         send_reset_email(user)
         db.session.commit()
+        return user
     except Exception as e:
         db.session.rollback()
         return e
-    return user
-
-    

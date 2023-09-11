@@ -3,7 +3,7 @@ import { useMutateData } from "hooks/useDataOperations";
 import { onErrorAfterSubmit } from "util/form";
 import {
   passwordConfirmValidator,
-  passwordNewValidator,
+  createPasswordValidator,
 } from "../util/validator";
 import * as yup from "yup";
 import useStatus from "hooks/useStatus";
@@ -43,7 +43,7 @@ export default function ResetPassword() {
   });
 
   const schemaObj = {
-    password: passwordNewValidator,
+    password: createPasswordValidator,
     passwordConfirm: passwordConfirmValidator([yup.ref("password"), "", null]),
   };
 

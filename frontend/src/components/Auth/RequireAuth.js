@@ -5,8 +5,7 @@ import { authActions } from "store/reducers/auth";
 import { checkTokenValidity } from "util/auth";
 
 export default function RequireAuth({ pageProtected }) {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const isLoading = useSelector((state) => state.auth.isLoading);
+  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const location = useLocation();

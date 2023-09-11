@@ -1,69 +1,55 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from backend.models.project import Project
-from backend.data_managers.project import get_project, get_projects, create_project, modify_project, delete_project
-from backend.validators.project import ProjectValidator
+
+from backend.services.project import get_project_service, get_projects_service, create_project_service, modify_project_service, delete_project_service
+from backend.utils.utils import check_error_and_return_json_response
 
 project =  Blueprint('project', __name__)
 
-@project.route('/api/projects/<proj_id>', methods=['GET'])
+@project.route('/api/projects/<project_id>', methods=['GET'])
 @jwt_required
-def get_project_route(proj_id):
+def get_project_route(project_id):
     user_id = get_jwt_identity()
-    project = get_project(proj_id)
-    return jsonify({'project': project}), 200
+    project, message, status_code = get_project_service(user_id, project_id).values()
+    if project:
+        return jsonify({'project': project, 'message': message}), status_code
+    else:
+        return jsonify({'error': message}), status_code
     
 @project.route('/api/projects', methods=['GET'])
 @jwt_required()
 def get_projects_route():
     user_id = get_jwt_identity()
-    project_list = get_projects(user_id)
-    return jsonify({'projects': project_list}), 200
+    project_list, status_code = get_projects_service(user_id).values()
+    return jsonify({'projects': project_list}), status_code
 
 @project.route('/api/projects', methods=['POST'])
 @jwt_required()
 def create_project_route():
     user_id = get_jwt_identity()
     create_project_json = request.get_json()
-    validator = ProjectValidator()
-    if not validator.validate_project_input(create_project_json):
-        return jsonify({'error': validator.error}), 400
-    name = create_project_json['name']
-    project = create_project(name, user_id)
-    if isinstance(project, Exception):
-        return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': f'Project successfully created', 'project': project}), 201
+    created_project, message, status_code = create_project_service(create_project_json, user_id).values()
+    if created_project:
+        return jsonify({'project': created_project, 'message': message}), status_code
+    else: 
+        return jsonify({'error': message}), status_code
 
-@project.route('/api/projects/<proj_id>', methods=['PATCH'])
+@project.route('/api/projects/<project_id>', methods=['PATCH'])
 @jwt_required()
-def modify_project_route(proj_id):
+def modify_project_route(project_id):
     user_id = get_jwt_identity()
     modified_project_json = request.get_json()
-    validator = ProjectValidator()
-    if not validator.validate_project_input(modified_project_json):
-        return jsonify({'error': validator.error}), 400
-    project = get_project(proj_id)
-    if project is None:
-        return jsonify({'error': f'Project not found'}), 404
-    if project.user_id != user_id:
-        return jsonify({'error': 'Access denied'}), 403
-    modified_project = modify_project(project, modified_project_json['name'])
-    if isinstance(modified_project, Exception):
-        return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': 'Project name successfully updated', 'project': modified_project}), 200
+    modified_project, message, status_code = modify_project_service(modified_project_json, user_id, project_id).values()
+    if modified_project:
+        return jsonify({'project': modified_project, 'message': message}), status_code
+    else:
+        return jsonify({'error': message}), status_code
 
-@project.route('/api/projects/<proj_id>', methods=['DELETE'])
+@project.route('/api/projects/<project_id>', methods=['DELETE'])
 @jwt_required()
-def delete_project_route(proj_id):
+def delete_project_route(project_id):
     user_id = get_jwt_identity()
-    project = get_project(proj_id)
-    if project is None:
-        return jsonify({'error': f'Project not found'}), 404
-    if project.user_id != user_id:
-        return jsonify({'error': 'Access denied'}), 403
-    deleted_project = delete_project(project)
-    if isinstance(deleted_project, Exception):
-        return jsonify({'error': 'Server error: please try again'}), 500
-    return jsonify({'message': f'Project deleted successfully', 'project': deleted_project}), 200
+    error, message, status_code = delete_project_service(user_id, project_id).values()
+    return check_error_and_return_json_response(error, message, status_code)
     

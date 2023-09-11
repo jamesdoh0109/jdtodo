@@ -14,6 +14,7 @@ const userDataSlice = createSlice({
       state.firstname = action.payload.firstname;
       state.lastname = action.payload.lastname;
       state.email = action.payload.email;
+      localStorage.setItem("user", JSON.stringify(state));
     },
     removeUser(state) {
       state.id = -1;

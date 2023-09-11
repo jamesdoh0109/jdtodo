@@ -6,7 +6,7 @@ import {
   firstnameValidator,
   lastnameValidator,
   passwordConfirmValidator,
-  passwordNewValidator,
+  createPasswordValidator,
 } from "util/validator";
 import * as yup from "yup";
 import useStatus from "hooks/useStatus";
@@ -67,7 +67,7 @@ export default function Signup() {
     firstname: firstnameValidator,
     lastname: lastnameValidator,
     email: emailValidator,
-    password: passwordNewValidator,
+    password: createPasswordValidator,
     passwordConfirm: passwordConfirmValidator([yup.ref("password"), "", null]),
   };
 

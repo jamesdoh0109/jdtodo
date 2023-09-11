@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import {
   passwordConfirmValidator,
-  passwordNewValidator,
+  createPasswordValidator,
   passwordValidator,
 } from "util/validator";
 import { onErrorAfterSubmit } from "util/form";
@@ -49,7 +49,7 @@ export default function ChangePassword() {
 
   const schemaObj = {
     passwordCurrent: passwordValidator,
-    passwordNew: passwordNewValidator,
+    passwordNew: createPasswordValidator,
     passwordConfirm: passwordConfirmValidator([
       yup.ref("passwordNew"),
       "",

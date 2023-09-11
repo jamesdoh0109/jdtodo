@@ -1,42 +1,35 @@
-from backend.app import mail 
-from flask_mail import Message
 from datetime import datetime
+
+from flask import jsonify
+from flask_mail import Message
 from tzlocal import get_localzone
 import pytz
 
-# use this helper function to convert the deadline in user's timezone to deadline in system timezone
-def convert_datetime_into_system_datetime(user_date_time, user_timezone):
-    date_obj = datetime.strptime(user_date_time, "%Y-%m-%dT%H:%M:%S.%fZ")
+from backend.app import mail 
 
-    # Assign it the input timezone
-    input_tz = pytz.timezone(user_timezone)  # Replace with your input timezone
-    date_obj = input_tz.localize(date_obj)
+BASE_URL = 'https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.app.github.dev'
 
-    # Get the system's local timezone
-    local_tz = get_localzone()
-
-    # Convert it to the system's local timezone
-    local_date_obj = date_obj.astimezone(local_tz)
-
-    return local_date_obj
+def send_email(subject, recipients, body):
+    msg = Message(subject,
+                  sender=('JDTodo', 'noreply@jdtodo.com'),
+                  recipients=recipients,
+                  html=body)
+    mail.send(msg)
 
 def send_reset_email(user):
     token = user.get_reset_token()
     user.reset_password_token = token
-    link = f"https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.app.github.dev/reset-password/{token}"
+    link = f'{BASE_URL}/reset-password/{token}'
     body = f'<p>Hello {user.firstname} {user.lastname}!<br><br>To reset your password, please click <a href="{link}">here</a>. If you did not make this request, then simply ignore this email, and no changes will be made.<br><br>Thanks,<br>JDTodo</p>'
-    msg = Message('Password Reset Request',
-                  sender=("JDTodo", "noreply@jdtodo.com"),
-                  recipients=[user.email],
-                  html=body)
-    mail.send(msg)
+    send_email('Password Reset Request', [user.email], body)
 
 def send_reset_confirm_email(user):
-    link = "https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.app.github.dev/login"
+    link = f'{BASE_URL}/login'
     body = f'<p>Hello {user.firstname} {user.lastname}!<br><br>You have successfully updated your password. To log in, please click <a href="{link}">here</a>.<br><br>Thanks,<br>JDTodo</p>'
-    msg = Message('Password Changed',
-                  sender=("JDTodo", "noreply@jdtodo.com"),
-                  recipients=[user.email],
-                  html=body)
-    mail.send(msg)
+    send_email('Password Changed', [user.email], body)
 
+def check_error_and_return_json_response(error, message, status_code):
+    if not error:
+        return jsonify({'message': message}), status_code
+    else:
+        return jsonify({'error': message}), status_code

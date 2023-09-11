@@ -4,7 +4,7 @@ const taskFormSlice = createSlice({
   name: "taskForm",
   initialState: {
     itemToBeEdited: {
-      id: -1,
+      id: undefined,
       name: "",
       deadline: "",
       description: "",
@@ -16,7 +16,7 @@ const taskFormSlice = createSlice({
       state.itemToBeEdited = action.payload.itemToBeEdited;
     },
     onReset(state) {
-      state.itemToBeEdited = { id: -1, name: "" };
+      state.itemToBeEdited = { id: undefined, name: "" };
     },
   },
 });

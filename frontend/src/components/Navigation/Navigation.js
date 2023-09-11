@@ -1,14 +1,15 @@
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 import { authActions } from "store/reducers/auth";
 import { useMutateData } from "hooks/useDataOperations";
 import { logout } from "util/auth";
 import { Navbar } from "flowbite-react";
 
 export default function Navigation() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const isLoading = useSelector((state) => state.auth.isLoading);
+  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
 
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
   const requestConfig = {
@@ -19,6 +20,7 @@ export default function Navigation() {
   const { mutate: onLogout } = useMutateData(requestConfig, {
     onSuccess: () => {
       dispatch(authActions.deauthenticateUser());
+      queryClient.clear();
       logout(dispatch);
     },
   });
