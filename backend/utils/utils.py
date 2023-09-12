@@ -2,8 +2,6 @@ from datetime import datetime
 
 from flask import jsonify
 from flask_mail import Message
-from tzlocal import get_localzone
-import pytz
 
 from backend.app import mail 
 

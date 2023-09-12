@@ -7,13 +7,10 @@ name = "pypi"
 flask = "*"
 flask-cors = "*"
 flask-sqlalchemy = "*"
-pyjwt = "*"
 flask-jwt-extended = "*"
-pytz = "*"
-mysqlclient = "*"
 itsdangerous = "*"
 flask-mail = "*"
-tzlocal = "*"
+mysqlclient = "*"
 
 [dev-packages]
 
