@@ -1,12 +1,16 @@
-<h1 align="center" style="font-size: 60px">JDTodo</h1>
+<h1 align="center">JDTodo</h1>
 <div align="center">
   <h3>Need to manage projects and tasks? You've come to the right place.</h3>
-  <div style="margin-top: 5px;">
-    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/jihundoh0109/jdtodo?logo=github&color=green">
-    &nbsp;
-    <img alt="Static Badge" src="https://img.shields.io/badge/tweet-%2523F7DF1E?style=social&logo=twitter&logoColor=%231D9BF0&color=blue&link=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Ftext%3D%26url%3Dhttps%253A%252F%252Fgithub.com%252Fjihundoh0109%252Fjdtodo">
-  </div>
 </div>
+<div align="center">
+
+  <a href="">[![GitHub Repo stars](https://img.shields.io/github/stars/jihundoh0109/jdtodo?logo=github&color=green)](https://github.com/jihundoh0109/jdtodo)</a>
+  &nbsp;
+  <a href="">[![Stack Overflow Badge](https://img.shields.io/badge/tweet-%2523F7DF1E?style=social&logo=twitter&logoColor=%231D9BF0&color=blue)](https://twitter.com/intent/tweet?text=&url=https%3A%2F%2Fgithub.com%2Fjihundoh0109%2Fjdtodo)</a>
+
+</div>
+
+
 
 ## Table of Contents
 - [Project Overview](#project-overview)   
