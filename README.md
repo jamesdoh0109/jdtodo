@@ -1,4 +1,12 @@
-# JDTodo
+<h1 align="center" style="font-size: 60px">JDTodo</h1>
+<div align="center">
+  <h3>Need to manage projects and tasks? You've come to the right place.</h3>
+  <div style="margin-top: 5px;">
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/jihundoh0109/jdtodo?logo=github&color=green">
+    &nbsp;
+    <img alt="Static Badge" src="https://img.shields.io/badge/tweet-%2523F7DF1E?style=social&logo=twitter&logoColor=%231D9BF0&color=blue&link=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Ftext%3D%26url%3Dhttps%253A%252F%252Fgithub.com%252Fjihundoh0109%252Fjdtodo">
+  </div>
+</div>
 
 ## Table of Contents
 - [Project Overview](#project-overview)   
@@ -289,7 +297,7 @@ Here's the general flow of authentication in this project:
 If an unauthenticated user (thus without a valid JWT) attempts to access protected pages (e.g. /dashboard), the API will return 401 unauthorized. The frontend will then use this status code to redirect the user back to the log in page. 
 
 ### Form Handling and Validation
-To simplify the process of handling forms, [React Hook Form](https://www.react-hook-form.com/) and [`yup`](https://github.com/jquense/yup) is used in this project. React Hook Form combined with `yup` reduces the amount of boilerplate code needed for form management and validation. With `yup`, in particular, defining validation rules becomes straightforward: 
+To simplify the process of handling forms, [React Hook Form](https://www.react-hook-form.com/) and [`yup`](https://github.com/jquense/yup) are used in this project. React Hook Form combined with `yup` reduces the amount of boilerplate code needed for form management and validation. With `yup`, in particular, defining validation rules becomes straightforward: 
 ```javascript
 // frontend/util/validator.js 
 export const createPasswordValidator = yup
@@ -308,12 +316,12 @@ In this fullstack application, we need to manage both the client and server stat
 For client states, such as modal, dropdown, and form states, we use [Redux](https://redux.js.org/) as well as [React Redux](https://react-redux.js.org/) to help simplify the integration between React and Redux. The `<Provider />` component wraps our entire application, which allows the app to have access to the Redux store. 
 
 #### Server states
-For server states, such as the `id` and `email` of the logged-user, we use [React Query](https://tanstack.com/query/v3/). When the user attempts to access the Account page (where user can view and edit his or her profile), `useQuery` hook is used to fetch and cache the relevant user data. Although this sounds more like [data fetching](#data-fetching-and-modifying-server-data) (discussed in next section) than maintaining state, React Query excels in efficiently managing and preserving this server state by allowing you to cache and retrieve the logged-in user's data, ensuring that the application remains synchronized with the server's state without the need for redundant network requests.
+For server states, such as the `id` and `email` of the logged-in user, we use [React Query](https://tanstack.com/query/v3/). When the user attempts to access the Account page (where user can view and edit his or her profile), `useQuery` hook is used to fetch and cache the relevant user data. Although this sounds more like [data fetching](#data-fetching-and-modifying-server-data) (discussed in next section) than maintaining state, React Query excels in efficiently managing and preserving this server state by allowing you to cache and retrieve the logged-in user's data, ensuring that the application remains synchronized with the server's state without the need for redundant network requests.
 
 It is important to keep in mind that whether it is a client or server state, no state should be managed by more than one tool, which can lead to synchronization issues (e.g. maintaining user state through React Query's caching mechanism but also dispatch this to the Redux store). It also makes it difficult to determine what the source of truth is. If React Query has one set of state and Redux has the other, which do you trust and which do you use? 
 
 ### Data Fetching and Modifying Server Data
-Instead of using React's built in `fetch` API or `axios`, I decided to use [React Query](https://tanstack.com/query/v3/). To fetch data, we use the `useQuery` hook and to modify server data, such as posting or deleting data (create, update, and delete operations), we use the `useMutation` hook. 
+Instead of using React's built-in `fetch` API or `axios`, I decided to use [React Query](https://tanstack.com/query/v3/). To fetch data, we use the `useQuery` hook, and to modify server data, such as posting or deleting data (create, update, and delete operations), we use the `useMutation` hook. 
 
 There are many benefits to using these two hooks from React Query. As opposed to using the built-in `fetch` API and `useEffect` for data fetching (which can get pretty cumbersome especially with caching and handling side effects), React Query gives us an out-of-box tool to manage all of these with simpler, easier-to-read/write code. Using React Query, we can, for example, fetch the user's list of projects, cache them with a key, and re-access them using this key--all without having to define a React state or a global Redux store. When mutating data, we can leverage `useMutation` hook to modify the server data and reflect these changes back to the cached data at one go. We can also optimistically update data in the browser before the mutation occurs, which can give a better, faster user experience. Optimistic update is implemented for operations like deleting project and task as well as marking task as "Finished," so that the user doesn't have to wait for the server to see the changes in the browser. Here's an example code that optimistically deletes a project:
 ```javascript
@@ -344,6 +352,7 @@ There are many benefits to using these two hooks from React Query. As opposed to
       queryClient.invalidateQueries({ queryKey: ["projects"] }),
   });
 ```
+Please note that optimistic update is not implemented for operations like creating/editing projects because the the created/edited timestamp is generated in the backend, and the frontend requires them for display purposes (i.e. we need to get the project data from the backend after creation/modification to display it in the frontend).
 
 ## Get in Touch
 If you have any questions or want to contribute, feel free to reach out to jdtodo.help@gmail.com!
