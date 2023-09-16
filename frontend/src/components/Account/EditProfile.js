@@ -54,15 +54,9 @@ export default function EditProfile({ user }) {
   const { mutate: onEditProfile, isLoading } = useMutateData(requestConfig, {
     onSuccess: (data) => {
       setStatus({ error: false, message: "Successfully updated!" });
-      const previousUserData = queryClient.getQueryData(['user']);
-      queryClient.setQueryData(['user'], data.user);
-      return { previousUserData };
+      queryClient.setQueryData(["user"], data.user);
     },
-    onError: (error, _variables, context) => {
-        onErrorAfterSubmit(error, setStatus)
-        // Revert the cache back to the previous state if the mutation fails
-        queryClient.setQueryData(['user'], context.previousUserData);
-    },
+    onError: (error) => onErrorAfterSubmit(error, setStatus),
   });
 
   return (

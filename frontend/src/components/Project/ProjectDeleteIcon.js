@@ -22,6 +22,9 @@ export default function ProjectDeleteIcon({ projectId }) {
         oldProjects,
       };
     },
+    onError: (_err, _variables, context) =>
+      queryClient.setQueryData(["projects"], context.oldProjects),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["projects"] }),
   });
 
   return (

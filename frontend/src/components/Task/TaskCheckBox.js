@@ -35,6 +35,10 @@ export default function TaskCheckBox({ className, checked, task }) {
         oldTasks,
       };
     },
+    onError: (_err, _variables, context) =>
+      queryClient.setQueryData(["tasks", projectId], context.oldTasks),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: ["tasks", projectId] }),
   });
 
   return (

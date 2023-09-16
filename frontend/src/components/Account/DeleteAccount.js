@@ -1,13 +1,20 @@
 import { useDispatch } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMutateData } from "hooks/useDataOperations";
 import { authActions } from "store/reducers/auth";
+import { onErrorAfterSubmit } from "util/form";
+import useStatus from "hooks/useStatus";
 import ButtonOnClick from "components/common/Button/ButtonOnClick";
+import Message from "components/common/Message";
 
 export default function DeleteAccount({ user }) {
   const { id, firstname, lastname } = user;
   const fullname = `${firstname} ${lastname}`;
 
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
+
+  const { status, setStatus } = useStatus();
 
   const requestConfig = {
     url: "/api/user/" + id,
@@ -17,7 +24,9 @@ export default function DeleteAccount({ user }) {
   const { mutate: onDeleteAccount, isLoading } = useMutateData(requestConfig, {
     onSuccess: () => {
       dispatch(authActions.deauthenticateUser());
+      queryClient.clear();
     },
+    onError: (error) => onErrorAfterSubmit(error, setStatus),
   });
 
   return (
@@ -36,6 +45,12 @@ export default function DeleteAccount({ user }) {
           text={isLoading ? "Deleting" : "Confirm"}
           onClick={() => onDeleteAccount()}
           disabled={isLoading}
+        />
+        <Message
+          messageObj={{
+            message: status.message.toString(),
+            error: status.error,
+          }}
         />
       </div>
     </>

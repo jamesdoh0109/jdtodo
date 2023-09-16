@@ -19,7 +19,18 @@
   - [/dashboard/<project_id>](#dashboardproject_id)
   - [/forgot-password](#forgotpassword)
   - [/reset-password/<reset_password_token>](#reset-passwordreset_password_token)
-- [Technical notes](#technical-notes)  
+- [Implementation Details/Technical Notes](#implementation-detailstechnical-notes)  
+  - [MVC Architecture](#mvc-architecture)
+  - [Data Models](#data-models)
+  - [Authentication](#authentication)
+      - [Sign Up](#sign-up)
+      - [Log In](#log-in)
+  - [Form Handling and Validation](#form-handling-and-validation)
+  - [State Management](#state-management)
+      - [Client states](#client-states)
+      - [Server states](#server-states)
+  - [Data Fetching and Modifying Server Data](#data-fetching-and-modifying-server-data)
+- [Get in Touch](#get-in-touch)
 
 ## Project Overview
 JDTodo is a web application designed for managing projects and tasks. It uses a React for the frontend and Python Flask for the backend to provide a user-friendly and efficient project/task management system. 
@@ -248,5 +259,91 @@ This is the reset password page where you can create your new password:
   Mobile
 </div>
 
-## Technical Notes
-Coming soon
+## Implementation Details/Technical Notes
+### MVC Architecture
+
+### Data Models
+In `backend/models`, you will find 3 modules, `user.py`, `project.py`, `task.py`, each of which represents data for the 3 entities in this project: user, project, and task. Here is the Entry Relationship Diagram (ERD) that shows each field for each model, and how the 3 models work together:
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1GKigIupkcTXZS7lQ8y6aGdR1YPNKY3VS" width="800">
+  </div>
+</div>
+
+### Authentication
+Authentication is probably one the most critical features, which when implemented correctly, can help us ensure security and privacy of users. While the popular phrase "don't roll your own crypto" implies the need to use reliable, existing packages and libraries (such as [Auth0](https://auth0.com/) and [Okta](https://www.okta.com/)) for maximizing safety, I decided to implement authentication on my own just for the sake of practice and understadning what really goes behind the scenes. 
+
+Here's the general flow of authentication in this project:
+#### Sign Up
+1. The user fills out the sign-up form with their credentials (name, email, and password).
+2. The frontend validates the user input (e.g. check valid email) and sends the data to the sign-up API.
+3. The API performs its server-side validation (e.g. check if email already exists) and creates a new row in the database if all the inputs are valid.  
+
+#### Log In
+1. The user fills out the log-in form with their credentials (email and password)
+2. The frontend validates the user input (e.g. check valid email) and sends the data to the log-in API.
+3. The API performs its server-side validation (e.g. check if user with the input email exists, check if password is correct).
+4. If the user is authenticated, the server generates a JSON Web Token (JWT), which is then returned back to the browser through a secure HTTP-only cookie (using the Set-Cookie header).
+5. The frontend receives this cookie and sends it along with future requests to the API (using the cookie header) to access protected resources. 
+
+If an unauthenticated user (thus without a valid JWT) attempts to access protected pages (e.g. /dashboard), the API will return 401 unauthorized. The frontend will then use this status code to redirect the user back to the log in page. 
+
+### Form Handling and Validation
+To simplify the process of handling forms, [React Hook Form](https://www.react-hook-form.com/) and [`yup`](https://github.com/jquense/yup) is used in this project. React Hook Form combined with `yup` reduces the amount of boilerplate code needed for form management and validation. With `yup`, in particular, defining validation rules becomes straightforward: 
+```javascript
+// frontend/util/validator.js 
+export const createPasswordValidator = yup
+  .string()
+  .min(8, "Password must contain at least 8 characters")
+  .matches(
+    /^(?=.*[A-Z])(?=.*\d)/,
+    "Password must contain at least 1 uppercase letter and 1 number"
+  )
+  .required("Password is required");
+```
+
+### State Management 
+In this fullstack application, we need to manage both the client and server states:
+#### Client states
+For client states, such as modal, dropdown, and form states, we use [Redux](https://redux.js.org/) as well as [React Redux](https://react-redux.js.org/) to help simplify the integration between React and Redux. The `<Provider />` component wraps our entire application, which allows the app to have access to the Redux store. 
+
+#### Server states
+For server states, such as the `id` and `email` of the logged-user, we use [React Query](https://tanstack.com/query/v3/). When the user attempts to access the Account page (where user can view and edit his or her profile), `useQuery` hook is used to fetch and cache the relevant user data. Although this sounds more like [data fetching](#data-fetching-and-modifying-server-data) (discussed in next section) than maintaining state, React Query excels in efficiently managing and preserving this server state by allowing you to cache and retrieve the logged-in user's data, ensuring that the application remains synchronized with the server's state without the need for redundant network requests.
+
+It is important to keep in mind that whether it is a client or server state, no state should be managed by more than one tool, which can lead to synchronization issues (e.g. maintaining user state through React Query's caching mechanism but also dispatch this to the Redux store). It also makes it difficult to determine what the source of truth is. If React Query has one set of state and Redux has the other, which do you trust and which do you use? 
+
+### Data Fetching and Modifying Server Data
+Instead of using React's built in `fetch` API or `axios`, I decided to use [React Query](https://tanstack.com/query/v3/). To fetch data, we use the `useQuery` hook and to modify server data, such as posting or deleting data (create, update, and delete operations), we use the `useMutation` hook. 
+
+There are many benefits to using these two hooks from React Query. As opposed to using the built-in `fetch` API and `useEffect` for data fetching (which can get pretty cumbersome especially with caching and handling side effects), React Query gives us an out-of-box tool to manage all of these with simpler, easier-to-read/write code. Using React Query, we can, for example, fetch the user's list of projects, cache them with a key, and re-access them using this key--all without having to define a React state or a global Redux store. When mutating data, we can leverage `useMutation` hook to modify the server data and reflect these changes back to the cached data at one go. We can also optimistically update data in the browser before the mutation occurs, which can give a better, faster user experience. Optimistic update is implemented for operations like deleting project and task as well as marking task as "Finished," so that the user doesn't have to wait for the server to see the changes in the browser. Here's an example code that optimistically deletes a project:
+```javascript
+// frontend/project/ProjectDeleteIcon.js 
+ const { mutate: deleteProject } = useMutateData(requestConfig, {
+    onMutate: async () => {
+      // cancel any outgoing refetches to prevent overwriting optimistic update
+      await queryClient.cancelQueries(["projects"]);
+
+      // snapshot the previous value
+      const oldProjects = queryClient.getQueryData(["projects"]);
+
+      // optimistically delete a project
+      queryClient.setQueryData(["projects"], (oldQueryData) => {
+        return oldQueryData.filter((project) => project.id !== projectId);
+      });
+
+      // return the snapshot in case mutation fails
+      return {
+        oldProjects,
+      };
+    },
+    onError: (_err, _variables, context) =>
+      // if mutation fails, use the context returned from onMutate to roll back
+      queryClient.setQueryData(["projects"], context.oldProjects),
+    onSettled: () => 
+      // refetch regardless of success or error to match with server state 
+      queryClient.invalidateQueries({ queryKey: ["projects"] }),
+  });
+```
+
+## Get in Touch
+If you have any questions or want to contribute, feel free to reach out to jdtodo.help@gmail.com!

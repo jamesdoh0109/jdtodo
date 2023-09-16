@@ -35,9 +35,7 @@ export default function Login() {
   };
 
   const { mutate: onLogin, isLoading } = useMutateData(requestConfig, {
-    onSuccess: () => {
-      dispatch(authActions.authenticateUser());
-    },
+    onSuccess: () => dispatch(authActions.authenticateUser()),
     onError: (error) => onErrorAfterSubmit(error, setStatus),
   });
 
