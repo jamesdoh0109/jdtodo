@@ -51,4 +51,3 @@ class User(db.Model):
         except:
             return None
             
-    

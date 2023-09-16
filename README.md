@@ -10,8 +10,6 @@
 
 </div>
 
-
-
 ## Table of Contents
 - [Project Overview](#project-overview)   
 - [Tech Stack](#tech-stack)  
@@ -32,7 +30,6 @@
   - [/forgot-password](#forgotpassword)
   - [/reset-password/<reset_password_token>](#reset-passwordreset_password_token)
 - [Implementation Details/Technical Notes](#implementation-detailstechnical-notes)  
-  - [MVC Architecture](#mvc-architecture)
   - [Data Models](#data-models)
   - [Authentication](#authentication)
       - [Sign Up](#sign-up)
@@ -272,8 +269,6 @@ This is the reset password page where you can create your new password:
 </div>
 
 ## Implementation Details/Technical Notes
-### MVC Architecture
-
 ### Data Models
 In `backend/models`, you will find 3 modules, `user.py`, `project.py`, `task.py`, each of which represents data for the 3 entities in this project: user, project, and task. Here is the Entry Relationship Diagram (ERD) that shows each field for each model, and how the 3 models work together:
 <div align="center">
