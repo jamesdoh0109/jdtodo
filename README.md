@@ -27,7 +27,7 @@
   - [/login](#login)
   - [/dashboard](#dashboard)
   - [/dashboard/<project_id>](#dashboardproject_id)
-  - [/forgot-password](#forgotpassword)
+  - [/forgot-password](#forgot-password)
   - [/reset-password/<reset_password_token>](#reset-passwordreset_password_token)
 - [Implementation Details/Technical Notes](#implementation-detailstechnical-notes)  
   - [Data Models](#data-models)
@@ -112,7 +112,7 @@ JDTodo is more than just a simple todo list application. With JDTodo, you can:
 * Delete your account 
 
 ## Pages
-### / (home)
+### /
 This is the home page from which you can navigate to the login page or signup page:
 <div align="center">
   <div>
