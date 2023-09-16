@@ -35,7 +35,7 @@ export default function Navigation() {
     <Navbar.Collapse className="ml-3 text-lg">
       <NavLink to="/dashboard">Dashboard</NavLink>
       <NavLink to="/account">Account</NavLink>
-      <button onClick={() => onLogout()}>Log Out</button>
+      <button onClick={() => onLogout()} className="self-start">Log Out</button>
     </Navbar.Collapse>
   );
 

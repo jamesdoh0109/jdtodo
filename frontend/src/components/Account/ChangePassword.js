@@ -31,7 +31,7 @@ const passwordInputs = [
 ];
 
 export default function ChangePassword({ user }) {
-  const id = user;
+  const { id } = user;
 
   const { status, setStatus } = useStatus();
 

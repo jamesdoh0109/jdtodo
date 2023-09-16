@@ -1,14 +1,25 @@
 # JDTodo
 
-
-
 ## Table of Contents
-[Project Overview](#project-overview)  
-[Tech Stack](#tech-stack)  
-[Installation and Setup](#installation-and-setup)     
-[Features](#features)  
-[Pages](#pages)  
-[Technical notes](#technical-notes)  
+- [Project Overview](#project-overview)   
+- [Tech Stack](#tech-stack)  
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+  - [Database](#database)
+- [Installation and Setup](#installation-and-setup)  
+  - [Frontend](#frontend-1)
+  - [Backend](#backend-1)   
+  - [Github Codespace users ONLY](#github-codespace-users-only)
+- [Features](#features)  
+- [Pages](#pages)  
+  - [/](#home)
+  - [/signup](#signup)
+  - [/login](#login)
+  - [/dashboard](#dashboard)
+  - [/dashboard/<project_id>](#dashboardproject_id)
+  - [/forgot-password](#forgotpassword)
+  - [/reset-password/<reset_password_token>](#reset-passwordreset_password_token)
+- [Technical notes](#technical-notes)  
 
 ## Project Overview
 JDTodo is a web application designed for managing projects and tasks. It uses a React for the frontend and Python Flask for the backend to provide a user-friendly and efficient project/task management system. 
@@ -44,7 +55,7 @@ Follow these steps to run the frontend development server:
 3. `npm start`
 
 ### Backend
-In `backend/config.py`, you will need to get your own environment variables:
+In `backend/config.py`, it initializes 4 environment variables, which you will need to set up on your own:
 * `SQLALCHEMY_DATABASE_URI`
   * URI used to connect to the database (e.g. sqlite:////tmp/test.db, mysql://username:password@server/db). You will first need to create your own 
 * `JWT_SECRET_KEY`  
@@ -81,7 +92,161 @@ JDTodo is more than just a simple todo list application. With JDTodo, you can:
 * Delete your account 
 
 ## Pages
-Coming soon 
+### / (home)
+This is the home page from which you can navigate to the login page or signup page:
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1skfqoH1wU0GR8koa0Mt01vQNrPZDeqMb" width="800">
+  </div>
+  Desktop
+</div>
+<br/>
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1rLoEo737Fc-VyNxP1W4fl8HE1HTdhqCk" width="200">
+  </div>
+  Mobile
+</div>
+
+### /signup
+Here, you can create your account using your first and last names, email address, and password. Your password must be at least 8 characters long and contain at least one number and an uppercase letter:
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=17-mVUOP9dt_qCkHk2qw1LrnWXVrpTIQZ" width="800">
+  </div>
+  Desktop
+</div>
+<br/>
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1dD1mkn4V5bWV1pXj-lcBvVLvtTQ_oYs2" width="200">
+  </div>
+  Mobile
+</div>
+
+### /login
+This is the login page where you log into your account using your email and password:
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1ECDWLWlhH_LGX0JyUmHBv8hGRf5VTUKx" width="800">
+  </div>
+  Desktop
+</div>
+<br/>
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1aEWl3wNx0s2artR-KoJ4V7wdhJ4bvDiU" width="200">
+  </div>
+  Mobile
+</div>
+
+### /dashboard 
+On the dasboard page, you can view and create/edit/delete projects, and also navigate to the project detail page by clicking on a project card:
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1vfya2EDFczbUx1Sv9ygJ-BWMPk93c49o" width="800">
+  </div>
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1IiCEqITi-wSKElrCpYGxwzZXS-gy5Kkx" width="800">
+  </div>
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1mh2DHcaJ4W1ctAF9wAanqvoI5ezZlkB2" width="800">
+  </div>
+  Desktop
+</div>
+<br/>
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1Qn9NDAmjkwBUVAN3TuoNyd5Ly4TzzcMz" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1KQ8PwB8ykCEL9hYxfvCovc_oQU4HVzlb" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1Im1J_oSROErEu3vPgJ37szIXD9zE519t" width="200">
+  </div>
+  Mobile
+</div>
+
+### /dashboard/<project_id>
+Once you click on one of your project cards, you will be on the project detail page, where you can view and create/edit/delete tasks. You can also click on each task to view its detail:
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1-uIo2S1y8z8nLgTt-ZEb3rFPtpPUtbMf" width="800">
+  </div>
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1TUmlBo6ov7L7l4q8UfY91y7aovekbH8P" width="800">
+  </div>
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1WCzDmwNE0KPy59GfkLzmbZTM3QxHkYnu" width="800">
+  </div>
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=13gdPDGInDJVCbQeecozcNwsAaBT7ZLqU" width="800">
+  </div>
+  Desktop
+</div>
+<br/>
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1QqVPlwgcgI78v1QEYtykHCLnWxN73uvm" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1AMbWlESSE_aXZa5aMMceOFMsUHuXtJpi" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1oHLfbeu1_yXj5XpxlObBip6N_Hmrh9Th" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=10bIoOBuoI37QEx9hzyE9CpuI_yEzN6rQ" width="200">
+  </div>
+  Mobile
+</div>
+
+### /dashboard/account
+If you need to make changes to your profile, visit the account page, where you can modify your name, email, and password, and also delete your account:
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1-RzgBrKFZugCW37D_koQlTT0l-suUhcY" width="800">
+  </div>
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1APQ1AzGIEW9pWGhA3aHZIN55_GWGxR30" width="800">
+  </div>
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1qyw57qEtKJ5rR0G2SZVhEMnl7eZeT8U1" width="800">
+  </div>
+  Desktop
+</div>
+<br/>
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1SSWro_-_cLMJ4OKcxtJ3jSPWSlod7hlR" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1SSWro_-_cLMJ4OKcxtJ3jSPWSlod7hlR" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1_W8dcw8Unsyr047P99nPFjofzl5wy7N3" width="200">
+  </div>
+  Mobile
+</div>
+
+### /forgot-password
+If you have forgotten your password, you can visit the forgot password page to enter your email address, to which a link will be sent, where you can create your new password: 
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1I1htcvZFjGtdlPz5PWeaUKXArfZ0C2Af" width="800">
+  </div>
+  Desktop
+</div>
+<br/>
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1pC7ydOvJcqjR_4Hjy4EpGe2gGOxHKzFX" width="200">
+  </div>
+  Mobile
+</div>
+
+### /reset-password/<reset_password_token>
+This is the reset password page where you can create your new password: 
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=152K9TaV0fGgDXKEpDCMPexq3wvqIWLxL" width="800">
+  </div>
+  Desktop
+</div>
+<br/>
+<div align="center">
+  <div>
+    <img src="https://drive.google.com/uc?export=view&id=1ixkXeQJPrmN6n2rx6v4s5RfNAUtJ2TKu" width="200">
+  </div>
+  Mobile
+</div>
 
 ## Technical Notes
 Coming soon
