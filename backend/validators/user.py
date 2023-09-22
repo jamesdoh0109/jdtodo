@@ -30,7 +30,12 @@ class UserValidator(Validator):
         return True 
     
     def is_login_json_valid(self, login_json):
-        return not self.has_missing_body_or_empty_fields(login_json, 'email', 'password')
+        if self.has_missing_body_or_empty_fields(login_json, 'email', 'password'):
+            return False 
+        if not self.is_email_valid(login_json['email']):
+            self.error = 'Email is not valid'
+            return False 
+        return True 
     
     def is_signup_json_valid(self, signup_json):
         if self.has_missing_body_or_empty_fields(signup_json, 'firstname', 'lastname', 'email', 'password', 'passwordConfirm'):

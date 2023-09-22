@@ -5,13 +5,22 @@ from backend.models.user import User
 from backend.utils.utils import send_reset_email, send_reset_confirm_email
 
 def get_user_by_id(user_id):
-    return User.query.filter_by(id=user_id).first()
+    try:
+        return User.query.filter_by(id=user_id).first()
+    except Exception as e:
+        return e
 
 def get_user_by_email(user_email):
-    return User.query.filter_by(email=user_email).first()
+    try:
+        return User.query.filter_by(email=user_email).first()
+    except Exception as e:
+        return e
 
 def get_user_by_token(token):
-    return User.verify_reset_token(token)
+    try: 
+        return User.verify_reset_token(token)
+    except Exception as e:
+        return e
 
 def create_user(firstname, lastname, email, password):
     new_user = User(firstname, lastname, email, password)
