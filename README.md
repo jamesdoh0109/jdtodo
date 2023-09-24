@@ -769,6 +769,8 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
     (deletes the task with <code>task_id</code>)
   </summary>
 
+  ##### Parameters
+
   None              
 
   ##### Response
