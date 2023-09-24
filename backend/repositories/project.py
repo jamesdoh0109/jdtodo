@@ -4,11 +4,17 @@ from backend.app import db
 from backend.models.project import Project 
 
 def get_project(project_id):
-    return Project.query.filter_by(id=project_id).first()
+    try: 
+        return Project.query.filter_by(id=project_id).first()
+    except Exception as e:
+        return e
 
 def get_projects(user_id):
-    projects = Project.query.filter_by(user_id=user_id)
-    return [project.to_dict() for project in projects]
+    try:
+        projects = Project.query.filter_by(user_id=user_id)
+        return [project.to_dict() for project in projects]
+    except Exception as e:
+        return e
 
 def create_project(name, user_id):
     project = Project(name, user_id)

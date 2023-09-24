@@ -2,11 +2,17 @@ from backend.app import db
 from backend.models.task import Task 
 
 def get_task(task_id):
-    return Task.query.filter_by(id=task_id).first() 
+    try:
+        return Task.query.filter_by(id=task_id).first() 
+    except Exception as e:
+        return e
 
 def get_tasks_for_project(project_id):
-    tasks = Task.query.filter_by(project_id=project_id).all()
-    return [task.to_dict() for task in tasks]
+    try:
+        tasks = Task.query.filter_by(project_id=project_id).all()
+        return [task.to_dict() for task in tasks]
+    except Exception as e:
+        return e
 
 def create_task_for_project(project_id, new_task_json): 
     task_data = {

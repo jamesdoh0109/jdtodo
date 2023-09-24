@@ -12,6 +12,8 @@ def get_tasks_for_project_service(user_id, project_id):
         return {'tasks': None, 'message': 'Access denied', 'status_code': 403} 
 
     tasks = get_tasks_for_project(project_id)
+    if isinstance(tasks, Exception):
+        return {'tasks': None, 'message': 'Server error: please try again', 'status_code': 500}
     return {'tasks': tasks, 'message': 'Tasks successfully fetched', 'status_code': 200} 
 
 @validate_task_json('created_task')
@@ -42,7 +44,7 @@ def modify_task_for_project_service(modified_task_json, user_id, task_id):
         return {'modified_task': None, 'message': 'Task with the same name already exists', 'status_code': 409}
     if isinstance(modified_task, Exception): 
         return {'modified_task': None, 'message': 'Server error: please try again', 'status_code': 500}
-    return {'modified_task': modified_task, 'message': 'Tasks successfully updated', 'status_code': 200} 
+    return {'modified_task': modified_task, 'message': 'Tasks successfully modified', 'status_code': 200} 
 
 def delete_task_for_project_service(user_id, task_id):
     task = get_task(task_id)

@@ -5,6 +5,8 @@ from backend.utils.decorator import validate_project_json
 
 def get_project_service(user_id, project_id):
     project = get_project(project_id)
+    if isinstance(project, Exception):
+        return {'project': None, 'message': 'Server error: please try again', 'status_code': 500}
     if project is None:
         return {'project': None, 'message': 'Project not found', 'status_code': 404}
     if project.user_id != user_id:
@@ -13,7 +15,9 @@ def get_project_service(user_id, project_id):
 
 def get_projects_service(user_id):
     project_list = get_projects(user_id)
-    return {'project_list': project_list, 'status_code': 200}
+    if isinstance(project_list, Exception):
+        return {'project_list': None, 'message': 'Server error: please try again', 'status_code': 500}
+    return {'project_list': project_list, 'message': 'Projects successfully fetched', 'status_code': 200}
 
 @validate_project_json('created_project')
 def create_project_service(create_project_json, user_id):
@@ -38,7 +42,7 @@ def modify_project_service(modified_project_json, user_id, project_id):
         return {'modified_project': None, 'message': 'Project with the same name already exists', 'status_code': 409}
     if isinstance(modified_project, Exception):
         return {'modified_project': None, 'message': 'Server error: please try again', 'status_code': 500}
-    return {'modified_project': modified_project, 'message': 'Project successfully updated', 'status_code': 200}
+    return {'modified_project': modified_project, 'message': 'Project successfully modified', 'status_code': 200}
 
 def delete_project_service(user_id, project_id):
     project = get_project(project_id)

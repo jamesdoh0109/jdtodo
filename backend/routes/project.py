@@ -21,8 +21,11 @@ def get_project_route(project_id):
 @jwt_required()
 def get_projects_route():
     user_id = get_jwt_identity()
-    project_list, status_code = get_projects_service(user_id).values()
-    return jsonify({'projects': project_list}), status_code
+    project_list, message, status_code = get_projects_service(user_id).values()
+    if project_list or project_list == []:
+        return jsonify({'projects': project_list, 'message': message}), status_code
+    else:
+        return jsonify({'error': message}), status_code
 
 @project.route('/api/projects', methods=['POST'])
 @jwt_required()

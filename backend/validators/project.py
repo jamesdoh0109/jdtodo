@@ -6,7 +6,7 @@ class ProjectValidator(Validator):
             return False 
         project_name = project_json['name']
         if len(project_name) > 25:
-            self.error = 'Name must be less than 25 characters'
+            self.error = 'Project name must be less than 25 characters'
             return False 
         return True 
         

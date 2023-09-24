@@ -315,7 +315,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
    <summary>
     <code>POST</code>
     <code><b>/api/login</b></code>
-    <code>(authenticates the user given his/her log-in credentials)</code>
+    (authenticates the user given his/her log-in credentials)
   </summary>
 
   ##### Parameters
@@ -331,15 +331,15 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   > | ---------- | ------------------------------------------------------- |
   > | `200` | <code>{ 'user': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'id': user.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'firstname': user.firstname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'lastname': user.lastname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'email': user.email<br>},<br>'message': 'Login success' }</code> |  
   > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' }</code> |              
-  > | `401` | `{'error': 'Invalid credentials' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |
+  > | `401` | `{ 'error': 'Invalid credentials' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |
 
 </details>
 <details>
    <summary>
     <code>POST</code>
     <code><b>/api/logout</b></code>
-    <code>(terminates the user's active session)</code>
+    (terminates the user's active session)
   </summary>
 
   ##### Parameters
@@ -350,14 +350,14 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | `{"message": "Logout success"}` |               
+  > | `200` | `{ 'message': 'Logout success' }` |               
       
 </details>
 <details>
    <summary>
     <code>POST</code>
     <code><b>/api/signup</b></code>
-    <code>(creates the user given his/her registration information)</code>
+    (creates the user given his/her registration information)
   </summary>
 
   ##### Parameters
@@ -376,15 +376,15 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   > | ---------- | ------------------------------------------------------- |
   > | `201` | `{ 'message': 'User successfully created' }`|
   > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' } OR <br> { 'error': 'Password must match' } OR <br>{ 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number' }</code> | 
-  > | `409` | `{'error': 'Email already exists' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |    
+  > | `409` | `{ 'error': 'Email already exists' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |    
 
 </details>
 <details>
    <summary>
     <code>GET</code>
     <code><b>/api/user</b></code>
-    <code>(retrieves information about a logged-in user using his/her JSON Web Token(JWT) )</code>
+    (retrieves information about a logged-in user using his/her JSON Web Token(JWT))
   </summary>
 
   ##### Parameters
@@ -396,15 +396,15 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
   > | `200` | <code>{ 'user': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'id': user.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'firstname': user.firstname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'lastname': user.lastname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'email': user.email<br>},<br>'message': 'User successfully fetched' }</code> |
-  > | `401` | `{'error': 'Missing cookie 'access_token_cookie'' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |               
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |               
 
 </details>
 <details>
    <summary>
     <code>PATCH</code>
     <code><b>/api/user/&lt;user_id&gt;</b></code>
-    <code>(modifies the user's firstname, lastname, and/or email)</code>
+    (modifies the user's firstname, lastname, and/or email)
   </summary>
 
   ##### Parameters
@@ -421,18 +421,18 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   > | ---------- | ------------------------------------------------------- |
   > | `200` | <code>{ 'user': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'id': user.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'firstname': user.firstname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'lastname': user.lastname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'email': user.email<br>},<br>'message': 'User successfully modified' }</code> |
   > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' }</code> | 
-  > | `401` | `{'error': 'Missing cookie 'access_token_cookie'' }` |
-  > | `403` | `{'error': 'Access denied' }` |
-  > | `404` | `{'error': 'User not found' }` |
-  > | `409` | `{'error': 'Email already exists' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |                 
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'User not found' }` |
+  > | `409` | `{ 'error': 'Email already exists' }` |
+  > | `500` | `{  'error': 'Server error: please try again' }` |                 
 
 </details>
 <details>
    <summary>
     <code>DELETE</code>
     <code><b>/api/user/&lt;user_id&gt;</b></code>
-    <code>(deletes the user's account)</code>
+    (deletes the user's account)
   </summary>
 
   ##### Parameters
@@ -443,18 +443,18 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | `{'message': 'User successfully deleted' }` |
-  > | `401` | `{'error': 'Missing cookie 'access_token_cookie'' }` |
-  > | `403` | `{'error': 'Access denied' }` |
-  > | `404` | `{'error': 'User not found' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |            
+  > | `200` | `{ 'message': 'User successfully deleted' }` |
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'User not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |            
 
 </details>
 <details>
    <summary>
     <code>PATCH</code>
     <code><b>/api/change_password/&lt;user_id&gt;</b></code>
-    <code>(modifies the user's password)</code>
+    (modifies the user's password)
   </summary>
 
   ##### Parameters
@@ -469,19 +469,19 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | `{'message': 'Password successfully updated' }` |
+  > | `200` | `{ 'message': 'Password successfully updated' }` |
   > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' } OR <br> { 'error': 'Passwords must match' } OR <br> { 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number'} OR <br> { 'error': 'New password must be different from your current one' }</code> | 
-  > | `401` | `{'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `403` | <code>{ 'error': 'Access denied' } OR <br> { 'error': 'Incorrect password' }</code> |
-  > | `404` | `{'error': 'User not found' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |                  
+  > | `404` | `{ 'error': 'User not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |                  
 
 </details>
 <details>
    <summary>
     <code>POST</code>
     <code><b>/api/forgot_password</b></code>
-    <code>(sends to the user an email with a link to a page for resetting passwords)</code>
+    (sends to the user an email with a link to a page for resetting passwords)
   </summary>
 
   ##### Parameters
@@ -494,17 +494,17 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | `{'message': 'Email successfully sent' }` |
+  > | `200` | `{ 'message': 'Email successfully sent' }` |
   > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' } |
-  > | `404` | `{'error': 'User not found' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |              
+  > | `404` | `{ 'error': 'User not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |              
 
 </details>
 <details>
    <summary>
     <code>PATCH</code>
     <code><b>/api/reset_password/&lt;token&gt;</b></code>
-    <code>(resets the password for the user identified by the reset-password token)</code>
+    (resets the password for the user identified by the <code>token</code> for resetting passwords)
   </summary>
 
   ##### Parameters
@@ -518,17 +518,17 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | `{'message': 'Password successfully updated' }` |
+  > | `200` | `{ 'message': 'Password successfully updated' }` |
   > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Passwords must match' } OR <br> { 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number'} OR <br> { 'error': 'New password must be different from your original one' }</code> | 
-  > | `404` | `{'error': 'User not found' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |              
+  > | `404` | `{ 'error': 'User not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |              
 
 </details>
 <details>
    <summary>
     <code>GET</code>
     <code><b>/api/verify_reset_password_token/&lt;token&gt;</b></code>
-    <code>(verifies if the token in the request URI is valid or not)</code>
+    (verifies if the <code>token</code> in the request URI is valid or not)
   </summary>
 
   ##### Parameters
@@ -539,17 +539,17 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | `{'message': 'Token found for {user.id}' }` |
-  > | `403` | `{'error': 'Token expired' }` | 
-  > | `404` | `{'error': 'Token not found' }` |
-  > | `500` | `{'error': 'Server error: please try again' }` |                   
+  > | `200` | `{ 'message': 'Token found for {user.id}' }` |
+  > | `403` | `{ 'error': 'Token expired' }` | 
+  > | `404` | `{ 'error': 'Token not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |                   
 
 </details>
 <details>
    <summary>
     <code>GET</code>
     <code><b>/api/protected</b></code>
-    <code>(returns whether user has access to protected pages (i.e. whether user is logged-in or not))</code>
+    (returns whether user has access to protected pages (i.e. whether user is logged-in or not))
   </summary>
 
   ##### Parameters
@@ -560,7 +560,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | `{'message': 'User authorized' }` | 
+  > | `200` | `{ 'message': 'User authorized' }` | 
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |             
 
 </details>
@@ -570,101 +570,114 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
    <summary>
     <code>GET</code>
     <code><b>/api/projects/&lt;project_id&gt;</b></code>
-    <code>()</code>
+    (retrieves the project with <code>project_id</code>)
   </summary>
 
   ##### Parameters
 
-  > | name       | type       | data type   | description                  |
-  > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  None              
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `200` | <code>{ 'project': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_id': project.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_name': project.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'date_updated': project.updated_at<br>},<br>'message': 'Project successfully fetched' }</code> |
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'Project not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |                 
 
 </details>
 <details>
    <summary>
-    <code>POST</code>
+    <code>PATCH</code>
     <code><b>/api/projects/&lt;project_id&gt;</b></code>
-    <code>()</code>
+    (modifies the name of the project with <code>project_id</code>)
   </summary>
 
   ##### Parameters
 
   > | name       | type       | data type   | description                  |
   > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  > | `name` | required | String | the name of the project being modified |               
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `200` | <code>{ 'project': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_id': project.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_name': project.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'date_updated': project.updated_at<br>},<br>'message': 'Project successfully modified' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Project name must be less than 25 characters' }</code> | 
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'Project not found' }` |
+  > | `409` | `{ 'error': 'Project with the same name already exists' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |               
 
 </details>
 <details>
    <summary>
     <code>DELETE</code>
     <code><b>/api/projects/&lt;project_id&gt;</b></code>
-    <code>()</code>
+    (deletes the project with <code>project_id</code>)
   </summary>
 
   ##### Parameters
 
-  > | name       | type       | data type   | description                  |
-  > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  None            
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `200` | `{ 'message': 'Project successfully deleted' }` |
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'Project not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |                        
 
 </details>
 <details>
    <summary>
     <code>GET</code>
     <code><b>/api/projects</b></code>
-    <code>()</code>
+    (retrieves a list of all projects for user identified by his/her JSON Web Token(JWT))
   </summary>
 
   ##### Parameters
 
-  > | name       | type       | data type   | description                  |
-  > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  None             
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `200` | <code>{ 'project': &lsqb;<br>&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'proj_id': project.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'proj_name': project.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'date_updated': project.updated_at<br>&nbsp;&nbsp;&nbsp;&nbsp;},<br>&nbsp;&nbsp;&nbsp;&nbsp;...<br>&rsqb;,<br>'message': 'Projects successfully fetched' }</code> |
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |                  
 
 </details>
-
 <details>
    <summary>
-    <code>PATCH</code>
+    <code>POST</code>
     <code><b>/api/projects</b></code>
-    <code>()</code>
+    (creates a project with given the project name)
   </summary>
 
   ##### Parameters
 
   > | name       | type       | data type   | description                  |
   > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  > | `name` | required | String | the name of the project being created |                  
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `201` | <code>{ 'project': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_id': project.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_name': project.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'date_updated': project.updated_at<br>},<br>'message': 'Project successfully created' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Project name must be less than 25 characters' }</code> | 
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `409` | `{ 'error': 'Project with the same name already exists' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |                
 
 </details>
 
@@ -672,81 +685,101 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
 <details>
    <summary>
     <code>GET</code>
-    <code><b>/api/<project_id>/&lt;tasks&gt;</b></code>
-    <code>()</code>
+    <code><b>/api/&lt;project_id&gt;/&lt;tasks&gt;</b></code>
+    (retrieves a list of tasks for project with <code>project_id</code>)
   </summary>
 
   ##### Parameters
 
-  > | name       | type       | data type   | description                  |
-  > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  None               
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `200` | <code>{ 'tasks': &lsqb;<br>&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_id': task.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_name': task.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_description': task.description,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_deadline': task.deadline,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_status': task.status<br>&nbsp;&nbsp;&nbsp;&nbsp;},<br>&nbsp;&nbsp;&nbsp;&nbsp;...<br>&rsqb;,<br>'message': 'Tasks successfully fetched' }</code> | 
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'Project not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |               
 
 </details>
 <details>
    <summary>
     <code>POST</code>
-    <code><b>/api/<project_id>/&lt;tasks&gt;</b></code>
-    <code>()</code>
+    <code><b>/api/&lt;project_id&gt;/&lt;tasks&gt;</b></code>
+    (creates a task with given task info for project with <code>project_id</code>)
   </summary>
 
   ##### Parameters
 
   > | name       | type       | data type   | description                  |
   > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  > | `name` | required | String | the name of the task being created |                  
+  > | `deadline` | required | DateTime | the deadline of the task being created |                  
+  > | `status` | required | String | the status of the task being created |                  
+  > | `description` | optional | String | the description of the task being created |                  
+               
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `201` | <code>{ 'task': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_id': task.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_name': task.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_description': task.description,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_deadline': task.deadline,<br><br>&nbsp;&nbsp;&nbsp;&nbsp;'task_status': task.status},<br>'message': 'Task successfully created' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Task name must be less than 60 characters' } OR <br> { 'error': 'Task deadline cannot be in the past' }</code> | 
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'Project not found' }` |
+  > | `409` | `{ 'error': 'Task with the same name already exists' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |                
 
 </details>
 <details>
    <summary>
     <code>PATCH</code>
     <code><b>/api/tasks/&lt;task_id&gt;</b></code>
-    <code>()</code>
+    (modifies the task info for task with <code>task_id</code>)
   </summary>
 
   ##### Parameters
 
   > | name       | type       | data type   | description                  |
   > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  > | `name` | required | String | the name of the task being modified |                  
+  > | `deadline` | required | DateTime | the deadline of the task being modified |                  
+  > | `status` | required | String | the status of the task being modified |                  
+  > | `description` | optional | String | the description of the task being modified |                    
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `200` | <code>{ 'task': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_id': task.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_name': task.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_description': task.description,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_deadline': task.deadline,<br><br>&nbsp;&nbsp;&nbsp;&nbsp;'task_status': task.status},<br>'message': 'Task successfully modified' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Task name must be less than 60 characters' } OR <br> { 'error': 'Task deadline cannot be in the past' } OR <br> { 'error': 'Task description must be less than 300 characters' }</code> | 
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'Task not found' }` |
+  > | `409` | `{ 'error': 'Task with the same name already exists' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |                      
 
 </details>
 <details>
    <summary>
     <code>DELETE</code>
     <code><b>/api/tasks/&lt;task_id&gt;</b></code>
-    <code>()</code>
+    (deletes the task with <code>task_id</code>)
   </summary>
 
-  ##### Parameters
-
-  > | name       | type       | data type   | description                  |
-  > | ---------- | ---------- | ----------- | ---------------------------- |
-  > | | | |               
+  None              
 
   ##### Response
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | | |               
+  > | `200` | `{ 'message': 'Task successfully deleted' }` |
+  > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
+  > | `403` | `{ 'error': 'Access denied' }` |
+  > | `404` | `{ 'error': 'Task not found' }` |
+  > | `500` | `{ 'error': 'Server error: please try again' }` |               
 
 </details>
 
