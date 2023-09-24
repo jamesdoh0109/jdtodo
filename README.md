@@ -329,8 +329,8 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | <code>{ 'user': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'id': user.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'firstname': user.firstname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'lastname': user.lastname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'email': user.email<br>},<br>'message': 'Login success' }</code> |  
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' }</code> |              
+  > | `200` | <code>{ 'user': { 'id': user.id, 'firstname': user.firstname, 'lastname': user.lastname, 'email': user.email }, 'message': 'Login success' }</code> |  
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Email is not valid' }</code> |              
   > | `401` | `{ 'error': 'Invalid credentials' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |
 
@@ -375,7 +375,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
   > | `201` | `{ 'message': 'User successfully created' }`|
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' } OR <br> { 'error': 'Password must match' } OR <br>{ 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number' }</code> | 
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Email is not valid' } OR { 'error': 'Password must match' } OR { 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number' }</code> | 
   > | `409` | `{ 'error': 'Email already exists' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |    
 
@@ -395,7 +395,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | <code>{ 'user': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'id': user.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'firstname': user.firstname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'lastname': user.lastname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'email': user.email<br>},<br>'message': 'User successfully fetched' }</code> |
+  > | `200` | <code>{ 'user': { 'id': user.id, 'firstname': user.firstname, 'lastname': user.lastname, 'email': user.email }, 'message': 'User successfully fetched' }</code> |
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |               
 
@@ -419,8 +419,8 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | <code>{ 'user': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'id': user.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'firstname': user.firstname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'lastname': user.lastname,<br>&nbsp;&nbsp;&nbsp;&nbsp;'email': user.email<br>},<br>'message': 'User successfully modified' }</code> |
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' }</code> | 
+  > | `200` | <code>{ 'user': { 'id': user.id, 'firstname': user.firstname, 'lastname': user.lastname, 'email': user.email }, 'message': 'User successfully modified' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Email is not valid' }</code> | 
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `403` | `{ 'error': 'Access denied' }` |
   > | `404` | `{ 'error': 'User not found' }` |
@@ -470,9 +470,9 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
   > | `200` | `{ 'message': 'Password successfully updated' }` |
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' } OR <br> { 'error': 'Passwords must match' } OR <br> { 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number'} OR <br> { 'error': 'New password must be different from your current one' }</code> | 
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Email is not valid' } OR { 'error': 'Passwords must match' } OR { 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number'} OR { 'error': 'New password must be different from your current one' }</code> | 
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
-  > | `403` | <code>{ 'error': 'Access denied' } OR <br> { 'error': 'Incorrect password' }</code> |
+  > | `403` | <code>{ 'error': 'Access denied' } OR { 'error': 'Incorrect password' }</code> |
   > | `404` | `{ 'error': 'User not found' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |                  
 
@@ -495,7 +495,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
   > | `200` | `{ 'message': 'Email successfully sent' }` |
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Email is not valid' } |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Email is not valid' } |
   > | `404` | `{ 'error': 'User not found' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |              
 
@@ -519,7 +519,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
   > | `200` | `{ 'message': 'Password successfully updated' }` |
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Passwords must match' } OR <br> { 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number'} OR <br> { 'error': 'New password must be different from your original one' }</code> | 
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Passwords must match' } OR { 'error': 'Password must contain at least 8 characters, 1 uppercase letter, and 1 number'} OR { 'error': 'New password must be different from your original one' }</code> | 
   > | `404` | `{ 'error': 'User not found' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |              
 
@@ -581,7 +581,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | <code>{ 'project': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_id': project.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_name': project.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'date_updated': project.updated_at<br>},<br>'message': 'Project successfully fetched' }</code> |
+  > | `200` | <code>{ 'project': { 'proj_id': project.id, 'proj_name': project.name, 'date_updated': project.updated_at }, 'message': 'Project successfully fetched' }</code> |
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `403` | `{ 'error': 'Access denied' }` |
   > | `404` | `{ 'error': 'Project not found' }` |
@@ -605,8 +605,8 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | <code>{ 'project': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_id': project.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_name': project.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'date_updated': project.updated_at<br>},<br>'message': 'Project successfully modified' }</code> |
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Project name must be less than 25 characters' }</code> | 
+  > | `200` | <code>{ 'project': { 'proj_id': project.id, 'proj_name': project.name, 'date_updated': project.updated_at }, 'message': 'Project successfully modified' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Project name must be less than 25 characters' }</code> | 
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `403` | `{ 'error': 'Access denied' }` |
   > | `404` | `{ 'error': 'Project not found' }` |
@@ -651,7 +651,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | <code>{ 'project': &lsqb;<br>&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'proj_id': project.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'proj_name': project.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'date_updated': project.updated_at<br>&nbsp;&nbsp;&nbsp;&nbsp;},<br>&nbsp;&nbsp;&nbsp;&nbsp;...<br>&rsqb;,<br>'message': 'Projects successfully fetched' }</code> |
+  > | `200` | <code>{ 'project': &lsqb;{ 'proj_id': project.id, 'proj_name': project.name, 'date_updated': project.updated_at }, ...&rsqb;, 'message': 'Projects successfully fetched' }</code> |
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |                  
 
@@ -673,8 +673,8 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `201` | <code>{ 'project': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_id': project.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'proj_name': project.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'date_updated': project.updated_at<br>},<br>'message': 'Project successfully created' }</code> |
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Project name must be less than 25 characters' }</code> | 
+  > | `201` | <code>{ 'project': { 'proj_id': project.id, 'proj_name': project.name, 'date_updated': project.updated_at }, 'message': 'Project successfully created' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Project name must be less than 25 characters' }</code> | 
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `409` | `{ 'error': 'Project with the same name already exists' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |                
@@ -697,7 +697,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | <code>{ 'tasks': &lsqb;<br>&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_id': task.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_name': task.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_description': task.description,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_deadline': task.deadline,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'task_status': task.status<br>&nbsp;&nbsp;&nbsp;&nbsp;},<br>&nbsp;&nbsp;&nbsp;&nbsp;...<br>&rsqb;,<br>'message': 'Tasks successfully fetched' }</code> | 
+  > | `200` | <code>{ 'tasks': &lsqb;{ 'task_id': task.id, 'task_name': task.name, 'task_description': task.description, 'task_deadline': task.deadline, 'task_status': task.status }, ...&rsqb;, 'message': 'Tasks successfully fetched' }</code> | 
   > | `403` | `{ 'error': 'Access denied' }` |
   > | `404` | `{ 'error': 'Project not found' }` |
   > | `500` | `{ 'error': 'Server error: please try again' }` |               
@@ -724,8 +724,8 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `201` | <code>{ 'task': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_id': task.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_name': task.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_description': task.description,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_deadline': task.deadline,<br><br>&nbsp;&nbsp;&nbsp;&nbsp;'task_status': task.status},<br>'message': 'Task successfully created' }</code> |
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Task name must be less than 60 characters' } OR <br> { 'error': 'Task deadline cannot be in the past' }</code> | 
+  > | `201` | <code>{ 'task': { 'task_id': task.id, 'task_name': task.name, 'task_description': task.description, 'task_deadline': task.deadline, 'task_status': task.status }, 'message': 'Task successfully created' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Task name must be less than 60 characters' } OR { 'error': 'Task deadline cannot be in the past' }</code> | 
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `403` | `{ 'error': 'Access denied' }` |
   > | `404` | `{ 'error': 'Project not found' }` |
@@ -753,8 +753,8 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
   
   > | http code  | response                                                |
   > | ---------- | ------------------------------------------------------- |
-  > | `200` | <code>{ 'task': {<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_id': task.id,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_name': task.name,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_description': task.description,<br>&nbsp;&nbsp;&nbsp;&nbsp;'task_deadline': task.deadline,<br><br>&nbsp;&nbsp;&nbsp;&nbsp;'task_status': task.status},<br>'message': 'Task successfully modified' }</code> |
-  > | `400` | <code>{ 'error': 'Missing request body' } OR <br> { 'error': 'Please fill in all the required field(s)' } OR <br> { 'error': 'Task name must be less than 60 characters' } OR <br> { 'error': 'Task deadline cannot be in the past' } OR <br> { 'error': 'Task description must be less than 300 characters' }</code> | 
+  > | `200` | <code>{ 'task': { 'task_id': task.id, 'task_name': task.name, 'task_description': task.description, 'task_deadline': task.deadline,'task_status': task.status }, 'message': 'Task successfully modified' }</code> |
+  > | `400` | <code>{ 'error': 'Missing request body' } OR { 'error': 'Please fill in all the required field(s)' } OR { 'error': 'Task name must be less than 60 characters' } OR { 'error': 'Task deadline cannot be in the past' } OR { 'error': 'Task description must be less than 300 characters' }</code> | 
   > | `401` | `{ 'error': 'Missing cookie 'access_token_cookie'' }` |
   > | `403` | `{ 'error': 'Access denied' }` |
   > | `404` | `{ 'error': 'Task not found' }` |
