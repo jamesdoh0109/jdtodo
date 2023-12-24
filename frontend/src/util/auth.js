@@ -1,6 +1,8 @@
+const BASE_URL = process.env.REACT_APP_BASE_BACKEND_URL;
+
 export async function checkTokenValidity() {
   const resp = await fetch(
-    "https://stunning-space-memory-57v96jpjjjwcr97-5000.app.github.dev/api/protected",
+    `${BASE_URL}/api/protected`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -13,9 +15,6 @@ export async function checkTokenValidity() {
 }
 
 export async function checkResetPasswordToken(token) {
-  const response = await fetch(
-    "https://stunning-space-memory-57v96jpjjjwcr97-5000.app.github.dev/api/verify_reset_password_token/" +
-      token
-  );
+  const response = await fetch(`${BASE_URL}/api/verify_reset_password_token/${token}`);
   return response.status !== 404 && response.status !== 403;
 }

@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from flask import jsonify
@@ -5,7 +6,7 @@ from flask_mail import Message
 
 from backend.app import mail 
 
-BASE_URL = 'https://stunning-space-memory-57v96jpjjjwcr97-3000.app.github.dev'
+BASE_URL = os.environ.get("BASE_FRONTEND_URL")
 
 def send_email(subject, recipients, body):
     msg = Message(subject,

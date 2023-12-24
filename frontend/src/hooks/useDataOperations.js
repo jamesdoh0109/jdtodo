@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { trimFormTrailingSpaces } from "util/form";
 
-const BASE_URL =
-  "https://stunning-space-memory-57v96jpjjjwcr97-5000.app.github.dev";
+const BASE_URL = process.env.REACT_APP_BASE_BACKEND_URL;
 
 export const useQueryData = (requestConfig, key, select) => {
   const queryData = async () => {
