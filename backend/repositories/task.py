@@ -15,13 +15,7 @@ def get_tasks_for_project(project_id):
         return e
 
 def create_task_for_project(project_id, new_task_json): 
-    task_data = {
-        'name': new_task_json.get('name'),
-        'deadline': new_task_json.get('deadline'),
-        'status': new_task_json.get('status'),
-        'description': new_task_json.get('description', ""),
-        'project_id': project_id,
-    }
+    task_data = Task('project_id': project_id, **new_task_json)
     task = Task(**task_data)
     try:
         db.session.add(task)

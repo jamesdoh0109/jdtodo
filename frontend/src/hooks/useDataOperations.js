@@ -36,7 +36,7 @@ export const useMutateData = (requestConfig, sideEffect) => {
     });
     const json = await res.json();
     if (res.status !== 200 && res.status !== 201) {
-      throw new Error(json.error)
+      throw new Error(json.error);
     }
     return json;
   };
