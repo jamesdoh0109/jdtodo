@@ -39,6 +39,7 @@ def delete_project(project):
     try:
         db.session.delete(project)
         db.session.commit()
+        return project.to_dict()
     except Exception as e:
         db.session.rollback()
         return e 

@@ -5,7 +5,7 @@ from flask_mail import Message
 
 from backend.app import mail 
 
-BASE_URL = 'https://jihundoh0109-stunning-guide-7j7xq64644p2xrpx-3000.app.github.dev'
+BASE_URL = 'https://stunning-space-memory-57v96jpjjjwcr97-3000.app.github.dev'
 
 def send_email(subject, recipients, body):
     msg = Message(subject,

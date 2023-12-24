@@ -51,6 +51,7 @@ def delete_user(user):
     try:
         db.session.delete(user)
         db.session.commit()
+        return user.to_dict()
     except Exception as e:
         db.session.rollback()
         return e

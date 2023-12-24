@@ -44,6 +44,7 @@ def delete_task_for_project(task):
     try:
         db.session.delete(task)
         db.session.commit()
+        return task.to_dict()
     except Exception as e:
         db.session.rollback()
         return e 

@@ -1,6 +1,7 @@
 from backend.validators.user import UserValidator
 from backend.validators.project import ProjectValidator
 from backend.validators.task import TaskValidator
+from backend.utils.exceptions import BadRequestException, UnauthorizedException, NotFoundException, AccessDeniedException, ServerException, IntegrityException
 
 def validate_user_json(validation_method_name, key='error'):
     def decorator(func):
@@ -35,3 +36,13 @@ def validate_task_json(task_type):
             return func(task_json, user_id, project_or_task_id)
         return wrapper
     return decorator 
+
+def handle_exceptions(data_key):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except (BadRequestException, UnauthorizedException, NotFoundException, AccessDeniedException, ServerException, IntegrityException) as e:
+                return { data_key: None, 'message': e.message, 'status_code': e.status_code }
+        return wrapper
+    return decorator
