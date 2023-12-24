@@ -2,7 +2,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from backend.repositories.user import get_user_by_id, get_user_by_email, get_user_by_token, create_user, modify_user, delete_user, change_password, reset_password, send_reset_password_link
-from backend.utils.decorator import validate_user_json, handle_exceptions
+from backend.utils.decorators import validate_user_json, handle_exceptions
 from backend.utils.exceptions import BadRequestException, UnauthorizedException, NotFoundException, AccessDeniedException, ServerException, IntegrityException
 
 def _check_different_password_from_original(hashed_password, password):

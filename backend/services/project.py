@@ -1,7 +1,7 @@
 from sqlalchemy.exc import IntegrityError
 
 from backend.repositories.project import get_project, get_projects, create_project, modify_project, delete_project
-from backend.utils.decorator import validate_project_json, handle_exceptions
+from backend.utils.decorators import validate_project_json, handle_exceptions
 from backend.utils.exceptions import NotFoundException, AccessDeniedException, ServerException, IntegrityException
 
 def _check_project_exists(project):

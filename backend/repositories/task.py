@@ -15,8 +15,7 @@ def get_tasks_for_project(project_id):
         return e
 
 def create_task_for_project(project_id, new_task_json): 
-    task_data = Task('project_id': project_id, **new_task_json)
-    task = Task(**task_data)
+    task = Task(project_id=project_id, **new_task_json)
     try:
         db.session.add(task)
         db.session.commit()

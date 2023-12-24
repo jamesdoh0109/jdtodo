@@ -2,7 +2,7 @@ from sqlalchemy.exc import IntegrityError
 
 from backend.repositories.project import get_project 
 from backend.repositories.task import get_task, get_tasks_for_project, create_task_for_project, modify_task_for_project, delete_task_for_project
-from backend.utils.decorator import validate_task_json, handle_exceptions
+from backend.utils.decorators import validate_task_json, handle_exceptions
 from backend.utils.exceptions import NotFoundException, AccessDeniedException, ServerException, IntegrityException
 
 def _check_task_exists(task):
@@ -27,7 +27,7 @@ def _check_server_error(project_or_tasks):
 
 def _check_integrity_error(project_or_task):
     if isinstance(project_or_task, IntegrityError):
-        raise IntegrityException('Project with the same name already exists')
+        raise IntegrityException('Task with the same name already exists')
 
 @handle_exceptions('tasks')
 def get_tasks_for_project_service(user_id, project_id):
