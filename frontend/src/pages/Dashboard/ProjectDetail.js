@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { deadlinePassed } from "util/form";
 import { getSortedTasks } from "util/display";
-import { useQueryData } from "hooks/useDataOperations";
+import { useProjectDetailQuery } from "api/task/useProjectDetailQuery";
 import TaskTable from "components/Task/TaskTable";
 import Loading from "components/common/Loading";
 import TaskForm from "components/Task/TaskForm";
@@ -13,30 +13,13 @@ import TaskSortBy from "components/Task/TaskSortBy";
 import TaskOverdueWarningMessage from "components/Task/TaskOverdueWarningMessage";
 
 export default function ProjectDetail() {
-  const { modalOpen, modalType } = useSelector((state) => state.modal);
   const projectId = useParams().projectId;
+
+  const { isLoading, data: tasks } = useProjectDetailQuery(projectId);
 
   const [currentSortBy, setCurrentSortBy] = useState("Sort By");
 
-  const requestConfig = {
-    url: `/api/${projectId}/tasks`,
-  };
-
-  const select = (data) =>
-    data.tasks.map((task) => ({
-      id: task.task_id,
-      name: task.task_name,
-      deadline: task.task_deadline,
-      status: task.task_status,
-      description: task.task_description,
-      isDone: task.task_status === "Finished",
-    }));
-
-  const { isLoading, data: tasks } = useQueryData(
-    requestConfig,
-    ["tasks", projectId],
-    select
-  );
+  const { modalOpen, modalType } = useSelector((state) => state.modal);
 
   const numOverdueTasks = useMemo(
     () =>

@@ -1,8 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
-import { authActions } from "store/reducers/auth";
-import { useMutateData } from "hooks/useDataOperations";
+import { useLogoutMutation } from "api/user/useLogoutMutation";
 import { Navbar } from "flowbite-react";
 
 export default function Navigation() {
@@ -11,17 +10,7 @@ export default function Navigation() {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const requestConfig = {
-    url: "/api/logout",
-    method: "POST",
-  };
-
-  const { mutate: onLogout } = useMutateData(requestConfig, {
-    onSuccess: () => {
-      dispatch(authActions.deauthenticateUser());
-      queryClient.clear();
-    },
-  });
+  const { mutate: onLogout } = useLogoutMutation(queryClient, dispatch);
 
   const loggedOutOptions = (
     <Navbar.Collapse className="ml-3 text-lg">
@@ -35,7 +24,9 @@ export default function Navigation() {
     <Navbar.Collapse className="ml-3 text-lg">
       <NavLink to="/dashboard">Dashboard</NavLink>
       <NavLink to="/account">Account</NavLink>
-      <button onClick={() => onLogout()} className="self-start">Log Out</button>
+      <button onClick={() => onLogout()} className="self-start">
+        Log Out
+      </button>
     </Navbar.Collapse>
   );
 

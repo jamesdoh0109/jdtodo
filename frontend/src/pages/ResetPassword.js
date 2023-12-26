@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutateData } from "hooks/useDataOperations";
-import { onErrorAfterSubmit } from "util/form";
+import { useResetPasswordMutation } from "api/user/useResetPasswordMutation";
 import {
   passwordConfirmValidator,
   createPasswordValidator,
@@ -32,15 +31,11 @@ export default function ResetPassword() {
 
   const { status, setStatus } = useStatus();
 
-  const requestConfig = {
-    url: `/api/reset_password/${resetPasswordToken}`,
-    method: "PATCH",
-  };
-
-  const { mutate: onResetPassword, isLoading } = useMutateData(requestConfig, {
-    onSuccess: () => navigate("/login"),
-    onError: (error) => onErrorAfterSubmit(error, setStatus),
-  });
+  const { mutate: onResetPassword, isLoading } = useResetPasswordMutation(
+    resetPasswordToken,
+    navigate,
+    setStatus
+  );
 
   const schemaObj = {
     password: createPasswordValidator,

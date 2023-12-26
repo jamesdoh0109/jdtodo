@@ -1,7 +1,5 @@
 import { useDispatch } from "react-redux";
-import { authActions } from "store/reducers/auth";
-import { useMutateData } from "hooks/useDataOperations";
-import { onErrorAfterSubmit } from "util/form";
+import { useLoginMutation } from "api/user/useLoginMutations";
 import { emailValidator, passwordValidator } from "util/validator";
 import useStatus from "hooks/useStatus";
 import AccountCTA from "components/Auth/AccountCTA";
@@ -29,15 +27,7 @@ export default function Login() {
 
   const { status, setStatus } = useStatus();
 
-  const requestConfig = {
-    url: "/api/login",
-    method: "POST",
-  };
-
-  const { mutate: onLogin, isLoading } = useMutateData(requestConfig, {
-    onSuccess: () => dispatch(authActions.authenticateUser()),
-    onError: (error) => onErrorAfterSubmit(error, setStatus),
-  });
+  const { mutate: onLogin, isLoading } = useLoginMutation(dispatch, setStatus);
 
   const schemaObj = {
     email: emailValidator,

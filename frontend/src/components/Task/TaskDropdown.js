@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMutateData } from "hooks/useDataOperations";
+import { useDeleteTaskMutation } from "api/task/useDeleteTaskMutation";
 import { dropdownActions } from "store/reducers/dropdown";
 import { taskFormActions } from "store/reducers/taskForm";
 import { modalActions } from "store/reducers/modal";
@@ -21,6 +21,12 @@ export default function TaskDropdown({
   const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
+
+  const { mutate: deleteTask } = useDeleteTaskMutation(
+    queryClient,
+    taskId,
+    projectId
+  );
 
   const toggleDropdown = () => {
     const newDropdownId = dropdownId === taskId ? -1 : taskId;
@@ -57,28 +63,6 @@ export default function TaskDropdown({
     e.stopPropagation();
     deleteTask();
   };
-
-  const requestConfig = {
-    url: "/api/tasks/" + taskId,
-    method: "DELETE",
-  };
-
-  const { mutate: deleteTask } = useMutateData(requestConfig, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(["tasks", projectId]);
-      const oldTasks = queryClient.getQueryData(["tasks", projectId]);
-      queryClient.setQueryData(["tasks", projectId], (oldQueryData) => {
-        return oldQueryData.filter((task) => task.id !== taskId);
-      });
-      return {
-        oldTasks,
-      };
-    },
-    onError: (_err, _variables, context) =>
-      queryClient.setQueryData(["tasks", projectId], context.oldTasks),
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["tasks", projectId] }),
-  });
 
   return (
     <div className="relative">

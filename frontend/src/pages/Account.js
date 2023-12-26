@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQueryData } from "hooks/useDataOperations";
+import { useAccountQuery } from "api/user/useAccountQuery";
 import { Tabs } from "flowbite-react";
 import EditProfile from "components/Account/EditProfile";
 import DeleteAccount from "components/Account/DeleteAccount";
@@ -25,17 +25,9 @@ const customTheme = {
 };
 
 export default function Account() {
+  const { isLoading, data: user } = useAccountQuery();
+
   const [activeSection, setActiveSection] = useState("Profile");
-
-  const requestConfig = {
-    url: "/api/user",
-  };
-
-  const { isLoading, data: user } = useQueryData(
-    requestConfig,
-    ["user"],
-    (data) => data.user
-  );
 
   const toggleSections = (
     <Tabs.Group aria-label="Default tabs" theme={customTheme}>

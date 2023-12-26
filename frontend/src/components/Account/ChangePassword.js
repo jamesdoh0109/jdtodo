@@ -1,10 +1,9 @@
+import { useChangePasswordMutation } from "api/user/useChangePasswordMutation";
 import {
   passwordConfirmValidator,
   createPasswordValidator,
   passwordValidator,
 } from "util/validator";
-import { onErrorAfterSubmit } from "util/form";
-import { useMutateData } from "hooks/useDataOperations";
 import * as yup from "yup";
 import AccountForm from "components/Account/AccountForm";
 import useStatus from "hooks/useStatus";
@@ -35,16 +34,10 @@ export default function ChangePassword({ user }) {
 
   const { status, setStatus } = useStatus();
 
-  const requestConfig = {
-    url: `/api/change_password/${id}`,
-    method: "PATCH",
-  };
-
-  const { mutate: onChangePassword, isLoading } = useMutateData(requestConfig, {
-    onSuccess: () =>
-      setStatus({ error: false, message: "Successfully updated!" }),
-    onError: (error) => onErrorAfterSubmit(error, setStatus),
-  });
+  const { mutate: onChangePassword, isLoading } = useChangePasswordMutation(
+    id,
+    setStatus
+  );
 
   const schemaObj = {
     passwordCurrent: passwordValidator,

@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useMutateData } from "hooks/useDataOperations";
-import { onErrorAfterSubmit } from "util/form";
+import { useSignupMutation } from "api/user/useSignupMutation";
 import {
   emailValidator,
   firstnameValidator,
@@ -53,15 +52,10 @@ export default function Signup() {
 
   const { status, setStatus } = useStatus();
 
-  const requestConfig = {
-    url: "/api/signup",
-    method: "POST",
-  };
-
-  const { mutate: onSignup, isLoading } = useMutateData(requestConfig, {
-    onSuccess: () => navigate("/login"),
-    onError: (error) => onErrorAfterSubmit(error, setStatus),
-  });
+  const { mutate: onSignup, isLoading } = useSignupMutation(
+    navigate,
+    setStatus
+  );
 
   const schemaObj = {
     firstname: firstnameValidator,

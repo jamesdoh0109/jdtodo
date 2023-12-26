@@ -1,5 +1,4 @@
-import { useMutateData } from "hooks/useDataOperations";
-import { onErrorAfterSubmit } from "util/form";
+import { useForgotPassword } from "api/user/useForgotPassword";
 import { emailValidator } from "util/validator";
 import useStatus from "hooks/useStatus";
 import AuthNavigation from "components/Auth/AuthNavigation";
@@ -18,16 +17,7 @@ const forgotPasswordInput = [
 export default function ForgotPassword() {
   const { status, setStatus } = useStatus();
 
-  const requestConfig = {
-    url: "/api/forgot_password",
-    method: "POST",
-  };
-
-  const { mutate: onSendEmail, isLoading } = useMutateData(requestConfig, {
-    onSuccess: () =>
-      setStatus({ error: false, message: "Email successfully sent!" }),
-    onError: (error) => onErrorAfterSubmit(error, setStatus),
-  });
+  const { mutate: onSendEmail, isLoading } = useForgotPassword(setStatus);
 
   const schemaObj = {
     email: emailValidator,

@@ -1,10 +1,9 @@
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { handleCreateOrEdit } from "util/form";
+import { useCreateOrEditProjectMutation } from "api/project/useCreateOrEditProjectMutation";
 import { projectNameValidator } from "util/validator";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutateData } from "hooks/useDataOperations";
 import useStatus from "hooks/useStatus";
 import * as yup from "yup";
 import ButtonSubmit from "components/common/Button/ButtonSubmit";
@@ -25,27 +24,14 @@ export default function ProjectForm() {
 
   const { status, setStatus } = useStatus();
 
-  const requestConfig = {
-    url: `/api/projects${!isCreatingNew ? "/" + projectToBeEdited.id : ""}`,
-    method: isCreatingNew ? "POST" : "PATCH",
-  };
-
-  const { mutate: createOrEditProject, isLoading } = useMutateData(
-    requestConfig,
-    handleCreateOrEdit(
+  const { mutate: createOrEditProject, isLoading } =
+    useCreateOrEditProjectMutation(
       queryClient,
-      ["projects"],
-      (data) => ({
-        id: data.project.proj_id,
-        name: data.project.proj_name,
-        dateUpdated: data.project.date_updated,
-      }),
-      isCreatingNew,
       dispatch,
-      "project",
-      setStatus
-    )
-  );
+      setStatus,
+      projectToBeEdited,
+      isCreatingNew
+    );
 
   const {
     register,
@@ -103,5 +89,5 @@ export default function ProjectForm() {
         </div>
       </form>
     </Modal>
-  );  
+  );
 }

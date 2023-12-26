@@ -7,9 +7,9 @@ import {
   taskDescriptionValidator,
   taskNameValidator,
 } from "util/validator";
-import { formatDateISO, handleCreateOrEdit } from "util/form";
+import { formatDateISO } from "util/form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutateData } from "hooks/useDataOperations";
+import { useCreateOrEditTaskMutation } from "api/task/useCreateOrEditTaskMutation";
 import useStatus from "hooks/useStatus";
 import * as yup from "yup";
 import TaskModalTitle from "components/Task/TaskModalTitle";
@@ -17,7 +17,6 @@ import FormInput from "components/common/FormInput";
 import ButtonSubmit from "components/common/Button/ButtonSubmit";
 import ButtonCloseModal from "components/common/Button/ButtonCloseModal";
 import Modal from "components/common/Modal";
-
 import Message from "components/common/Message";
 
 const taskInputs = [
@@ -58,31 +57,13 @@ export default function TaskForm() {
 
   const { status, setStatus } = useStatus();
 
-  const requestConfig = {
-    url: isCreatingNew
-      ? `/api/${projectId}/tasks`
-      : `/api/tasks/${taskToBeEdited.id}`,
-    method: isCreatingNew ? "POST" : "PATCH",
-  };
-
-  const { mutate: createOrEditTask, isLoading } = useMutateData(
-    requestConfig,
-    handleCreateOrEdit(
-      queryClient,
-      ["tasks", projectId],
-      (data) => ({
-        id: data.task.task_id,
-        name: data.task.task_name,
-        deadline: data.task.task_deadline,
-        status: data.task.task_status,
-        description: data.task.task_description,
-        isDone: data.task.task_status === "Finished",
-      }),
-      isCreatingNew,
-      dispatch,
-      "task",
-      setStatus
-    )
+  const { mutate: createOrEditTask, isLoading } = useCreateOrEditTaskMutation(
+    queryClient,
+    dispatch,
+    setStatus,
+    isCreatingNew,
+    projectId,
+    taskToBeEdited
   );
 
   const {
@@ -148,6 +129,6 @@ export default function TaskForm() {
           />
         </div>
       </form>
-    </Modal> 
+    </Modal>
   );
 }

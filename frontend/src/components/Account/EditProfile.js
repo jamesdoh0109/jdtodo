@@ -1,11 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useEditProfileMutation } from "api/user/useEditProfileMutation";
 import {
   emailValidator,
   firstnameValidator,
   lastnameValidator,
 } from "util/validator";
-import { useMutateData } from "hooks/useDataOperations";
-import { onErrorAfterSubmit } from "util/form";
 import useStatus from "hooks/useStatus";
 import AccountForm from "components/Account/AccountForm";
 
@@ -13,6 +12,14 @@ export default function EditProfile({ user }) {
   const { id, email, firstname, lastname } = user;
 
   const queryClient = useQueryClient();
+
+  const { status, setStatus } = useStatus();
+
+  const { mutate: onEditProfile, isLoading } = useEditProfileMutation(
+    queryClient,
+    id,
+    setStatus
+  );
 
   const editProfileInputs = [
     {
@@ -43,21 +50,6 @@ export default function EditProfile({ user }) {
     lastname: lastnameValidator,
     email: emailValidator,
   };
-
-  const { status, setStatus } = useStatus();
-
-  const requestConfig = {
-    url: `/api/user/${id}`,
-    method: "PATCH",
-  };
-
-  const { mutate: onEditProfile, isLoading } = useMutateData(requestConfig, {
-    onSuccess: (data) => {
-      setStatus({ error: false, message: "Successfully updated!" });
-      queryClient.setQueryData(["user"], data.user);
-    },
-    onError: (error) => onErrorAfterSubmit(error, setStatus),
-  });
 
   return (
     <>
