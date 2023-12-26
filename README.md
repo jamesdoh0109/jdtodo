@@ -19,31 +19,20 @@
   - [Database](#database)
 - [Features](#features)
 - [Installation and Setup](#installation-and-setup)
+  - [Environment Variables](#environment-variables)
   - [Frontend](#frontend-1)
   - [Backend](#backend-1)
-  - [Github Codespace users ONLY](#github-codespace-users-only)
 - [Pages](#pages)
-  - [/](#home)
-  - [/signup](#signup)
-  - [/login](#login)
-  - [/dashboard](#dashboard)
-  - [/dashboard/<project_id>](#dashboardproject_id)
-  - [/forgot-password](#forgot-password)
-  - [/reset-password/<reset_password_token>](#reset-passwordreset_password_token)
+  - [Dashboard](#dashboard)
+  - [Project Details](#project-details)
+  - [Manage Account](#manage-account)
 - [Implementation Details/Technical Notes](#implementation-detailstechnical-notes)
   - [API Documentation](#api-documentation)
     - [`User` endpoints](#user-endpoints)
     - [`Project` endpoints](#project-endpoints)
     - [`Task` endpoints](#task-endpoints)
   - [Data Models](#data-models)
-  - [Authentication](#authentication)
-    - [Sign Up](#sign-up)
-    - [Log In](#log-in)
-  - [Form Handling and Validation](#form-handling-and-validation)
-  - [State Management](#state-management)
-    - [Client states](#client-states)
-    - [Server states](#server-states)
-  - [Data Fetching and Modifying Server Data](#data-fetching-and-modifying-server-data)
+  - [Note on State Management](#note-on-state-management)
 - [Get in Touch](#get-in-touch)
 
 ## Project Overview
@@ -55,8 +44,8 @@ JDTodo is a web application designed for managing projects and tasks. It uses a 
 ### Frontend
 
 <p>
-  <img alt="Javascript" src="https://img.shields.io/badge/Javascript-%23F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
   <img alt="React" src="https://img.shields.io/badge/React-%2361DAFB?style=for-the-badge&logo=react&logoColor=black">
+  <img alt="Javascript" src="https://img.shields.io/badge/Javascript-%23F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
   <img alt="Redux" src="https://img.shields.io/badge/Redux-%23764ABC?style=for-the-badge&logo=redux">
   <img alt="React Query" src="https://img.shields.io/badge/react--query-%23FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
   <img alt="React Hook Form" src="https://img.shields.io/badge/react--hook--form-%23EC5990?style=for-the-badge&logo=reacthookform&logoColor=white">
@@ -74,7 +63,6 @@ JDTodo is a web application designed for managing projects and tasks. It uses a 
 
 <p>
   <img alt="MySQL" src="https://img.shields.io/badge/mysql-%234479A1?style=for-the-badge&logo=mysql&logoColor=white">
-  <img alt="Amazon RDS" src="https://img.shields.io/badge/Amazon%20RDS-%23527FFF?style=for-the-badge&logo=amazonrds&logoColor=white">
 </p>
 
 ## Features
@@ -88,13 +76,31 @@ JDTodo is more than just a simple todo list application. With JDTodo, you can:
 - Update tasks (e.g. marking it as "Finished", changing the deadline, etc.)
 - Delete tasks
 - See which tasks are overdue
-- Create an account with your email address
-- Log in to retrieve your project/task data
-- Reset your password via email when forgotten
-- Update your information (email, name, password)
-- Delete your account
 
 ## Installation and Setup
+Fork this repository and clone it locally. Once completed, follow these steps:
+
+### Environment variables 
+Create a `.env` file at the root of the repository, then define the following 6 environment variables:
+- `SQLALCHEMY_DATABASE_URI`
+  - URI used to connect to the database (e.g. sqlite:////tmp/test.db, mysql://username:password@server/db). You will first need to create your own.
+- `JWT_SECRET_KEY`
+  - Secret key used for signing and verifying JWTs. A good rule of thumb is to use a secret key with a length of at least 256 bits (32 bytes) or longer and also a random, unique string generated cryptographically (e.g. `secrets.token_hex(32)`).
+- `MAIL_USERNAME`
+  - Username for your Gmail account
+- `MAIL_PASSWORD`
+  - Password for your Gmail account
+- `BASE_FRONTEND_URL`
+  - The URL where your frontend application is hosted (e.g. https://localhost:3000)
+- `REACT_APP_BASE_BACKEND_URL`
+  - The URL where your backend application is hosted (e.g. https://localhost:5000)
+  
+### Backend
+Once these have been set, then follow these steps to run the backend development server:
+1. `cd backend`
+2. `pipenv shell`
+3. `pipenv install`
+4. `flask --app app run`
 
 ### Frontend
 
@@ -104,89 +110,10 @@ Follow these steps to run the frontend development server:
 2. `npm install`
 3. `npm start`
 
-### Backend
-
-In `backend/config.py`, it initializes 4 environment variables, which you will need to set up on your own:
-
-- `SQLALCHEMY_DATABASE_URI`
-  - URI used to connect to the database (e.g. sqlite:////tmp/test.db, mysql://username:password@server/db). You will first need to create your own
-- `JWT_SECRET_KEY`
-  - Secret key used for signing and verifying JWTs. A good rule of thumb is to use a secret key with a length of at least 256 bits (32 bytes) or longer and also a random, unique string generated cryptographically (e.g. `secrets.token_hex(32)`).
-- `MAIL_USERNAME`
-  - Username for your Gmail account
-- `MAIL_PASSWORD`
-  - Password for your Gmail account
-
-Once these have been set, then follow these steps to run the backend development server:
-
-1. `cd backend`
-2. `pipenv shell`
-3. `pipenv install`
-4. `flask --app app run`
-
-### Github Codespace users ONLY
-
-If you are using [Github Codespaces](https://github.com/features/codespaces), you can define each enviornment variable by navigating to Github -> Settings -> Codespaces -> New Secret (selecting the cloned repository).
-
-Please also navigate to line 5 in `frontend/src/hooks/useDataOperations.js` as well as line 3 and line 17 in `frontend/src/util/auth.js` to change `localhost:5000` to the url corresponding to your Codespace url.
-
 ## Pages
+Below are some of the essential pages that underpin the core functionality and represent the backbone of the application.of our application. Presented here are detailed descriptions and accompanying screenshots of the Dashboard, Project Details, and Manage Account pages. 
 
-### /
-
-This is the home page from which you can navigate to the login page or signup page:
-
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=1skfqoH1wU0GR8koa0Mt01vQNrPZDeqMb" width="800">
-  </div>
-  Desktop
-</div>
-<br/>
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=1rLoEo737Fc-VyNxP1W4fl8HE1HTdhqCk" width="200">
-  </div>
-  Mobile
-</div>
-
-### /signup
-
-Here, you can create your account using your first and last names, email address, and password. Your password must be at least 8 characters long and contain at least one number and an uppercase letter:
-
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=17-mVUOP9dt_qCkHk2qw1LrnWXVrpTIQZ" width="800">
-  </div>
-  Desktop
-</div>
-<br/>
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=1dD1mkn4V5bWV1pXj-lcBvVLvtTQ_oYs2" width="200">
-  </div>
-  Mobile
-</div>
-
-### /login
-
-This is the login page where you log into your account using your email and password:
-
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=1ECDWLWlhH_LGX0JyUmHBv8hGRf5VTUKx" width="800">
-  </div>
-  Desktop
-</div>
-<br/>
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=1aEWl3wNx0s2artR-KoJ4V7wdhJ4bvDiU" width="200">
-  </div>
-  Mobile
-</div>
-
-### /dashboard
+### Dashboard
 
 On the dasboard page, you can view and create/edit/delete projects, and also navigate to the project detail page by clicking on a project card:
 
@@ -212,7 +139,7 @@ On the dasboard page, you can view and create/edit/delete projects, and also nav
   Mobile
 </div>
 
-### /dashboard/<project_id>
+### Project Details 
 
 Once you click on one of your project cards, you will be on the project detail page, where you can view and create/edit/delete tasks. You can also click on each task to view its detail:
 
@@ -242,7 +169,7 @@ Once you click on one of your project cards, you will be on the project detail p
   Mobile
 </div>
 
-### /dashboard/account
+### Manage Account
 
 If you need to make changes to your profile, visit the account page, where you can modify your name, email, and password, and also delete your account:
 
@@ -268,45 +195,10 @@ If you need to make changes to your profile, visit the account page, where you c
   Mobile
 </div>
 
-### /forgot-password
-
-If you have forgotten your password, you can visit the forgot password page to enter your email address, to which a link will be sent, where you can create your new password:
-
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=1I1htcvZFjGtdlPz5PWeaUKXArfZ0C2Af" width="800">
-  </div>
-  Desktop
-</div>
-<br/>
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=1pC7ydOvJcqjR_4Hjy4EpGe2gGOxHKzFX" width="200">
-  </div>
-  Mobile
-</div>
-
-### /reset-password/<reset_password_token>
-
-This is the reset password page where you can create your new password:
-
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=152K9TaV0fGgDXKEpDCMPexq3wvqIWLxL" width="800">
-  </div>
-  Desktop
-</div>
-<br/>
-<div align="center">
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=1ixkXeQJPrmN6n2rx6v4s5RfNAUtJ2TKu" width="200">
-  </div>
-  Mobile
-</div>
-
 ## Implementation Details/Technical Notes
 
 ### API Documentation
+<i>NOTE:</i> this represents the application's <i>internal</i> API and is not intended for use as an <i>open</i> API. It's important to note that documenting an internal API can pose certain security risks. However, in the context of showcasing my portfolio project, the purpose is solely to provide supplementary information.
 
 Here are the Flask API endpoints for managing users, projects, and tasks (these can be found in modules in `backend/routes`):
 
@@ -786,6 +678,7 @@ Here are the Flask API endpoints for managing users, projects, and tasks (these 
 </details>
 
 ### Data Models
+<i>NOTE:</i> much like the preceding discussion on API routes, the presentation of this database structure serves the purpose of showcasing a pivotal facet of my portfolio project. However, it is crucial to acknowledge that the exposure of such sensitive information introduces potential security vulnerabilities.
 
 In `backend/models`, you will find 3 modules, `user.py`, `project.py`, `task.py`, each of which represents data for the 3 entities in this project: user, project, and task. Here is the Entry Relationship Diagram (ERD) that shows each field for each model, and how the 3 models work together:
 
@@ -795,95 +688,8 @@ In `backend/models`, you will find 3 modules, `user.py`, `project.py`, `task.py`
   </div>
 </div>
 
-### Authentication
-
-Authentication is probably one the most critical features, which when implemented correctly, can help us ensure security and privacy of users. While the popular phrase "don't roll your own crypto" implies the need to use reliable, existing packages and libraries (such as [Auth0](https://auth0.com/) and [Okta](https://www.okta.com/)) for maximizing safety, I decided to implement authentication on my own just for the sake of practice and understadning what really goes behind the scenes.
-
-Here's the general flow of authentication in this project:
-
-#### Sign Up
-
-1. The user fills out the sign-up form with their credentials (name, email, and password).
-2. The frontend validates the user input (e.g. check valid email) and sends the data to the sign-up API.
-3. The API performs its server-side validation (e.g. check if email already exists) and creates a new row in the database if all the inputs are valid.
-
-#### Log In
-
-1. The user fills out the log-in form with their credentials (email and password)
-2. The frontend validates the user input (e.g. check valid email) and sends the data to the log-in API.
-3. The API performs its server-side validation (e.g. check if user with the input email exists, check if password is correct).
-4. If the user is authenticated, the server generates a JSON Web Token (JWT), which is then returned back to the browser through a secure HTTP-only cookie (using the Set-Cookie header).
-5. The frontend receives this cookie and sends it along with future requests to the API (using the cookie header) to access protected resources.
-
-If an unauthenticated user (thus without a valid JWT) attempts to access protected pages (e.g. /dashboard), the API will return 401 unauthorized. The frontend will then use this status code to redirect the user back to the log in page.
-
-### Form Handling and Validation
-
-To simplify the process of handling forms, [React Hook Form](https://www.react-hook-form.com/) and [`yup`](https://github.com/jquense/yup) are used in this project. React Hook Form combined with `yup` reduces the amount of boilerplate code needed for form management and validation. With `yup`, in particular, defining validation rules becomes straightforward:
-
-```javascript
-// frontend/util/validator.js
-export const createPasswordValidator = yup
-  .string()
-  .min(8, "Password must contain at least 8 characters")
-  .matches(
-    /^(?=.*[A-Z])(?=.*\d)/,
-    "Password must contain at least 1 uppercase letter and 1 number"
-  )
-  .required("Password is required");
-```
-
-### State Management
-
-In this fullstack application, we need to manage both the client and server states:
-
-#### Client states
-
-For client states, such as modal, dropdown, and form states, we use [Redux](https://redux.js.org/) as well as [React Redux](https://react-redux.js.org/) to help simplify the integration between React and Redux. The `<Provider />` component wraps our entire application, which allows the app to have access to the Redux store.
-
-#### Server states
-
-For server states, such as the `id` and `email` of the logged-in user, we use [React Query](https://tanstack.com/query/v3/). When the user attempts to access the Account page (where user can view and edit his or her profile), `useQuery` hook is used to fetch and cache the relevant user data. Although this sounds more like [data fetching](#data-fetching-and-modifying-server-data) (discussed in next section) than maintaining state, React Query excels in efficiently managing and preserving this server state by allowing you to cache and retrieve the logged-in user's data, ensuring that the application remains synchronized with the server's state without the need for redundant network requests.
-
-It is important to keep in mind that whether it is a client or server state, no state should be managed by more than one tool, which can lead to synchronization issues (e.g. maintaining user state through React Query's caching mechanism but also dispatch this to the Redux store). It also makes it difficult to determine what the source of truth is. If React Query has one set of state and Redux has the other, which do you trust and which do you use?
-
-### Data Fetching and Modifying Server Data
-
-Instead of using React's built-in `fetch` API or `axios`, I decided to use [React Query](https://tanstack.com/query/v3/). To fetch data, we use the `useQuery` hook, and to modify server data, such as posting or deleting data (create, update, and delete operations), we use the `useMutation` hook.
-
-There are many benefits to using these two hooks from React Query. As opposed to using the built-in `fetch` API and `useEffect` for data fetching (which can get pretty cumbersome especially with caching and handling side effects), React Query gives us an out-of-box tool to manage all of these with simpler, easier-to-read/write code. Using React Query, we can, for example, fetch the user's list of projects, cache them with a key, and re-access them using this key--all without having to define a React state or a global Redux store. When mutating data, we can leverage `useMutation` hook to modify the server data and reflect these changes back to the cached data at one go. We can also optimistically update data in the browser before the mutation occurs, which can give a better, faster user experience. Optimistic update is implemented for operations like deleting project and task as well as marking task as "Finished," so that the user doesn't have to wait for the server to see the changes in the browser. Here's an example code that optimistically deletes a project:
-
-```javascript
-// frontend/project/ProjectDeleteIcon.js
-const { mutate: deleteProject } = useMutateData(requestConfig, {
-  onMutate: async () => {
-    // cancel any outgoing refetches to prevent overwriting optimistic update
-    await queryClient.cancelQueries(["projects"]);
-
-    // snapshot the previous value
-    const oldProjects = queryClient.getQueryData(["projects"]);
-
-    // optimistically delete a project
-    queryClient.setQueryData(["projects"], (oldQueryData) => {
-      return oldQueryData.filter((project) => project.id !== projectId);
-    });
-
-    // return the snapshot in case mutation fails
-    return {
-      oldProjects,
-    };
-  },
-  onError: (_err, _variables, context) =>
-    // if mutation fails, use the context returned from onMutate to roll back
-    queryClient.setQueryData(["projects"], context.oldProjects),
-  onSettled: () =>
-    // refetch regardless of success or error to match with server state
-    queryClient.invalidateQueries({ queryKey: ["projects"] }),
-});
-```
-
-Please note that optimistic update is not implemented for operations like creating/editing projects because the the created/edited timestamp is generated in the backend, and the frontend requires them for display purposes (i.e. we need to get the project data from the backend after creation/modification to display it in the frontend).
+### Note on State Management
+In this fullstack application, we need to manage both the client and server states. I have implemented Redux and React Redux for managing client state, and React-Query for managing server states. Each usage has been evaluated to ensure I am not duplicating state management between multiple tools whenever possible.
 
 ## Get in Touch
-
 If you have any questions or want to contribute, feel free to reach out to jdtodo.help@gmail.com!
