@@ -119,22 +119,22 @@ On the dasboard page, you can view and create/edit/delete projects, and also nav
 
 <div align="center">
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1vfya2EDFczbUx1Sv9ygJ-BWMPk93c49o" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=13bdQDSThwjtcPT2EKwN0F_e658K5QT1L" width="800">
   </div>
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1IiCEqITi-wSKElrCpYGxwzZXS-gy5Kkx" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=1mBY9v8S0xw5mvSVJY2ygvDm6Zikmg65F" width="800">
   </div>
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1mh2DHcaJ4W1ctAF9wAanqvoI5ezZlkB2" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=19-0nAqMGVdsF52oWDw7LwNDmWaKHbm8_" width="800">
   </div>
   Desktop
 </div>
 <br/>
 <div align="center">
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1Qn9NDAmjkwBUVAN3TuoNyd5Ly4TzzcMz" width="200">
-    <img src="https://drive.google.com/uc?export=view&id=1KQ8PwB8ykCEL9hYxfvCovc_oQU4HVzlb" width="200">
-    <img src="https://drive.google.com/uc?export=view&id=1Im1J_oSROErEu3vPgJ37szIXD9zE519t" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1KOybwTm0P7dTuEpLTKAukciMbPgCKu8J" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1pemr5zuprE7Sy86O4SqvJMFMmFWKoDmP" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=16jycFaVckJYU3DEFufFXDdZxmk_I_7kI" width="200">
   </div>
   Mobile
 </div>
@@ -145,26 +145,22 @@ Once you click on one of your project cards, you will be on the project detail p
 
 <div align="center">
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1-uIo2S1y8z8nLgTt-ZEb3rFPtpPUtbMf" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=16rzDs0Iupm5eNetYdXyz7Uz-3VnI4AvC" width="800">
   </div>
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1TUmlBo6ov7L7l4q8UfY91y7aovekbH8P" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=18ev-oJQM8eEGANyGRS-qbP7STTfpkHl0" width="800">
   </div>
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1WCzDmwNE0KPy59GfkLzmbZTM3QxHkYnu" width="800">
-  </div>
-  <div>
-    <img src="https://drive.google.com/uc?export=view&id=13gdPDGInDJVCbQeecozcNwsAaBT7ZLqU" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=1iz9tc9Nnfet_EOvckgflnwBBqn3xPN-y" width="800">
   </div>
   Desktop
 </div>
 <br/>
 <div align="center">
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1QqVPlwgcgI78v1QEYtykHCLnWxN73uvm" width="200">
-    <img src="https://drive.google.com/uc?export=view&id=1AMbWlESSE_aXZa5aMMceOFMsUHuXtJpi" width="200">
-    <img src="https://drive.google.com/uc?export=view&id=1oHLfbeu1_yXj5XpxlObBip6N_Hmrh9Th" width="200">
-    <img src="https://drive.google.com/uc?export=view&id=10bIoOBuoI37QEx9hzyE9CpuI_yEzN6rQ" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1aLZtibYLINK3LiUCSHeOSO1LusNUkgEV" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1Uq1aH_hXSn8jXBy2xXp7N0fB_vXEMWmZ" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1g5iW0W4DoLmwDOMyR35i785EW4nW1G-p" width="200">
   </div>
   Mobile
 </div>
@@ -175,22 +171,22 @@ If you need to make changes to your profile, visit the account page, where you c
 
 <div align="center">
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1-RzgBrKFZugCW37D_koQlTT0l-suUhcY" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=1z7K6oaanDAsgJzG-IC-qURjLKCxx9ADE" width="800">
   </div>
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1APQ1AzGIEW9pWGhA3aHZIN55_GWGxR30" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=1StfC1MAkDCxfzif-TV74KkbbgCRsRdie" width="800">
   </div>
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1qyw57qEtKJ5rR0G2SZVhEMnl7eZeT8U1" width="800">
+    <img src="https://drive.google.com/uc?export=view&id=1H2JTgTzgEaG40ElUnieFLUaLHsmUDiMe" width="800">
   </div>
   Desktop
 </div>
 <br/>
 <div align="center">
   <div>
-    <img src="https://drive.google.com/uc?export=view&id=1SSWro_-_cLMJ4OKcxtJ3jSPWSlod7hlR" width="200">
-    <img src="https://drive.google.com/uc?export=view&id=1SSWro_-_cLMJ4OKcxtJ3jSPWSlod7hlR" width="200">
-    <img src="https://drive.google.com/uc?export=view&id=1_W8dcw8Unsyr047P99nPFjofzl5wy7N3" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1fkksn8graF-CFtoFclldRmFgZf68PvxK" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1h_-3nCOnAtUuvzFghsoMZzjpOigPWURY" width="200">
+    <img src="https://drive.google.com/uc?export=view&id=1VnEN43fPF4PwiRhFD1M_m3M0mxxtsdR3" width="200">
   </div>
   Mobile
 </div>
