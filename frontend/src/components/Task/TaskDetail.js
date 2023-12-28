@@ -24,7 +24,10 @@ export default function TaskDetail() {
         </div>
         <div>
           <h3 className="italic">Status</h3>
-          <TaskStatusBadge taskStatus={taskToBeShown.status} forTaskDetail={true} />
+          <TaskStatusBadge
+            taskStatus={taskToBeShown.status}
+            forTaskDetail={true}
+          />
           {/* show Overdue badge if deadline is passed and task isn't done */}
           {deadlinePassed(taskToBeShown.deadline) && !taskToBeShown.isDone && (
             <TaskStatusBadge taskStatus="Overdue" forTaskDetail={true} />
@@ -37,8 +40,11 @@ export default function TaskDetail() {
             : "This task has no description."}
         </div>
         <div className="w-full">
-          <ButtonOpenModal btnTxt="Edit" modalFor="task" />
-          <ButtonCloseModal formResetRequired={{ required: true, for: "task" }} />
+          <ButtonOpenModal btnTxt="Edit" modalFor="task" color="blue" />
+          <ButtonCloseModal
+            formResetRequired={{ required: true, for: "task" }}
+            color="slate"
+          />
         </div>
       </div>
     </Modal>

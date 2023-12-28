@@ -37,7 +37,11 @@ export default function ProjectDetail() {
         {!isLoading && (
           <>
             <div className="flex justify-between mb-2">
-              <ButtonOpenModal btnTxt="Create new task" modalFor="task" />
+              <ButtonOpenModal
+                btnTxt="Create new task"
+                modalFor="task"
+                color="blue"
+              />
               {tasks.length > 0 && (
                 <TaskSortBy
                   currentSortBy={currentSortBy}

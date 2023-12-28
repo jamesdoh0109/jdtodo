@@ -41,6 +41,7 @@ export default function AccountForm({
       <ButtonSubmit
         text={isLoading ? btnDisabledTxt : btnTxt}
         disabled={isLoading || !isValid}
+        color="blue"
       />
       <Message
         messageObj={{

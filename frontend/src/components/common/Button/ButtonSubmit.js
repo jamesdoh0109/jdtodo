@@ -1,8 +1,13 @@
-export default function ButtonSubmit({ text, disabled }) {
+import { COLOR_TO_TAILWIND_CLASSES } from "util/constants";
+
+export default function ButtonSubmit({ text, disabled, color }) {
   return (
     <button
-      className={`bg-blue-500 text-white font-bold py-2 px-4 mr-2 mb-2 rounded focus:outline-none focus:shadow-outline disabled:opacity-50 ${
-        !disabled && "hover:bg-blue-700"
+      className={`${
+        COLOR_TO_TAILWIND_CLASSES[color]["tailwind"]
+      } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50 ${
+        !disabled &&
+        `hover:${COLOR_TO_TAILWIND_CLASSES[color]["tailwindHover"]}`
       }`}
       type="submit"
       disabled={disabled}

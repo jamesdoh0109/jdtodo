@@ -17,7 +17,11 @@ export default function Dashboard() {
         {isLoading && <Loading />}
         {!isLoading && (
           <>
-            <ButtonOpenModal btnTxt="Create new project" modalFor="project" />
+            <ButtonOpenModal
+              btnTxt="Create new project"
+              modalFor="project"
+              color="blue"
+            />
             <ProjectList projects={projects} />
           </>
         )}

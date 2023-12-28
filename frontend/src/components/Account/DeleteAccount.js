@@ -37,6 +37,7 @@ export default function DeleteAccount({ user }) {
           text={isLoading ? "Deleting" : "Confirm"}
           onClick={() => onDeleteAccount()}
           disabled={isLoading}
+          color="red"
         />
         <Message
           messageObj={{

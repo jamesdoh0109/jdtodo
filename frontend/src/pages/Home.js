@@ -6,8 +6,8 @@ function Home() {
       <div className="mx-auto flex flex-col gap-9">
         <h1 className="text-5xl font-bold">JDTodo</h1>
         <div className="buttons flex flex-col gap-3">
-          <ButtonToLink href="/login" text="Log In"/>
-          <ButtonToLink href="/signup" text="Sign Up"/>
+          <ButtonToLink href="/login" text="Log In" color="blue" />
+          <ButtonToLink href="/signup" text="Sign Up" color="blue" />
         </div>
       </div>
     </div>

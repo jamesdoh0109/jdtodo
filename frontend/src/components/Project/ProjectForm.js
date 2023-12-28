@@ -64,21 +64,24 @@ export default function ProjectForm() {
           errors={errors}
           register={register}
         />
-        <div className="w-full">
+        <div className="w-full flex flex-row-reverse space-x-2 space-x-reverse">
           {isCreatingNew ? (
             <ButtonSubmit
-              text={isLoading ? "Creating" : "Create project"}
+              text={isLoading ? "Creating" : "Create"}
               disabled={isLoading || !isValid}
+              color="blue"
             />
           ) : (
             <ButtonSubmit
-              text={isLoading ? "Editing" : "Edit project"}
+              text={isLoading ? "Saving" : "Save"}
               disabled={isLoading || !isValid}
+              color="blue"
             />
           )}
           <ButtonCloseModal
             disabled={isLoading}
             formResetRequired={{ required: !isCreatingNew, for: "project" }}
+            color="slate"
           />
           <Message
             messageObj={{

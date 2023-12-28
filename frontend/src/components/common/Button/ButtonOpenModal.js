@@ -4,7 +4,7 @@ import { dropdownActions } from "store/reducers/dropdown";
 import { openFormModal } from "util/modal";
 import ButtonOnClick from "components/common/Button/ButtonOnClick";
 
-export default function ButtonOpenModal({ btnTxt, modalFor }) {
+export default function ButtonOpenModal({ btnTxt, modalFor, color }) {
   const taskToBeShown = useSelector((state) => state.taskDetail.itemToBeShown);
 
   const dispatch = useDispatch();
@@ -34,9 +34,9 @@ export default function ButtonOpenModal({ btnTxt, modalFor }) {
 
   return btnTxt !== "Edit" ? (
     <div className="l-lg-h:mt-32 l-md-h:mt-24 l-sm-h:mt-16">
-      <ButtonOnClick text={btnTxt} onClick={openModal} />
+      <ButtonOnClick text={btnTxt} onClick={openModal} color={color} />
     </div>
   ) : (
-    <ButtonOnClick text={btnTxt} onClick={openModal} />
+    <ButtonOnClick text={btnTxt} onClick={openModal} color={color} />
   );
 }

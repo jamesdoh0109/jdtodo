@@ -105,21 +105,24 @@ export default function TaskForm() {
             register={register}
           />
         ))}
-        <div className="w-full">
+        <div className="w-full flex flex-row-reverse space-x-2 space-x-reverse">
           {isCreatingNew ? (
             <ButtonSubmit
-              text={isLoading ? "Creating" : "Create task"}
+              text={isLoading ? "Creating" : "Create"}
               disabled={isLoading || !isValid}
+              color="blue"
             />
           ) : (
             <ButtonSubmit
-              text={isLoading ? "Editing" : "Edit task"}
+              text={isLoading ? "Editing" : "Edit"}
               disabled={isLoading || !isValid}
+              color="blue"
             />
           )}
           <ButtonCloseModal
             disabled={isLoading}
             formResetRequired={{ required: !isCreatingNew, for: "task" }}
+            color="slate"
           />
           <Message
             messageObj={{

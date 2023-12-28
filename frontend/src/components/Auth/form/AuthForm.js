@@ -47,6 +47,7 @@ export default function AuthForm({
         <ButtonSubmit
           text={isLoading ? btnDisabledTxt : btnTxt}
           disabled={isLoading || !isValid}
+          color="blue"
         />
         {additionalAction}
       </div>
