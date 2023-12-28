@@ -1,6 +1,6 @@
 <h1 align="center">JDTodo</h1>
 <div align="center">
-  <h3>A simple tool for managing projects and tasks./</h3>
+  <h3>A simple tool for managing projects and tasks.</h3>
 </div>
 <div align="center">
 
