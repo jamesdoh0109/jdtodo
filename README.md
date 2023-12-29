@@ -111,7 +111,7 @@ Follow these steps to run the frontend development server:
 3. `npm start`
 
 ## Pages
-Below are some of the essential pages that underpin the core functionality and represent the backbone of the application.of our application. Presented here are detailed descriptions and accompanying screenshots of the Dashboard, Project Details, and Manage Account pages. 
+Below are some of the essential pages that underpin the core functionality and represent the backbone of the application. Presented here are detailed descriptions and accompanying screenshots of the Dashboard, Project Details, and Manage Account pages. 
 
 ### Dashboard
 
